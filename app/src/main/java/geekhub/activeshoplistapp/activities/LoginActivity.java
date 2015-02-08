@@ -1,11 +1,14 @@
 package geekhub.activeshoplistapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.fragments.LoginFragment;
+import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 
 /**
  * Created by rage on 06.02.15.
@@ -13,19 +16,29 @@ import geekhub.activeshoplistapp.fragments.LoginFragment;
  * Login screen
  */
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements LoginFragment.OnLoginFragmentListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new LoginFragment())
-                    .commit();
+        SharedPrefHelper sharedPrefHelper = SharedPrefHelper.getInstance();
+        if (TextUtils.isEmpty(sharedPrefHelper.getUserName())) {
+            setContentView(R.layout.activity_with_fragment);
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.container, new LoginFragment())
+                        .commit();
+            }
+        } else {
+            openApplication();
         }
     }
 
+    private void openApplication() {
+        finish();
+        Intent intent = new Intent(this, PurchaseListActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -47,5 +60,10 @@ public class LoginActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onLoginFragmentClickListener(int button) {
+        openApplication();
     }
 }

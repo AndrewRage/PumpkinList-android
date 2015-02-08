@@ -8,5 +8,8 @@ package geekhub.activeshoplistapp.helpers;
 public final class AppConstants {
 
     public static final String APP_PREFERENCES = "ASlistPreferences";
+    public static final String APP_PREFERENCES_USERNAME = "UserName";
 
+    public static final int LOGIN_BUTTON = 1;
+    public static final int LOGIN_BUTTON_CONTINUE = 0;
 }

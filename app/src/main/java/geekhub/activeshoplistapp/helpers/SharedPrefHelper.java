@@ -30,4 +30,19 @@ public class SharedPrefHelper {
     public static SharedPrefHelper getInstance(){
         return sharedPrefHelper;
     }
+
+    public void setUserName(String userName){
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(AppConstants.APP_PREFERENCES_USERNAME, userName);
+        editor.apply();
+    }
+
+    public String getUserName(){
+        String userName = null;
+        if (preferences.contains(AppConstants.APP_PREFERENCES_USERNAME)) {
+            userName = preferences.getString(AppConstants.APP_PREFERENCES_USERNAME, null);
+        }
+        return userName;
+    }
+
 }
