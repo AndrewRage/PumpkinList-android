@@ -2,7 +2,19 @@
 <resources>
 
     <string name="app_name">ASlistApp</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <!--Login-->
+    <string name="login_email">E-mail</string>
+    <string name="login_password">Password</string>
+    <string name="login_remember">Remember my on this device</string>
+    <string name="login_button_login">LOGIN</string>
+    <string name="login_button_continue">Continue without registration</string>
+
+    <!--Login register-->
+    <string name="login_register_description">Please complete lines below: </string>
+    <string name="login_register_email">E-mail</string>
+    <string name="login_register_password">Password</string>
+    <string name="login_register_button">REGISTER</string>
 
 </resources>
