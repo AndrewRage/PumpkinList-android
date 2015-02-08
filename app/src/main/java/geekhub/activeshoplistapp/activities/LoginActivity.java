@@ -5,6 +5,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import geekhub.activeshoplistapp.R;
+import geekhub.activeshoplistapp.fragments.LoginFragment;
 
 /**
  * Created by rage on 06.02.15.
@@ -18,6 +19,11 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, new LoginFragment())
+                    .commit();
+        }
     }
 
 
