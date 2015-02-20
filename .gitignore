@@ -45,3 +45,6 @@ build/
 # IML files
 *.iml
 **/app.iml
+
+# AppVariables
+app/src/main/res/values/variables.xml
