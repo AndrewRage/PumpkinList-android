@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,8 +16,6 @@ import com.facebook.LoggingBehavior;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.Settings;
-import com.facebook.UiLifecycleHelper;
-import com.facebook.widget.LoginButton;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.helpers.AppConstants;
@@ -73,7 +70,16 @@ public class LoginFragment extends BaseFragment{
         view.findViewById(R.id.button_facebook_auth).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClickLogin();
+                Session session = Session.getActiveSession();
+                SessionState state = session.getState();
+
+                if (state.isOpened()) {
+                    Log.i(TAG, "Close");
+                    facebookLogout();
+                } else if (state.isClosed()) {
+                    Log.i(TAG, "Open");
+                    facebookLogin();
+                }
             }
         });
 
@@ -107,12 +113,19 @@ public class LoginFragment extends BaseFragment{
         Session.saveSession(session, outState);
     }
 
-    private void onClickLogin() {
+    private void facebookLogin() {
         Session session = Session.getActiveSession();
         if (!session.isOpened() && !session.isClosed()) {
             session.openForRead(new Session.OpenRequest(this).setCallback(callback));
         } else {
             Session.openActiveSession(getActivity(), this, true, callback);
+        }
+    }
+
+    private void facebookLogout() {
+        Session session = Session.getActiveSession();
+        if (!session.isClosed()) {
+            session.closeAndClearTokenInformation();
         }
     }
 
