@@ -47,7 +47,7 @@
             android:text="@string/login_button_login"
             android:layout_centerHorizontal="true" />
 
-        <com.facebook.widget.LoginButton
+        <Button
             android:id="@+id/button_facebook_auth"
             android:layout_below="@id/button_login"
             android:layout_width="wrap_content"
