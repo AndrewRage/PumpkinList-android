@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.facebook.LoggingBehavior;
 import com.facebook.Session;
@@ -67,19 +68,22 @@ public class LoginFragment extends BaseFragment{
             }
         }
 
+        facebookLogout();
+
         view.findViewById(R.id.button_facebook_auth).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Session session = Session.getActiveSession();
                 SessionState state = session.getState();
+                facebookLogin();
 
-                if (state.isOpened()) {
+                /*if (session.isOpened()) {
                     Log.i(TAG, "Close");
                     facebookLogout();
-                } else if (state.isClosed()) {
+                } else if (session.isClosed()) {
                     Log.i(TAG, "Open");
                     facebookLogin();
-                }
+                }*/
             }
         });
 
@@ -168,8 +172,10 @@ public class LoginFragment extends BaseFragment{
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {
             Log.i(TAG, "Logged in...");
+            Toast.makeText(getActivity(), "LogIn", Toast.LENGTH_SHORT).show();
         } else if (state.isClosed()) {
             Log.i(TAG, "Logged out...");
+            Toast.makeText(getActivity(), "LogOut", Toast.LENGTH_SHORT).show();
         }
     }
 }
