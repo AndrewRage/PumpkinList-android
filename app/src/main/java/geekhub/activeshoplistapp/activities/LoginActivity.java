@@ -1,6 +1,7 @@
 package geekhub.activeshoplistapp.activities;
 
 import android.accounts.AccountManager;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +12,13 @@ import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKScope;
+import com.vk.sdk.VKSdk;
+import com.vk.sdk.VKSdkListener;
+import com.vk.sdk.VKUIHelper;
+import com.vk.sdk.api.VKError;
+import com.vk.sdk.dialogs.VKCaptchaDialog;
 
 import java.io.IOException;
 
@@ -42,6 +50,7 @@ public class LoginActivity extends BaseActivity implements LoginFragment.OnLogin
         } else {
             openApplication();
         }
+        VKSdk.initialize(vkSdkListener, getString(R.string.vkontakte_app_id)/*, VKAccessToken.tokenFromSharedPreferences(this, sTokenKey)*/);
     }
 
     private void openApplication() {
@@ -53,6 +62,8 @@ public class LoginActivity extends BaseActivity implements LoginFragment.OnLogin
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        VKUIHelper.onActivityResult(this, requestCode, resultCode, data);
+
         if (requestCode == AppConstants.REQUEST_CODE_GOOGLE_PLUS_AUTH && resultCode == RESULT_OK) {
             final String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
             AsyncTask<Void, Void, String> getToken = new AsyncTask<Void, Void, String>() {
@@ -85,6 +96,55 @@ public class LoginActivity extends BaseActivity implements LoginFragment.OnLogin
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        VKUIHelper.onResume(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VKUIHelper.onDestroy(this);
+    }
+
+    private VKSdkListener vkSdkListener = new VKSdkListener() {
+        @Override
+        public void onCaptchaError(VKError captchaError) {
+            new VKCaptchaDialog(captchaError).show();
+            Log.d(TAG, "onCaptchaError");
+        }
+
+        @Override
+        public void onTokenExpired(VKAccessToken expiredToken) {
+            VKSdk.authorize(AppConstants.VKONTAKTE_SCOPES);
+            Log.d(TAG, "onTokenExpired");
+        }
+
+        @Override
+        public void onAccessDenied(VKError authorizationError) {
+            new AlertDialog.Builder(LoginActivity.this)
+                    .setMessage(authorizationError.errorMessage)
+                    .show();
+            Log.d(TAG, "onAccessDenied");
+        }
+
+        @Override
+        public void onReceiveNewToken(VKAccessToken newToken) {
+            newToken.saveTokenToSharedPreferences(LoginActivity.this, AppConstants.VKONTAKTE_PREFERENCES);
+            Log.d(TAG, "onReceiveNewToken: " + newToken.accessToken);
+            /*Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(i);*/
+        }
+
+        @Override
+        public void onAcceptUserToken(VKAccessToken token) {
+            Log.d(TAG, "onAcceptUserToken: " + token.accessToken);
+            /*Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(i);*/
+        }
+    };
+
+    @Override
     public void onLoginFragmentClickListener(int button) {
         switch (button) {
             case AppConstants.LOGIN_BUTTON:
@@ -94,6 +154,9 @@ public class LoginActivity extends BaseActivity implements LoginFragment.OnLogin
                 Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
                         false, null, null, null, null);
                 startActivityForResult(intent, AppConstants.REQUEST_CODE_GOOGLE_PLUS_AUTH);
+                break;
+            case AppConstants.LOGIN_VKONTAKTE_BUTTON:
+                VKSdk.authorize(AppConstants.VKONTAKTE_SCOPES, true, false);
                 break;
         }
     }

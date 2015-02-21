@@ -94,6 +94,13 @@ public class LoginFragment extends BaseFragment{
             }
         });
 
+        view.findViewById(R.id.button_vkontakte_auth).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onLoginFragmentListener.onLoginFragmentClickListener(AppConstants.LOGIN_VKONTAKTE_BUTTON);
+            }
+        });
+
         //LoginButton facebookAuthButton = (LoginButton) view.findViewById(R.id.button_facebook_auth);
         //facebookAuthButton.setFragment(this);
         return view;

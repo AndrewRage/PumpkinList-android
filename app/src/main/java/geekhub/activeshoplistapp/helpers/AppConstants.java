@@ -1,5 +1,7 @@
 package geekhub.activeshoplistapp.helpers;
 
+import com.vk.sdk.VKScope;
+
 /**
  * Created by rage on 06.02.15.
  *
@@ -13,10 +15,12 @@ public final class AppConstants {
     public static final int LOGIN_BUTTON_CONTINUE = 1000;
     public static final int LOGIN_BUTTON = 1001;
     public static final int LOGIN_G_PLUS_BUTTON = 1002;
+    public static final int LOGIN_VKONTAKTE_BUTTON = 1003;
 
     public static final int REQUEST_CODE_GOOGLE_PLUS_AUTH = 2000;
 
-
+    public static final String VKONTAKTE_PREFERENCES = "VK_ACCESS_TOKEN";
+    public static final String[] VKONTAKTE_SCOPES = new String[]{VKScope.FRIENDS};
 
     private final static String G_PLUS_SCOPE = "https://www.googleapis.com/auth/plus.me";
     private final static String G_PLUS_USER_INFO_SCOPE = "https://www.googleapis.com/auth/userinfo.profile";
