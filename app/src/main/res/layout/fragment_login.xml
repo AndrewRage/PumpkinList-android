@@ -13,7 +13,8 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin" >
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:id="@+id/relativeLayout">
 
         <EditText
             android:id="@+id/edit_email"
@@ -75,6 +76,16 @@
             android:layout_toRightOf="@+id/button_google_plus_auth"
             android:layout_toEndOf="@+id/button_google_plus_auth" />
 
+        <Button
+            android:id="@+id/button_twitter_auth"
+            android:text="tw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignTop="@+id/button_vkontakte_auth"
+            android:layout_toRightOf="@+id/button_vkontakte_auth"
+            android:layout_toEndOf="@+id/button_vkontakte_auth" />
+
     </RelativeLayout>
 
     <TextView
@@ -84,5 +95,14 @@
         android:text="@string/login_button_continue"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:id="@+id/twitter_login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

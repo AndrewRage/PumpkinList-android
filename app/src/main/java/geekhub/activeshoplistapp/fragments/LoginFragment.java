@@ -17,6 +17,16 @@ import com.facebook.LoggingBehavior;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.Settings;
+import com.facebook.internal.ImageDownloader;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthToken;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.twitter.sdk.android.core.internal.oauth.AppSession;
+import com.twitter.sdk.android.core.models.User;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.helpers.AppConstants;
@@ -33,6 +43,7 @@ public class LoginFragment extends BaseFragment{
     private View loginButton;
     private View continueButton;
     private OnLoginFragmentListener onLoginFragmentListener;
+    private TwitterLoginButton twitterLoginButton;
 
     /*Facebook*/
     //private UiLifecycleHelper uiHelper;
@@ -51,6 +62,7 @@ public class LoginFragment extends BaseFragment{
         rememberCheckBox = (CheckBox) view.findViewById(R.id.checkbox_remember);
         loginButton = view.findViewById(R.id.button_login);
         continueButton = view.findViewById(R.id.button_continue);
+        twitterLoginButton = (TwitterLoginButton) view.findViewById(R.id.twitter_login_button);
 
         Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
 
@@ -73,17 +85,7 @@ public class LoginFragment extends BaseFragment{
         view.findViewById(R.id.button_facebook_auth).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Session session = Session.getActiveSession();
-                SessionState state = session.getState();
                 facebookLogin();
-
-                /*if (session.isOpened()) {
-                    Log.i(TAG, "Close");
-                    facebookLogout();
-                } else if (session.isClosed()) {
-                    Log.i(TAG, "Open");
-                    facebookLogin();
-                }*/
             }
         });
 
@@ -101,8 +103,36 @@ public class LoginFragment extends BaseFragment{
             }
         });
 
-        //LoginButton facebookAuthButton = (LoginButton) view.findViewById(R.id.button_facebook_auth);
-        //facebookAuthButton.setFragment(this);
+        view.findViewById(R.id.button_twitter_auth).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                twitterLoginButton.performClick();
+            }
+        });
+
+        twitterLoginButton.setCallback(new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                Log.d(TAG, "success");
+                TwitterSession session = Twitter.getSessionManager().getActiveSession();
+                TwitterAuthToken authToken = session.getAuthToken();
+                String token = authToken.token;
+                String secret = authToken.secret;
+
+                TwitterSession guestAppSession = result.data;
+                Log.d(TAG, "guestAppSession: " + guestAppSession.getUserName());
+
+                //TODO twitter login
+                
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+                // Do something on failure
+                Log.d(TAG, "failure");
+            }
+        });
+
         return view;
     }
 
@@ -120,8 +150,10 @@ public class LoginFragment extends BaseFragment{
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
         Session.getActiveSession().onActivityResult(getActivity(), requestCode, resultCode, data);
+        twitterLoginButton.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
