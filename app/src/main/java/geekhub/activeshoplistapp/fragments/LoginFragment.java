@@ -26,7 +26,7 @@ import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
  * Created by rage on 08.02.15. Create by task: 004
  */
 public class LoginFragment extends BaseFragment{
-    private static final String TAG = "Login Fragment";
+    private static final String TAG = "LoginFragment";
     private EditText emailEditText;
     private EditText passwordEditText;
     private CheckBox rememberCheckBox;
@@ -84,6 +84,13 @@ public class LoginFragment extends BaseFragment{
                     Log.i(TAG, "Open");
                     facebookLogin();
                 }*/
+            }
+        });
+
+        view.findViewById(R.id.button_google_plus_auth).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onLoginFragmentListener.onLoginFragmentClickListener(AppConstants.LOGIN_G_PLUS_BUTTON);
             }
         });
 
