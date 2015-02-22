@@ -1,11 +1,13 @@
 package geekhub.activeshoplistapp.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ImageButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ public class PurchaseListMainFragment extends BaseFragment {
 
     private GridView purchaseView;
     private List<PurchaseListModel> purchaseLists;
+    private OnPurchaseListMainFragmentListener purchaseListMainFragmentListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,7 +42,7 @@ public class PurchaseListMainFragment extends BaseFragment {
 
         //Fake data
         purchaseLists = new ArrayList<>();
-        Map<Integer,PurchaseItemModel> purchasesItem = new HashMap<>();
+        List<PurchaseItemModel> purchasesItem = new ArrayList<>();
         purchaseLists.add(new PurchaseListModel(0,"List1",1,1,0,0,0,purchasesItem));
         purchaseLists.add(new PurchaseListModel(0,"List2",1,1,0,0,0,purchasesItem));
         purchaseLists.add(new PurchaseListModel(0,"List3",1,1,0,0,0,purchasesItem));
@@ -48,5 +51,29 @@ public class PurchaseListMainFragment extends BaseFragment {
 
         PurchaseListAdapter adapter = new PurchaseListAdapter(getActivity(), R.layout.purchase_view_item, purchaseLists);
         purchaseView.setAdapter(adapter);
+
+        //Show edit fragment
+        view.findViewById(R.id.plus_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                purchaseListMainFragmentListener.onPurchaseListMainFragmentClickListener();
+            }
+        });
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            purchaseListMainFragmentListener = (OnPurchaseListMainFragmentListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnLoginFragmentListener");
+        }
+    }
+
+    public interface OnPurchaseListMainFragmentListener {
+        public void onPurchaseListMainFragmentClickListener();
     }
 }

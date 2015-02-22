@@ -1,5 +1,6 @@
 package geekhub.activeshoplistapp.model;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,7 +14,7 @@ public class PurchaseListModel {
     private long timeAlarm;
     private long timeCreate;
     private long timeStamp;
-    private Map<Integer,PurchaseItemModel> purchasesItem;
+    private List<PurchaseItemModel> purchasesItem;
 
     public PurchaseListModel(long listId,
                              String listName,
@@ -22,7 +23,7 @@ public class PurchaseListModel {
                              long timeAlarm,
                              long timeCreate,
                              long timeStamp,
-                             Map<Integer,PurchaseItemModel> purchasesItem) {
+                             List<PurchaseItemModel> purchasesItem) {
         this.listId = listId;
         this.listName = listName;
         this.userId = userId;
@@ -49,7 +50,7 @@ public class PurchaseListModel {
         this.timeAlarm = timeAlarm;
     }
 
-    public void setPurchasesItem(Map<Integer,PurchaseItemModel> purchasesItem) {
+    public void setPurchasesItem(List<PurchaseItemModel> purchasesItem) {
         this.purchasesItem = purchasesItem;
     }
 
@@ -81,7 +82,7 @@ public class PurchaseListModel {
         return timeStamp;
     }
 
-    public Map<Integer,PurchaseItemModel> getPurchasesItem() {
+    public List<PurchaseItemModel> getPurchasesItem() {
         return purchasesItem;
     }
 }

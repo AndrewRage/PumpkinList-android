@@ -7,13 +7,14 @@ import android.view.MenuItem;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.fragments.LoginFragment;
+import geekhub.activeshoplistapp.fragments.PurchaseListEditFragment;
 import geekhub.activeshoplistapp.fragments.PurchaseListMainFragment;
 import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 
 /**
  * Created by rage on 08.02.15.
  */
-public class PurchaseListActivity extends BaseActivity {
+public class PurchaseListActivity extends BaseActivity implements PurchaseListMainFragment.OnPurchaseListMainFragmentListener{
     private static final String TAG = "PurchaseListActivity";
 
     @Override
@@ -52,5 +53,12 @@ public class PurchaseListActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPurchaseListMainFragmentClickListener() {
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, new PurchaseListEditFragment())
+                .commit();
     }
 }
