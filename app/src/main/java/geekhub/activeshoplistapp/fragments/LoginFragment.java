@@ -14,10 +14,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.LoggingBehavior;
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.Settings;
 import com.facebook.internal.ImageDownloader;
+import com.facebook.model.GraphUser;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -123,7 +126,7 @@ public class LoginFragment extends BaseFragment{
                 Log.d(TAG, "guestAppSession: " + guestAppSession.getUserName());
 
                 //TODO twitter login
-                
+
             }
 
             @Override
@@ -217,11 +220,18 @@ public class LoginFragment extends BaseFragment{
 
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {
+            //TODO post to server session.getAccessToken()
+            Request.newMeRequest(session, new Request.GraphUserCallback() {
+                @Override
+                public void onCompleted(GraphUser user, Response response) {
+                    if (user != null) {
+                        Log.d(TAG, "fb: " + user.getId());
+                    }
+                }
+            }).executeAsync();
             Log.i(TAG, "Logged in...");
-            Toast.makeText(getActivity(), "LogIn", Toast.LENGTH_SHORT).show();
         } else if (state.isClosed()) {
             Log.i(TAG, "Logged out...");
-            Toast.makeText(getActivity(), "LogOut", Toast.LENGTH_SHORT).show();
         }
     }
 }

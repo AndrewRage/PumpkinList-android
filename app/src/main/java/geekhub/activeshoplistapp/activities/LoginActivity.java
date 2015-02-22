@@ -87,6 +87,7 @@ public class LoginActivity extends BaseActivity implements LoginFragment.OnLogin
                 @Override
                 protected void onPostExecute(String token) {
                     Log.d(TAG, "Google+ token: " + token);
+                    //TODO send token to server
                 }
 
             };
@@ -137,15 +138,13 @@ public class LoginActivity extends BaseActivity implements LoginFragment.OnLogin
         public void onReceiveNewToken(VKAccessToken newToken) {
             newToken.saveTokenToSharedPreferences(LoginActivity.this, AppConstants.VKONTAKTE_PREFERENCES);
             Log.d(TAG, "onReceiveNewToken: " + newToken.accessToken);
-            /*Intent i = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(i);*/
+            //TODO send vk token to server
         }
 
         @Override
         public void onAcceptUserToken(VKAccessToken token) {
             Log.d(TAG, "onAcceptUserToken: " + token.accessToken);
-            /*Intent i = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(i);*/
+            //TODO send vk token to server
         }
     };
 
