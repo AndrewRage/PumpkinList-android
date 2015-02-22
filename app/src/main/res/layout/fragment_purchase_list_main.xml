@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <GridView
+        android:id="@+id/purchase_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="purchase main" />
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:padding="@dimen/purchase_list_item_margin"
+        android:numColumns="2"
+        android:horizontalSpacing="@dimen/purchase_list_item_margin"
+        android:verticalSpacing="@dimen/purchase_list_item_margin"/>
 
-</LinearLayout>
+    <ImageButton
+        android:id="@+id/plus_button"
+        android:layout_width="@dimen/fab_button_size_big"
+        android:layout_height="@dimen/fab_button_size_big"
+        android:background="@drawable/fab_background"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="@dimen/fab_button_right_margin"
+        android:layout_marginEnd="@dimen/fab_button_right_margin"
+        android:layout_marginBottom="@dimen/fab_button_bottom_margin"
+        android:contentDescription="@string/app_name" />
+
+</RelativeLayout>

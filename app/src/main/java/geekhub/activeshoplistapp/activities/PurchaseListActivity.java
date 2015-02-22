@@ -14,6 +14,7 @@ import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
  * Created by rage on 08.02.15.
  */
 public class PurchaseListActivity extends BaseActivity {
+    private static final String TAG = "PurchaseListActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
