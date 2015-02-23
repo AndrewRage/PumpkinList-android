@@ -23,7 +23,7 @@ public class PurchaseListActivity extends BaseActivity implements PurchaseListMa
         setContentView(R.layout.activity_with_fragment);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PurchaseListMainFragment())
+                    .replace(R.id.container, new PurchaseListMainFragment())
                     .commit();
         }
     }
@@ -58,7 +58,8 @@ public class PurchaseListActivity extends BaseActivity implements PurchaseListMa
     @Override
     public void onPurchaseListMainFragmentClickListener() {
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, new PurchaseListEditFragment())
+                .replace(R.id.container, new PurchaseListEditFragment())
+                .addToBackStack("s")
                 .commit();
     }
 }
