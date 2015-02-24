@@ -18,4 +18,8 @@
     <string name="login_register_password">Password</string>
     <string name="login_register_button">REGISTER</string>
 
+    <!--Purchase edit-->
+    <string name="purchase_edit_new_goods_hint">Enter goods label</string>
+    <string name="purchase_edit_add_button">Add</string>
+
 </resources>
