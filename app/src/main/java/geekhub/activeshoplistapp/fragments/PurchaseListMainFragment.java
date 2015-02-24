@@ -16,6 +16,7 @@ import java.util.Map;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.adapters.PurchaseListAdapter;
+import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
 
@@ -26,7 +27,7 @@ public class PurchaseListMainFragment extends BaseFragment {
     private static final String TAG = "PurchaseListMainFragment";
 
     private GridView purchaseView;
-    private List<PurchaseListModel> purchaseLists;
+    private Map<Integer,PurchaseListModel> purchaseLists;
     private OnPurchaseListMainFragmentListener purchaseListMainFragmentListener;
 
     @Override
@@ -41,15 +42,19 @@ public class PurchaseListMainFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         //Fake data
-        purchaseLists = new ArrayList<>();
+        /*purchaseLists = new ArrayList<>();
         List<PurchaseItemModel> purchasesItem = new ArrayList<>();
         purchaseLists.add(new PurchaseListModel(0,"List1",1,1,0,0,0,purchasesItem));
         purchaseLists.add(new PurchaseListModel(0,"List2",1,1,0,0,0,purchasesItem));
         purchaseLists.add(new PurchaseListModel(0,"List3",1,1,0,0,0,purchasesItem));
         purchaseLists.add(new PurchaseListModel(0,"List4",1,1,0,0,0,purchasesItem));
-        purchaseLists.add(new PurchaseListModel(0,"List5",1,1,0,0,0,purchasesItem));
+        purchaseLists.add(new PurchaseListModel(0,"List5",1,1,0,0,0,purchasesItem));*/
 
-        PurchaseListAdapter adapter = new PurchaseListAdapter(getActivity(), R.layout.purchase_view_item, purchaseLists);
+        //ShoppingHelper shoppingHelper = ShoppingHelper.getInstance();
+
+        purchaseLists = ShoppingHelper.getInstance().getPurchaseLists();
+
+        PurchaseListAdapter adapter = new PurchaseListAdapter(getActivity(), R.layout.purchase_view_item, purchaseLists/*, new ArrayList<>(purchaseLists.keySet())*/);
         purchaseView.setAdapter(adapter);
 
         //Show edit fragment
