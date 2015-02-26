@@ -2,19 +2,15 @@ package geekhub.activeshoplistapp.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
-import geekhub.activeshoplistapp.adapters.PurchaseListAdapter;
-import geekhub.activeshoplistapp.model.PurchaseItemModel;
+import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
 
 /**
@@ -22,11 +18,20 @@ import geekhub.activeshoplistapp.model.PurchaseListModel;
  */
 public class PurchaseListEditFragment extends BaseFragment {
     private static final String TAG = "PurchaseListEditFragment";
-    
+    private static final String ARG_LIST_ID = "PurchaseList_param";
+
     private ListView purchaseListView;
     private View header;
     private View footer;
     private PurchaseListModel purchaseList;
+
+    public static PurchaseListEditFragment newInstance(long purchaseListId) {
+        PurchaseListEditFragment fragment = new PurchaseListEditFragment();
+        Bundle args = new Bundle();
+        args.putLong(ARG_LIST_ID, purchaseListId);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public PurchaseListEditFragment() {
 
@@ -44,6 +49,13 @@ public class PurchaseListEditFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (getArguments() != null) {
+            Long id = getArguments().getLong(ARG_LIST_ID);
+            purchaseList = ShoppingHelper.getInstance().getPurchaseLists().get(id);
+        } else {
+            purchaseList = new PurchaseListModel();
+        }
 
         PurchaseItemAdapter adapter = new PurchaseItemAdapter(getActivity(), R.layout.purchase_edit_item, purchaseList.getPurchasesItem());;
         purchaseListView.addHeaderView(header);

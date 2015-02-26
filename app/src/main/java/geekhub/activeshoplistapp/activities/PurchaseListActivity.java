@@ -6,9 +6,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import geekhub.activeshoplistapp.R;
-import geekhub.activeshoplistapp.fragments.LoginFragment;
 import geekhub.activeshoplistapp.fragments.PurchaseListEditFragment;
 import geekhub.activeshoplistapp.fragments.PurchaseListMainFragment;
+import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 
 /**
@@ -59,7 +59,15 @@ public class PurchaseListActivity extends BaseActivity implements PurchaseListMa
     public void onPurchaseListMainFragmentClickListener() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, new PurchaseListEditFragment())
-                .addToBackStack("s")
+                .addToBackStack(AppConstants.BACK_STACK_PURCHASE)
+                .commit();
+    }
+
+    @Override
+    public void onPurchaseListMainFragmentClickListener(long id) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, PurchaseListEditFragment.newInstance(id))
+                .addToBackStack(AppConstants.BACK_STACK_PURCHASE)
                 .commit();
     }
 }

@@ -7,7 +7,6 @@ import java.util.Map;
  * Created by rage on 08.02.15. Create by task: 003
  */
 public class PurchaseListModel {
-    private long listId;
     private String listName;
     private int userId;
     private int shopId;
@@ -16,15 +15,17 @@ public class PurchaseListModel {
     private long timeStamp;
     private Map<Integer,PurchaseItemModel> purchasesItem;
 
-    public PurchaseListModel(long listId,
-                             String listName,
+    public PurchaseListModel() {
+
+    }
+
+    public PurchaseListModel(String listName,
                              int userId,
                              int shopId,
                              long timeAlarm,
                              long timeCreate,
                              long timeStamp,
                              Map<Integer,PurchaseItemModel> purchasesItem) {
-        this.listId = listId;
         this.listName = listName;
         this.userId = userId;
         this.shopId = shopId;
@@ -52,10 +53,6 @@ public class PurchaseListModel {
 
     public void setPurchasesItem(Map<Integer,PurchaseItemModel> purchasesItem) {
         this.purchasesItem = purchasesItem;
-    }
-
-    public long getListId() {
-        return listId;
     }
 
     public String getListName() {

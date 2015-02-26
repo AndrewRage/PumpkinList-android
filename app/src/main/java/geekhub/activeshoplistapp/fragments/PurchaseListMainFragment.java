@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 
@@ -27,7 +28,7 @@ public class PurchaseListMainFragment extends BaseFragment {
     private static final String TAG = "PurchaseListMainFragment";
 
     private GridView purchaseView;
-    private Map<Integer,PurchaseListModel> purchaseLists;
+    private Map<Long,PurchaseListModel> purchaseLists;
     private OnPurchaseListMainFragmentListener purchaseListMainFragmentListener;
 
     @Override
@@ -41,21 +42,16 @@ public class PurchaseListMainFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //Fake data
-        /*purchaseLists = new ArrayList<>();
-        List<PurchaseItemModel> purchasesItem = new ArrayList<>();
-        purchaseLists.add(new PurchaseListModel(0,"List1",1,1,0,0,0,purchasesItem));
-        purchaseLists.add(new PurchaseListModel(0,"List2",1,1,0,0,0,purchasesItem));
-        purchaseLists.add(new PurchaseListModel(0,"List3",1,1,0,0,0,purchasesItem));
-        purchaseLists.add(new PurchaseListModel(0,"List4",1,1,0,0,0,purchasesItem));
-        purchaseLists.add(new PurchaseListModel(0,"List5",1,1,0,0,0,purchasesItem));*/
-
-        //ShoppingHelper shoppingHelper = ShoppingHelper.getInstance();
-
         purchaseLists = ShoppingHelper.getInstance().getPurchaseLists();
 
-        PurchaseListAdapter adapter = new PurchaseListAdapter(getActivity(), R.layout.purchase_view_item, purchaseLists/*, new ArrayList<>(purchaseLists.keySet())*/);
+        final PurchaseListAdapter adapter = new PurchaseListAdapter(getActivity(), R.layout.purchase_view_item, purchaseLists/*, new ArrayList<>(purchaseLists.keySet())*/);
         purchaseView.setAdapter(adapter);
+        purchaseView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                purchaseListMainFragmentListener.onPurchaseListMainFragmentClickListener(adapter.getItemId(position));
+            }
+        });
 
         //Show edit fragment
         view.findViewById(R.id.plus_button).setOnClickListener(new View.OnClickListener() {
@@ -80,5 +76,6 @@ public class PurchaseListMainFragment extends BaseFragment {
 
     public interface OnPurchaseListMainFragmentListener {
         public void onPurchaseListMainFragmentClickListener();
+        public void onPurchaseListMainFragmentClickListener(long id);
     }
 }

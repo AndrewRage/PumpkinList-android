@@ -20,15 +20,19 @@ import geekhub.activeshoplistapp.model.PurchaseListModel;
 public class PurchaseListAdapter extends BaseAdapter {
     private Context context;
     private int resource;
-    private Map<Integer,PurchaseListModel> purchaseMap;
+    private Map<Long,PurchaseListModel> purchaseMap;
     private LayoutInflater inflater;
-    private List<Integer> keys;
+    private List<Long> keys;
 
-    public PurchaseListAdapter(Context context, int resource, Map<Integer,PurchaseListModel> purchaseItems) {
+    public PurchaseListAdapter(Context context, int resource, Map<Long,PurchaseListModel> purchaseItems) {
         this.context = context;
         this.resource = resource;
         this.purchaseMap = purchaseItems;
-        this.keys = new ArrayList<>(purchaseMap.keySet());
+        if (purchaseItems != null) {
+            this.keys = new ArrayList<Long>(purchaseMap.keySet());
+        } else {
+            this.keys = new ArrayList<>();
+        }
         inflater = LayoutInflater.from(context);
     }
 

@@ -29,7 +29,11 @@ public class PurchaseItemAdapter extends BaseAdapter {
         this.context = context;
         this.resource = resource;
         this.purchaseItemsMap = objects;
-        this.keys = new ArrayList<>(purchaseItemsMap.keySet());
+        if (objects != null) {
+            this.keys = new ArrayList<>(objects.keySet());
+        } else {
+            this.keys = new ArrayList<>();
+        }
         inflater = LayoutInflater.from(context);
     }
 
