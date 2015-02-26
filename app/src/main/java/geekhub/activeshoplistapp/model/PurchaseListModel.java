@@ -14,7 +14,7 @@ public class PurchaseListModel {
     private long timeAlarm;
     private long timeCreate;
     private long timeStamp;
-    private List<PurchaseItemModel> purchasesItem;
+    private Map<Integer,PurchaseItemModel> purchasesItem;
 
     public PurchaseListModel(long listId,
                              String listName,
@@ -23,7 +23,7 @@ public class PurchaseListModel {
                              long timeAlarm,
                              long timeCreate,
                              long timeStamp,
-                             List<PurchaseItemModel> purchasesItem) {
+                             Map<Integer,PurchaseItemModel> purchasesItem) {
         this.listId = listId;
         this.listName = listName;
         this.userId = userId;
@@ -50,7 +50,7 @@ public class PurchaseListModel {
         this.timeAlarm = timeAlarm;
     }
 
-    public void setPurchasesItem(List<PurchaseItemModel> purchasesItem) {
+    public void setPurchasesItem(Map<Integer,PurchaseItemModel> purchasesItem) {
         this.purchasesItem = purchasesItem;
     }
 
@@ -82,7 +82,7 @@ public class PurchaseListModel {
         return timeStamp;
     }
 
-    public List<PurchaseItemModel> getPurchasesItem() {
+    public Map<Integer,PurchaseItemModel> getPurchasesItem() {
         return purchasesItem;
     }
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -21,16 +20,15 @@ import geekhub.activeshoplistapp.model.PurchaseListModel;
 public class PurchaseListAdapter extends BaseAdapter {
     private Context context;
     private int resource;
-    private Map<Integer,PurchaseListModel> purchaseLists;
+    private Map<Integer,PurchaseListModel> purchaseMap;
     private LayoutInflater inflater;
     private List<Integer> keys;
 
-    public PurchaseListAdapter(Context context, int resource, Map<Integer,PurchaseListModel> purchaseItems/*, List<Integer> keys*/) {
-        //super(context, resource, keys);
+    public PurchaseListAdapter(Context context, int resource, Map<Integer,PurchaseListModel> purchaseItems) {
         this.context = context;
         this.resource = resource;
-        this.purchaseLists = purchaseItems;
-        this.keys = new ArrayList<>(purchaseLists.keySet());
+        this.purchaseMap = purchaseItems;
+        this.keys = new ArrayList<>(purchaseMap.keySet());
         inflater = LayoutInflater.from(context);
     }
 
@@ -41,17 +39,17 @@ public class PurchaseListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return purchaseLists.get(keys.get(position));
+        return purchaseMap.get(keys.get(position));
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return keys.get(position);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        PurchaseListModel purchaseList = purchaseLists.get(keys.get(position));
+        PurchaseListModel purchaseList = purchaseMap.get(keys.get(position));
         Holder holder;
         if (convertView == null) {
             convertView = inflater.inflate(resource, parent, false);

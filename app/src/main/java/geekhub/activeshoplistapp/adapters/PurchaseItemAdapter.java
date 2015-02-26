@@ -4,34 +4,53 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
+import geekhub.activeshoplistapp.model.PurchaseListModel;
 
 /**
  * Created by rage on 2/22/15.
  */
-public class PurchaseItemAdapter extends ArrayAdapter<PurchaseItemModel> {
+public class PurchaseItemAdapter extends BaseAdapter {
     private Context context;
     private int resource;
-    private List<PurchaseItemModel> purchaseItemLists;
+    private Map<Integer,PurchaseItemModel> purchaseItemsMap;
     private LayoutInflater inflater;
+    private List<Integer> keys;
 
-    public PurchaseItemAdapter(Context context, int resource, List<PurchaseItemModel> objects) {
-        super(context, resource, objects);
+    public PurchaseItemAdapter(Context context, int resource, Map<Integer,PurchaseItemModel> objects) {
         this.context = context;
         this.resource = resource;
-        this.purchaseItemLists = objects;
+        this.purchaseItemsMap = objects;
+        this.keys = new ArrayList<>(purchaseItemsMap.keySet());
         inflater = LayoutInflater.from(context);
     }
 
     @Override
+    public int getCount() {
+        return keys.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return purchaseItemsMap.get(keys.get(position));
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return keys.get(position);
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        PurchaseItemModel purchaseList = purchaseItemLists.get(position);
+        PurchaseItemModel purchaseList = purchaseItemsMap.get(keys.get(position));
         Holder holder;
         if (convertView == null) {
             convertView = inflater.inflate(resource, parent, false);

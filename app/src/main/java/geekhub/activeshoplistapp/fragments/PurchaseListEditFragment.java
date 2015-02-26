@@ -15,15 +15,22 @@ import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
 import geekhub.activeshoplistapp.adapters.PurchaseListAdapter;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
+import geekhub.activeshoplistapp.model.PurchaseListModel;
 
 /**
  * Created by rage on 08.02.15. Create by task: 004
  */
 public class PurchaseListEditFragment extends BaseFragment {
     private static final String TAG = "PurchaseListEditFragment";
+    
     private ListView purchaseListView;
     private View header;
     private View footer;
+    private PurchaseListModel purchaseList;
+
+    public PurchaseListEditFragment() {
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -38,11 +45,7 @@ public class PurchaseListEditFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //Fake data
-        List<PurchaseItemModel> purchaseItemLists = new ArrayList<>();
-        purchaseItemLists.add(new PurchaseItemModel(false,false,false,1,1,"Desc_str",123));
-
-        PurchaseItemAdapter adapter = new PurchaseItemAdapter(getActivity(), R.layout.purchase_edit_item, purchaseItemLists);;
+        PurchaseItemAdapter adapter = new PurchaseItemAdapter(getActivity(), R.layout.purchase_edit_item, purchaseList.getPurchasesItem());;
         purchaseListView.addHeaderView(header);
         purchaseListView.addFooterView(footer);
         purchaseListView.setAdapter(adapter);
