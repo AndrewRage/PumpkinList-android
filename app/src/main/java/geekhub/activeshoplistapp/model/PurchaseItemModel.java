@@ -4,35 +4,29 @@ package geekhub.activeshoplistapp.model;
  * Created by rage on 08.02.15. Create by task: 003
  */
 public class PurchaseItemModel {
-    private boolean isUserGood; //if it a user goods id
     private boolean isBought; //true if bye
     private boolean isCancel; //if user decided not to buy goods -- for synchronize
     private int goodsId;
+    private String goodsLabel;
     private float goodsQuantity;
     private String goodsDescription;
     private long timeStamp;
 
-    public PurchaseItemModel(boolean isUserGood,
-                             boolean isBought,
-                             boolean isCancel,
-                             int goodsId,
-                             float goodsQuantity,
-                             String goodsDescription,
-                             long timeStamp) {
-        this.isUserGood = isUserGood;
+    public PurchaseItemModel() {
+
+    }
+
+    public PurchaseItemModel(boolean isBought, boolean isCancel, int goodsId, String goodsLabel, float goodsQuantity, String goodsDescription, long timeStamp) {
         this.isBought = isBought;
         this.isCancel = isCancel;
         this.goodsId = goodsId;
+        this.goodsLabel = goodsLabel;
         this.goodsQuantity = goodsQuantity;
         this.goodsDescription = goodsDescription;
         this.timeStamp = timeStamp;
     }
 
     //Setter
-    public void setUserGood(boolean isUserGood) {
-        this.isUserGood = isUserGood;
-    }
-
     public void setBought(boolean isBought) {
         this.isBought = isBought;
     }
@@ -43,6 +37,10 @@ public class PurchaseItemModel {
 
     public void setGoodsId(int goodsId) {
         this.goodsId = goodsId;
+    }
+
+    public void setGoodsLabel(String goodsLabel) {
+        this.goodsLabel = goodsLabel;
     }
 
     public void setGoodsQuantity(float goodsQuantity) {
@@ -58,10 +56,6 @@ public class PurchaseItemModel {
     }
 
     //Getter
-    public boolean isUserGood() {
-        return isUserGood;
-    }
-
     public boolean isBought() {
         return isBought;
     }
@@ -72,6 +66,10 @@ public class PurchaseItemModel {
 
     public int getGoodsId() {
         return goodsId;
+    }
+
+    public String getGoodsLabel() {
+        return goodsLabel;
     }
 
     public float getGoodsQuantity() {
