@@ -18,6 +18,25 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     private static final String INTEGER_TYPE = " INTEGER";
     private static final String COMMA_SEP = ",";
 
+    public final static String TABLE_GOODS = "goods";
+    public final static String GOODS_COLUMN_ID = "_id";
+    public final static String GOODS_COLUMN_IS_USER_GOODS = "is_user_goods";
+    public final static String GOODS_COLUMN_LABEL = "good_label";
+    public final static String GOODS_COLUMN_CATEGORY_ID = "good_category_id";
+    public final static String GOODS_COLUMN_MEASURE_ID = "good_measure_id";
+    public final static String GOODS_COLUMN_DESCRIPTION = "goods_description";
+    public final static String SQL_CREATE_GOODS =
+            "CREATE TABLE " + TABLE_GOODS + " (" +
+                    GOODS_COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
+                    GOODS_COLUMN_IS_USER_GOODS + INTEGER_TYPE + COMMA_SEP +
+                    GOODS_COLUMN_LABEL + INTEGER_TYPE + COMMA_SEP +
+                    GOODS_COLUMN_CATEGORY_ID + INTEGER_TYPE + COMMA_SEP +
+                    GOODS_COLUMN_MEASURE_ID + INTEGER_TYPE + COMMA_SEP +
+                    GOODS_COLUMN_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
+                    " );";
+    public final static String SQL_DELETE_GOODS =
+            "DROP TABLE IF EXISTS " + TABLE_GOODS;
+
     public final static String TABLE_PURCHASE_ITEM = "purchase_items";
     public final static String PURCHASE_ITEM_COLUMN_ID = "_id";
     public final static String PURCHASE_ITEM_COLUMN_LIST_ID = "list_id";
@@ -79,6 +98,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(SQL_CREATE_GOODS);
         db.execSQL(SQL_CREATE_PURCHASE_ITEM);
         db.execSQL(SQL_CREATE_PURCHASE_LIST);
     }

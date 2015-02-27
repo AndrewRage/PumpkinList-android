@@ -5,32 +5,42 @@ package geekhub.activeshoplistapp.model;
  */
 public class GoodsItemModel {
     private int goodsId;
+    private boolean isUserGoods;
     private String goodLabel;
-    private byte goodMeasure;
+    private int goodCategoryId;
+    private int goodMeasureId;
+    private String goodsDescription;
 
-    public GoodsItemModel(int goodId, String goodLabel, byte goodMeasure) {
-        this.goodsId = goodId;
+    public GoodsItemModel(int goodsId, boolean isUserGoods, String goodLabel, int goodCategoryId, int goodMeasureId, String goodsDescription) {
+        this.goodsId = goodsId;
+        this.isUserGoods = isUserGoods;
         this.goodLabel = goodLabel;
-        this.goodMeasure = goodMeasure;
+        this.goodCategoryId = goodCategoryId;
+        this.goodMeasureId = goodMeasureId;
+        this.goodsDescription = goodsDescription;
     }
 
     public int getGoodsId() {
         return goodsId;
     }
 
+    public boolean isUserGoods() {
+        return isUserGoods;
+    }
+
     public String getGoodLabel() {
         return goodLabel;
     }
 
-    public byte getGoodMeasure() {
-        return goodMeasure;
+    public int getGoodCategoryId() {
+        return goodCategoryId;
     }
 
-    public void setGoodLabel(String goodLabel) {
-        this.goodLabel = goodLabel;
+    public int getGoodMeasureId() {
+        return goodMeasureId;
     }
 
-    public void setGoodMeasure(byte goodMeasure) {
-        this.goodMeasure = goodMeasure;
+    public String getGoodsDescription() {
+        return goodsDescription;
     }
 }
