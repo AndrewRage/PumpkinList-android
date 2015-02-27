@@ -34,7 +34,7 @@ public class DataBaseHelper {
 
     public long addPurchaseList(long id, PurchaseListModel list) {
         ContentValues values = new ContentValues();
-        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_ID, id);
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID, id);
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME, list.getListName());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID, list.getUserId());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID, list.getShopId());
@@ -52,7 +52,7 @@ public class DataBaseHelper {
     public Map<Long,PurchaseListModel> getPurchaseLists(){
         Map<Long,PurchaseListModel> list = new TreeMap<>();
         String[] projection = {
-                SqlDbHelper.PURCHASE_LIST_COLUMN_ID,
+                SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID,
@@ -72,7 +72,7 @@ public class DataBaseHelper {
         );
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            int indexId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_ID);
+            int indexListId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID);
             int indexName = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME);
             int indexUser = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID);
             int indexShop = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID);
@@ -89,7 +89,7 @@ public class DataBaseHelper {
                     cursor.getLong(indexTimestamp),
                     purchasesItem
             );
-            list.put(cursor.getLong(indexId), listModel);
+            list.put(cursor.getLong(indexListId), listModel);
             cursor.moveToNext();
         }
         return list;

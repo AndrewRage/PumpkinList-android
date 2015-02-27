@@ -17,6 +17,7 @@ import java.util.Map;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.adapters.PurchaseListAdapter;
+import geekhub.activeshoplistapp.helpers.DataBaseHelper;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
@@ -41,6 +42,11 @@ public class PurchaseListMainFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(getActivity());
+        dataBaseHelper.open();
+        ShoppingHelper.getInstance().setPurchaseLists(dataBaseHelper.getPurchaseLists());
+        dataBaseHelper.close();
 
         purchaseLists = ShoppingHelper.getInstance().getPurchaseLists();
 

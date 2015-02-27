@@ -20,13 +20,13 @@ public class ShoppingHelper {
         //===========
         //Fake data!!!
         purchaseLists = new TreeMap<Long,PurchaseListModel>();
-        Map<Integer,PurchaseItemModel> purchasesItem = new TreeMap<>();
+        /*Map<Integer,PurchaseItemModel> purchasesItem = new TreeMap<>();
         purchasesItem.put(1, new PurchaseItemModel(false, false, 1, "", 1, "Desc_str1", 123));
         purchaseLists.put((long) 10, new PurchaseListModel("List1", 1, 1, 0, 0, 0, purchasesItem));
         purchaseLists.put((long) 20, new PurchaseListModel("List2", 1, 1, 0, 0, 0, purchasesItem));
         purchaseLists.put((long) 30, new PurchaseListModel("List3", 1, 1, 0, 0, 0, purchasesItem));
         purchaseLists.put((long) 40, new PurchaseListModel("List4", 1, 1, 0, 0, 0, purchasesItem));
-        purchaseLists.put((long) 50, new PurchaseListModel("List5", 1, 1, 0, 0, 0, purchasesItem));
+        purchaseLists.put((long) 50, new PurchaseListModel("List5", 1, 1, 0, 0, 0, purchasesItem));*/
         //===========
     }
 
@@ -39,5 +39,9 @@ public class ShoppingHelper {
 
     public Map<Long, PurchaseListModel> getPurchaseLists() {
         return purchaseLists;
+    }
+
+    public void setPurchaseLists(Map<Long, PurchaseListModel> purchaseLists) {
+        this.purchaseLists = purchaseLists;
     }
 }

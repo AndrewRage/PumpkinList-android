@@ -25,7 +25,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String SQL_CREATE_FRIENDS =
             "CREATE TABLE " + TABLE_FRIENDS + " (" +
             FRIENDS_COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
-            FRIENDS_COLUMN_NAME + TEXT_TYPE + COMMA_SEP +
+            FRIENDS_COLUMN_NAME + TEXT_TYPE +
             " );";
     public final static String SQL_DELETE_FRIENDS =
             "DROP TABLE IF EXISTS " + TABLE_FRIENDS;
@@ -44,7 +44,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
             GOODS_COLUMN_LABEL + INTEGER_TYPE + COMMA_SEP +
             GOODS_COLUMN_CATEGORY_ID + INTEGER_TYPE + COMMA_SEP +
             GOODS_COLUMN_MEASURE_ID + INTEGER_TYPE + COMMA_SEP +
-            GOODS_COLUMN_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
+            GOODS_COLUMN_DESCRIPTION + TEXT_TYPE +
             " );";
     public final static String SQL_DELETE_GOODS =
             "DROP TABLE IF EXISTS " + TABLE_GOODS;
@@ -69,13 +69,14 @@ public class SqlDbHelper extends SQLiteOpenHelper {
             PURCHASE_ITEM_COLUMN_GOODS_LABEL + TEXT_TYPE + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_GOODS_QUANTITY + REAL_TYPE + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_GOODS_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-            PURCHASE_ITEM_COLUMN_TIMESTAMP + INTEGER_TYPE + COMMA_SEP +
+            PURCHASE_ITEM_COLUMN_TIMESTAMP + INTEGER_TYPE +
             " );";
     public final static String SQL_DELETE_PURCHASE_ITEM =
             "DROP TABLE IF EXISTS " + TABLE_PURCHASE_ITEM;
 
-    public final static String TABLE_PURCHASE_LIST = "purchase_items";
+    public final static String TABLE_PURCHASE_LIST = "purchase_list";
     public final static String PURCHASE_LIST_COLUMN_ID = "_id";
+    public final static String PURCHASE_LIST_COLUMN_LIST_ID = "list_id";
     public final static String PURCHASE_LIST_COLUMN_LIST_NAME = "list_name";
     public final static String PURCHASE_LIST_COLUMN_USER_ID = "user_id";
     public final static String PURCHASE_LIST_COLUMN_SHOP_ID = "shop_id";
@@ -85,12 +86,13 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String SQL_CREATE_PURCHASE_LIST =
             "CREATE TABLE " + TABLE_PURCHASE_LIST + " (" +
             PURCHASE_LIST_COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
+            PURCHASE_LIST_COLUMN_LIST_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_LIST_NAME + TEXT_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_USER_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_SHOP_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_TIME_ALARM + TEXT_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_TIME_CREATE + INTEGER_TYPE + COMMA_SEP +
-            PURCHASE_LIST_COLUMN_TIMESTAMP + INTEGER_TYPE + COMMA_SEP +
+            PURCHASE_LIST_COLUMN_TIMESTAMP + INTEGER_TYPE +
             " );";
     public final static String SQL_DELETE_PURCHASE_LIST =
             "DROP TABLE IF EXISTS " + TABLE_PURCHASE_LIST;
@@ -107,7 +109,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
             SHOPS_COLUMN_NAME + TEXT_TYPE + COMMA_SEP +
             SHOPS_COLUMN_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
             SHOPS_COLUMN_LATITUDE + REAL_TYPE + COMMA_SEP +
-            SHOPS_COLUMN_LONGTITUDE + REAL_TYPE + COMMA_SEP +
+            SHOPS_COLUMN_LONGTITUDE + REAL_TYPE +
             " );";
     public final static String SQL_DELETE_SHOPS =
             "DROP TABLE IF EXISTS " + TABLE_SHOPS;

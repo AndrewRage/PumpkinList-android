@@ -9,6 +9,7 @@ import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.fragments.PurchaseListEditFragment;
 import geekhub.activeshoplistapp.fragments.PurchaseListMainFragment;
 import geekhub.activeshoplistapp.helpers.AppConstants;
+import geekhub.activeshoplistapp.helpers.DataBaseHelper;
 import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 
 /**
