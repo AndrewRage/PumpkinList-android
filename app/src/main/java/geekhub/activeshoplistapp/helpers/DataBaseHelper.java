@@ -139,4 +139,23 @@ public class DataBaseHelper {
         }
         return list;
     }
+
+    public long addPurchaseItem(PurchaseItemModel item, long listId) {
+        ContentValues values = new ContentValues();
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_ITEM_ID, item.getServerId());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID, listId);
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT, item.isBought());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL, item.isCancel());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_ID, item.getGoodsId());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_LABEL, item.getGoodsLabel());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_QUANTITY, item.getGoodsQuantity());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_DESCRIPTION, item.getGoodsDescription());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_TIMESTAMP, item.getTimeStamp());
+        long rawId = database.insert(
+                SqlDbHelper.TABLE_PURCHASE_ITEM,
+                null,
+                values
+        );
+        return rawId;
+    }
 }

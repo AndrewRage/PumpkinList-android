@@ -127,7 +127,7 @@ public class PurchaseListEditFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(goodsLabelEdit.getText().toString())) {
-                    purchaseList.getPurchasesItems().add(new PurchaseItemModel(
+                    PurchaseItemModel item = new PurchaseItemModel(
                             0,
                             0,
                             false,
@@ -136,8 +136,13 @@ public class PurchaseListEditFragment extends BaseFragment {
                             goodsLabelEdit.getText().toString(),
                             0,
                             "",
-                            System.currentTimeMillis()));
+                            System.currentTimeMillis());
+                    purchaseList.getPurchasesItems().add(item);
                     adapter.notifyDataSetChanged();
+
+                    if (isEdit) {
+                        ShoppingHelper.getInstance().addPurchaseItem(item, purchaseList.getDbId());
+                    }
                     goodsLabelEdit.setText(null);
                 }
             }

@@ -45,7 +45,7 @@ public class PurchaseItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        PurchaseItemModel purchaseList = purchaseItems.get(position);
+        PurchaseItemModel purchaseItem = purchaseItems.get(position);
         Holder holder;
         if (convertView == null) {
             convertView = inflater.inflate(resource, parent, false);
@@ -55,7 +55,7 @@ public class PurchaseItemAdapter extends BaseAdapter {
         } else {
             holder = (Holder) convertView.getTag();
         }
-        holder.title.setText("id: " + purchaseList.getGoodsId() + " label: " + purchaseList.getGoodsLabel());
+        holder.title.setText("rawId:" + purchaseItem.getDbId() + "id: " + purchaseItem.getGoodsId() + " label: " + purchaseItem.getGoodsLabel());
         return convertView;
     }
 

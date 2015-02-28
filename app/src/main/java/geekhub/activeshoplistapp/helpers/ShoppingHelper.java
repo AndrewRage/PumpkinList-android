@@ -57,6 +57,9 @@ public class ShoppingHelper {
         dataBaseHelper.open();
         long rawId = dataBaseHelper.addPurchaseList(purchaseList);
         dataBaseHelper.close();
+        for (PurchaseItemModel item: purchaseList.getPurchasesItems()) {
+            addPurchaseItem(item, rawId);
+        }
         purchaseList.setDbId(rawId);
         purchaseLists.add(0, purchaseList);
         return rawId;
@@ -73,5 +76,13 @@ public class ShoppingHelper {
         dataBaseHelper.open();
         dataBaseHelper.updatePurchaseList(purchaseList);
         dataBaseHelper.close();
+    }
+
+    public long addPurchaseItem(PurchaseItemModel purchaseItem, long listId) {
+        dataBaseHelper.open();
+        long rawId = dataBaseHelper.addPurchaseItem(purchaseItem, listId);
+        dataBaseHelper.close();
+        purchaseItem.setDbId(rawId);
+        return rawId;
     }
 }
