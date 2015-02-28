@@ -122,7 +122,7 @@ public class DataBaseHelper {
             int indexAlarm = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM);
             int indexCreate = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE);
             int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP);
-            Map<Integer,PurchaseItemModel> purchasesItem = new TreeMap<>();
+            List<PurchaseItemModel> purchasesItem = new ArrayList<>();
             PurchaseListModel listModel = new PurchaseListModel(
                     cursor.getInt(indexId),
                     cursor.getLong(indexServerId),

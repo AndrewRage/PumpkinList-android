@@ -1,7 +1,6 @@
 package geekhub.activeshoplistapp.model;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by rage on 08.02.15. Create by task: 003
@@ -15,7 +14,7 @@ public class PurchaseListModel {
     private long timeAlarm;
     private long timeCreate;
     private long timeStamp;
-    private Map<Integer,PurchaseItemModel> purchasesItem;
+    private List<PurchaseItemModel> purchasesItems;
 
     public PurchaseListModel() {
 
@@ -29,7 +28,7 @@ public class PurchaseListModel {
                              long timeAlarm,
                              long timeCreate,
                              long timeStamp,
-                             Map<Integer, PurchaseItemModel> purchasesItem) {
+                             List<PurchaseItemModel> purchasesItems) {
         this.dbId = dbId;
         this.serverId = serverId;
         this.listName = listName;
@@ -38,7 +37,7 @@ public class PurchaseListModel {
         this.timeAlarm = timeAlarm;
         this.timeCreate = timeCreate;
         this.timeStamp = timeStamp;
-        this.purchasesItem = purchasesItem;
+        this.purchasesItems = purchasesItems;
     }
 
     public long getDbId() {
@@ -105,11 +104,11 @@ public class PurchaseListModel {
         this.timeStamp = timeStamp;
     }
 
-    public Map<Integer, PurchaseItemModel> getPurchasesItem() {
-        return purchasesItem;
+    public List<PurchaseItemModel> getPurchasesItems() {
+        return purchasesItems;
     }
 
-    public void setPurchasesItem(Map<Integer, PurchaseItemModel> purchasesItem) {
-        this.purchasesItem = purchasesItem;
+    public void setPurchasesItems(List<PurchaseItemModel> purchasesItems) {
+        this.purchasesItems = purchasesItems;
     }
 }

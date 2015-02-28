@@ -7,13 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
-import geekhub.activeshoplistapp.model.PurchaseListModel;
 
 /**
  * Created by rage on 2/22/15.
@@ -21,40 +18,34 @@ import geekhub.activeshoplistapp.model.PurchaseListModel;
 public class PurchaseItemAdapter extends BaseAdapter {
     private Context context;
     private int resource;
-    private Map<Integer,PurchaseItemModel> purchaseItemsMap;
+    private List<PurchaseItemModel> purchaseItems;
     private LayoutInflater inflater;
-    private List<Integer> keys;
 
-    public PurchaseItemAdapter(Context context, int resource, Map<Integer,PurchaseItemModel> objects) {
+    public PurchaseItemAdapter(Context context, int resource, List<PurchaseItemModel> objects) {
         this.context = context;
         this.resource = resource;
-        this.purchaseItemsMap = objects;
-        if (objects != null) {
-            this.keys = new ArrayList<>(objects.keySet());
-        } else {
-            this.keys = new ArrayList<>();
-        }
+        this.purchaseItems = objects;
         inflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getCount() {
-        return keys.size();
+        return purchaseItems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return purchaseItemsMap.get(keys.get(position));
+        return purchaseItems.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return keys.get(position);
+        return purchaseItems.get(position).getServerId();
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        PurchaseItemModel purchaseList = purchaseItemsMap.get(keys.get(position));
+        PurchaseItemModel purchaseList = purchaseItems.get(position);
         Holder holder;
         if (convertView == null) {
             convertView = inflater.inflate(resource, parent, false);
@@ -64,7 +55,7 @@ public class PurchaseItemAdapter extends BaseAdapter {
         } else {
             holder = (Holder) convertView.getTag();
         }
-        holder.title.setText(purchaseList.getGoodsId() + purchaseList.getGoodsDescription());
+        holder.title.setText("id: " + purchaseList.getGoodsId() + " label: " + purchaseList.getGoodsLabel());
         return convertView;
     }
 

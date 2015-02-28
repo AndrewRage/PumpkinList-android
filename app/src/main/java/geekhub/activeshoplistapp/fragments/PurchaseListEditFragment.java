@@ -1,19 +1,21 @@
 package geekhub.activeshoplistapp.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
+import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
 
 /**
@@ -31,6 +33,8 @@ public class PurchaseListEditFragment extends BaseFragment {
     private View addNewListButton;
     private View updateListButton;
     private View deleteListButton;
+    private EditText goodsLabelEdit;
+    private View addItemButton;
     private boolean isEdit;
 
     public static PurchaseListEditFragment newInstance(int purchaseListId) {
@@ -55,6 +59,8 @@ public class PurchaseListEditFragment extends BaseFragment {
         addNewListButton = footer.findViewById(R.id.button_new_list);
         updateListButton = footer.findViewById(R.id.button_update_list);
         deleteListButton = footer.findViewById(R.id.button_delete_list);
+        goodsLabelEdit = (EditText) header.findViewById(R.id.edit_goods_label);
+        addItemButton = header.findViewById(R.id.button_goods_add);
         return view;
     }
 
@@ -70,11 +76,13 @@ public class PurchaseListEditFragment extends BaseFragment {
             isEdit = true;
         } else {
             purchaseList = new PurchaseListModel();
+            List<PurchaseItemModel> purchaseItems = new ArrayList<>();
+            purchaseList.setPurchasesItems(purchaseItems);
             updateListButton.setVisibility(View.GONE);
             isEdit = false;
         }
 
-        PurchaseItemAdapter adapter = new PurchaseItemAdapter(getActivity(), R.layout.purchase_edit_item, purchaseList.getPurchasesItem());;
+        final PurchaseItemAdapter adapter = new PurchaseItemAdapter(getActivity(), R.layout.purchase_edit_item, purchaseList.getPurchasesItems());;
         purchaseListView.addHeaderView(header);
         purchaseListView.addFooterView(footer);
         purchaseListView.setAdapter(adapter);
@@ -112,6 +120,26 @@ public class PurchaseListEditFragment extends BaseFragment {
                 purchaseList.setListName(listNameEdit.getText().toString());
                 ShoppingHelper.getInstance().updatePurchaseList(purchaseList);
                 getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+        addItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(goodsLabelEdit.getText().toString())) {
+                    purchaseList.getPurchasesItems().add(new PurchaseItemModel(
+                            0,
+                            0,
+                            false,
+                            false,
+                            0,
+                            goodsLabelEdit.getText().toString(),
+                            0,
+                            "",
+                            System.currentTimeMillis()));
+                    adapter.notifyDataSetChanged();
+                    goodsLabelEdit.setText(null);
+                }
             }
         });
     }

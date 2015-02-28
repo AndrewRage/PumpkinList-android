@@ -22,7 +22,6 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String COLUMN_ID = "_id";
 
     public final static String TABLE_FRIENDS = "friends";
-    public final static String FRIENDS_COLUMN_ID = "_id";
     public final static String FRIENDS_COLUMN_NAME = "user_name";
     public final static String SQL_CREATE_FRIENDS =
             "CREATE TABLE " + TABLE_FRIENDS + " (" +
@@ -33,7 +32,6 @@ public class SqlDbHelper extends SQLiteOpenHelper {
             "DROP TABLE IF EXISTS " + TABLE_FRIENDS;
 
     public final static String TABLE_GOODS = "goods";
-    public final static String GOODS_COLUMN_ID = "_id";
     public final static String GOODS_COLUMN_IS_USER_GOODS = "is_user_goods";
     public final static String GOODS_COLUMN_LABEL = "good_label";
     public final static String GOODS_COLUMN_CATEGORY_ID = "good_category_id";
@@ -52,7 +50,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
             "DROP TABLE IF EXISTS " + TABLE_GOODS;
 
     public final static String TABLE_PURCHASE_ITEM = "purchase_items";
-    public final static String PURCHASE_ITEM_COLUMN_ID = "_id";
+    public final static String PURCHASE_ITEM_COLUMN_ITEM_ID = "item_id";
     public final static String PURCHASE_ITEM_COLUMN_LIST_ID = "list_id";
     public final static String PURCHASE_ITEM_COLUMN_IS_BOUGHT = "is_bought";
     public final static String PURCHASE_ITEM_COLUMN_IS_CANCEL = "is_cancel";
@@ -64,6 +62,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String SQL_CREATE_PURCHASE_ITEM =
             "CREATE TABLE " + TABLE_PURCHASE_ITEM + " (" +
             COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
+            PURCHASE_ITEM_COLUMN_ITEM_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_LIST_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_IS_BOUGHT + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_IS_CANCEL + INTEGER_TYPE + COMMA_SEP +
@@ -100,7 +99,6 @@ public class SqlDbHelper extends SQLiteOpenHelper {
             "DROP TABLE IF EXISTS " + TABLE_PURCHASE_LIST;
 
     public final static String TABLE_SHOPS = "shops";
-    public final static String SHOPS_COLUMN_ID = "_id";
     public final static String SHOPS_COLUMN_NAME = "shop_name";
     public final static String SHOPS_COLUMN_DESCRIPTION = "shop_description";
     public final static String SHOPS_COLUMN_LATITUDE = "latitude";
