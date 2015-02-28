@@ -29,7 +29,7 @@ public class PurchaseListMainFragment extends BaseFragment {
     private static final String TAG = "PurchaseListMainFragment";
 
     private GridView purchaseView;
-    private Map<Long,PurchaseListModel> purchaseLists;
+    private List<PurchaseListModel> purchaseLists;
     private OnPurchaseListMainFragmentListener purchaseListMainFragmentListener;
 
     @Override
@@ -43,19 +43,14 @@ public class PurchaseListMainFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(getActivity());
-        dataBaseHelper.open();
-        ShoppingHelper.getInstance().setPurchaseLists(dataBaseHelper.getPurchaseLists());
-        dataBaseHelper.close();
-
         purchaseLists = ShoppingHelper.getInstance().getPurchaseLists();
 
-        final PurchaseListAdapter adapter = new PurchaseListAdapter(getActivity(), R.layout.purchase_view_item, purchaseLists/*, new ArrayList<>(purchaseLists.keySet())*/);
+        final PurchaseListAdapter adapter = new PurchaseListAdapter(getActivity(), R.layout.purchase_view_item, purchaseLists);
         purchaseView.setAdapter(adapter);
         purchaseView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                purchaseListMainFragmentListener.onPurchaseListMainFragmentClickListener(adapter.getItemId(position));
+                purchaseListMainFragmentListener.onPurchaseListMainFragmentClickListener(position);
             }
         });
 
@@ -82,6 +77,6 @@ public class PurchaseListMainFragment extends BaseFragment {
 
     public interface OnPurchaseListMainFragmentListener {
         public void onPurchaseListMainFragmentClickListener();
-        public void onPurchaseListMainFragmentClickListener(long id);
+        public void onPurchaseListMainFragmentClickListener(int id);
     }
 }

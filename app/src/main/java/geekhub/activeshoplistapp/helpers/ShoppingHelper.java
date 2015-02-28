@@ -1,5 +1,7 @@
 package geekhub.activeshoplistapp.helpers;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,34 +16,40 @@ import geekhub.activeshoplistapp.model.PurchaseListModel;
  */
 public class ShoppingHelper {
     private static ShoppingHelper shoppingHelper;
-    private Map<Long,PurchaseListModel> purchaseLists;
+    private List<PurchaseListModel> purchaseLists;
+    private DataBaseHelper dataBaseHelper;
 
-    private ShoppingHelper() {
+    private ShoppingHelper(Context context) {
+        dataBaseHelper = new DataBaseHelper(context);
+
         //===========
         //Fake data!!!
-        purchaseLists = new TreeMap<Long,PurchaseListModel>();
-        /*Map<Integer,PurchaseItemModel> purchasesItem = new TreeMap<>();
+        /*purchaseLists = new ArrayList<>();
+        Map<Integer,PurchaseItemModel> purchasesItem = new TreeMap<>();
         purchasesItem.put(1, new PurchaseItemModel(false, false, 1, "", 1, "Desc_str1", 123));
-        purchaseLists.put((long) 10, new PurchaseListModel("List1", 1, 1, 0, 0, 0, purchasesItem));
-        purchaseLists.put((long) 20, new PurchaseListModel("List2", 1, 1, 0, 0, 0, purchasesItem));
-        purchaseLists.put((long) 30, new PurchaseListModel("List3", 1, 1, 0, 0, 0, purchasesItem));
-        purchaseLists.put((long) 40, new PurchaseListModel("List4", 1, 1, 0, 0, 0, purchasesItem));
-        purchaseLists.put((long) 50, new PurchaseListModel("List5", 1, 1, 0, 0, 0, purchasesItem));*/
+        purchaseLists.add( new PurchaseListModel(1, 1,"List1", 1, 1, 0, 0, 0, purchasesItem));
+        purchaseLists.add( new PurchaseListModel(2, 2,"List2", 1, 1, 0, 0, 0, purchasesItem));
+        purchaseLists.add( new PurchaseListModel(3, 3,"List3", 1, 1, 0, 0, 0, purchasesItem));
+        purchaseLists.add( new PurchaseListModel(4, 4,"List4", 1, 1, 0, 0, 0, purchasesItem));*/
         //===========
     }
-
-    public static ShoppingHelper getInstance() {
+    public static ShoppingHelper newInstance(Context context) {
         if (shoppingHelper == null) {
-            shoppingHelper = new ShoppingHelper();
+            shoppingHelper = new ShoppingHelper(context);
         }
         return shoppingHelper;
     }
 
-    public Map<Long, PurchaseListModel> getPurchaseLists() {
-        return purchaseLists;
+    public static ShoppingHelper getInstance() {
+        return shoppingHelper;
     }
 
-    public void setPurchaseLists(Map<Long, PurchaseListModel> purchaseLists) {
-        this.purchaseLists = purchaseLists;
+    public List<PurchaseListModel> getPurchaseLists() {
+        if (purchaseLists == null) {
+            dataBaseHelper.open();
+            purchaseLists = dataBaseHelper.getPurchaseLists();
+            dataBaseHelper.close();
+        }
+        return purchaseLists;
     }
 }

@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
@@ -20,40 +18,34 @@ import geekhub.activeshoplistapp.model.PurchaseListModel;
 public class PurchaseListAdapter extends BaseAdapter {
     private Context context;
     private int resource;
-    private Map<Long,PurchaseListModel> purchaseMap;
+    private List<PurchaseListModel> purchaseLists;
     private LayoutInflater inflater;
-    private List<Long> keys;
 
-    public PurchaseListAdapter(Context context, int resource, Map<Long,PurchaseListModel> purchaseItems) {
+    public PurchaseListAdapter(Context context, int resource, List<PurchaseListModel> purchaseLists) {
         this.context = context;
         this.resource = resource;
-        this.purchaseMap = purchaseItems;
-        if (purchaseItems != null) {
-            this.keys = new ArrayList<Long>(purchaseMap.keySet());
-        } else {
-            this.keys = new ArrayList<>();
-        }
+        this.purchaseLists = purchaseLists;
         inflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getCount() {
-        return keys.size();
+        return purchaseLists.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return purchaseMap.get(keys.get(position));
+        return purchaseLists.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return keys.get(position);
+        return purchaseLists.get(position).getServerId();
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        PurchaseListModel purchaseList = purchaseMap.get(keys.get(position));
+        PurchaseListModel purchaseList = purchaseLists.get(position);
         Holder holder;
         if (convertView == null) {
             convertView = inflater.inflate(resource, parent, false);

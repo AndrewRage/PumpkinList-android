@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
+import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 
 /**
@@ -20,5 +21,6 @@ public class AppClass extends Application {
         super.onCreate();
         SharedPrefHelper.getInstance(getApplicationContext());
         SqlDbHelper.getInstance(getApplicationContext());
+        ShoppingHelper.newInstance(getApplicationContext());
     }
 }

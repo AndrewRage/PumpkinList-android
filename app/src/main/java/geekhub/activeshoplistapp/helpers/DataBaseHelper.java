@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -49,9 +51,10 @@ public class DataBaseHelper {
         return rawId;
     }
 
-    public Map<Long,PurchaseListModel> getPurchaseLists(){
-        Map<Long,PurchaseListModel> list = new TreeMap<>();
+    public List<PurchaseListModel> getPurchaseLists(){
+        List<PurchaseListModel> list = new ArrayList<>();
         String[] projection = {
+                SqlDbHelper.PURCHASE_LIST_COLUMN_ID,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID,
@@ -72,7 +75,8 @@ public class DataBaseHelper {
         );
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            int indexListId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID);
+            int indexId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_ID);
+            int indexServerId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID);
             int indexName = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME);
             int indexUser = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID);
             int indexShop = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID);
@@ -81,6 +85,8 @@ public class DataBaseHelper {
             int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP);
             Map<Integer,PurchaseItemModel> purchasesItem = new TreeMap<>();
             PurchaseListModel listModel = new PurchaseListModel(
+                    cursor.getInt(indexId),
+                    cursor.getLong(indexServerId),
                     cursor.getString(indexName),
                     cursor.getInt(indexUser),
                     cursor.getInt(indexShop),
@@ -89,7 +95,7 @@ public class DataBaseHelper {
                     cursor.getLong(indexTimestamp),
                     purchasesItem
             );
-            list.put(cursor.getLong(indexListId), listModel);
+            list.add(listModel);
             cursor.moveToNext();
         }
         return list;

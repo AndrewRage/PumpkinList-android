@@ -25,10 +25,10 @@ public class PurchaseListEditFragment extends BaseFragment {
     private View footer;
     private PurchaseListModel purchaseList;
 
-    public static PurchaseListEditFragment newInstance(long purchaseListId) {
+    public static PurchaseListEditFragment newInstance(int purchaseListId) {
         PurchaseListEditFragment fragment = new PurchaseListEditFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG_LIST_ID, purchaseListId);
+        args.putInt(ARG_LIST_ID, purchaseListId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,7 +51,7 @@ public class PurchaseListEditFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (getArguments() != null) {
-            Long id = getArguments().getLong(ARG_LIST_ID);
+            int id = getArguments().getInt(ARG_LIST_ID);
             purchaseList = ShoppingHelper.getInstance().getPurchaseLists().get(id);
         } else {
             purchaseList = new PurchaseListModel();

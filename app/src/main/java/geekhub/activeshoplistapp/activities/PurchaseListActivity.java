@@ -65,7 +65,7 @@ public class PurchaseListActivity extends BaseActivity implements PurchaseListMa
     }
 
     @Override
-    public void onPurchaseListMainFragmentClickListener(long id) {
+    public void onPurchaseListMainFragmentClickListener(int id) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, PurchaseListEditFragment.newInstance(id))
                 .addToBackStack(AppConstants.BACK_STACK_PURCHASE)
