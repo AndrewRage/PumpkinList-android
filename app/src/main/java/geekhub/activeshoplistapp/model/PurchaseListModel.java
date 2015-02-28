@@ -7,7 +7,7 @@ import java.util.Map;
  * Created by rage on 08.02.15. Create by task: 003
  */
 public class PurchaseListModel {
-    private int dbId;
+    private long dbId;
     private long serverId;
     private String listName;
     private int userId;
@@ -21,7 +21,7 @@ public class PurchaseListModel {
 
     }
 
-    public PurchaseListModel(int dbId,
+    public PurchaseListModel(long dbId,
                              long serverId,
                              String listName,
                              int userId,
@@ -41,11 +41,11 @@ public class PurchaseListModel {
         this.purchasesItem = purchasesItem;
     }
 
-    public int getDbId() {
+    public long getDbId() {
         return dbId;
     }
 
-    public void setDbId(int dbId) {
+    public void setDbId(long dbId) {
         this.dbId = dbId;
     }
 

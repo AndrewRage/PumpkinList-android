@@ -52,4 +52,20 @@ public class ShoppingHelper {
         }
         return purchaseLists;
     }
+
+    public long addPurchaseList(PurchaseListModel purchaseList) {
+        dataBaseHelper.open();
+        long rawId = dataBaseHelper.addPurchaseList(purchaseList);
+        dataBaseHelper.close();
+        purchaseList.setDbId(rawId);
+        purchaseLists.add(0, purchaseList);
+        return rawId;
+    }
+
+    public void deletePurchaseList(PurchaseListModel purchaseList) {
+        dataBaseHelper.open();
+        dataBaseHelper.deletePurchaseList(purchaseList.getDbId());
+        dataBaseHelper.close();
+        purchaseLists.remove(purchaseList);
+    }
 }

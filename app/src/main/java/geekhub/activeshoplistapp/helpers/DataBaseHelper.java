@@ -34,9 +34,9 @@ public class DataBaseHelper {
         dbHelper.close();
     }
 
-    public long addPurchaseList(long id, PurchaseListModel list) {
+    public long addPurchaseList(PurchaseListModel list) {
         ContentValues values = new ContentValues();
-        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID, id);
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID, list.getServerId());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME, list.getListName());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID, list.getUserId());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID, list.getShopId());
@@ -49,6 +49,14 @@ public class DataBaseHelper {
                 values
         );
         return rawId;
+    }
+
+    public void deletePurchaseList(long dbId) {
+        database.delete(
+                SqlDbHelper.TABLE_PURCHASE_LIST,
+                SqlDbHelper.PURCHASE_LIST_COLUMN_ID + " = " + dbId,
+                null
+        );
     }
 
     public List<PurchaseListModel> getPurchaseLists(){

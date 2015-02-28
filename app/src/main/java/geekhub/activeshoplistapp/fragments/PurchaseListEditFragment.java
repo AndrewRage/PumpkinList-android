@@ -84,7 +84,7 @@ public class PurchaseListEditFragment extends BaseFragment {
                     listNameEdit.setText(R.string.purchase_edit_new_list_default);
                 }
                 purchaseList.setListName(listNameEdit.getText().toString());
-                ShoppingHelper.getInstance().getPurchaseLists().add(purchaseList);
+                ShoppingHelper.getInstance().addPurchaseList(purchaseList);
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
@@ -93,7 +93,7 @@ public class PurchaseListEditFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (isEdit) {
-                    ShoppingHelper.getInstance().getPurchaseLists().remove(purchaseList);
+                    ShoppingHelper.getInstance().deletePurchaseList(purchaseList);
                 }
                 getActivity().getSupportFragmentManager().popBackStack();
             }
