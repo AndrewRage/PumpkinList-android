@@ -19,12 +19,14 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     private static final String REAL_TYPE = " REAL";
     private static final String COMMA_SEP = ",";
 
+    public final static String COLUMN_ID = "_id";
+
     public final static String TABLE_FRIENDS = "friends";
     public final static String FRIENDS_COLUMN_ID = "_id";
     public final static String FRIENDS_COLUMN_NAME = "user_name";
     public final static String SQL_CREATE_FRIENDS =
             "CREATE TABLE " + TABLE_FRIENDS + " (" +
-            FRIENDS_COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
+            COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
             FRIENDS_COLUMN_NAME + TEXT_TYPE +
             " );";
     public final static String SQL_DELETE_FRIENDS =
@@ -39,7 +41,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String GOODS_COLUMN_DESCRIPTION = "goods_description";
     public final static String SQL_CREATE_GOODS =
             "CREATE TABLE " + TABLE_GOODS + " (" +
-            GOODS_COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
+            COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
             GOODS_COLUMN_IS_USER_GOODS + INTEGER_TYPE + COMMA_SEP +
             GOODS_COLUMN_LABEL + INTEGER_TYPE + COMMA_SEP +
             GOODS_COLUMN_CATEGORY_ID + INTEGER_TYPE + COMMA_SEP +
@@ -61,7 +63,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String PURCHASE_ITEM_COLUMN_TIMESTAMP = "timestamp";
     public final static String SQL_CREATE_PURCHASE_ITEM =
             "CREATE TABLE " + TABLE_PURCHASE_ITEM + " (" +
-            PURCHASE_ITEM_COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
+            COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_LIST_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_IS_BOUGHT + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_IS_CANCEL + INTEGER_TYPE + COMMA_SEP +
@@ -85,7 +87,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String PURCHASE_LIST_COLUMN_TIMESTAMP = "timestamp";
     public final static String SQL_CREATE_PURCHASE_LIST =
             "CREATE TABLE " + TABLE_PURCHASE_LIST + " (" +
-            PURCHASE_LIST_COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
+            COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
             PURCHASE_LIST_COLUMN_LIST_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_LIST_NAME + TEXT_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_USER_ID + INTEGER_TYPE + COMMA_SEP +
@@ -105,7 +107,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String SHOPS_COLUMN_LONGTITUDE = "longitude";
     public final static String SQL_CREATE_SHOPS =
             "CREATE TABLE " + TABLE_SHOPS + " (" +
-            SHOPS_COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
+            COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
             SHOPS_COLUMN_NAME + TEXT_TYPE + COMMA_SEP +
             SHOPS_COLUMN_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
             SHOPS_COLUMN_LATITUDE + REAL_TYPE + COMMA_SEP +

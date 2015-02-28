@@ -24,6 +24,7 @@
     <string name="purchase_edit_new_list_hint">Enter new list name</string>
     <string name="purchase_edit_new_list_default">New list</string>
     <string name="purchase_edit_create_new_list">Create</string>
+    <string name="purchase_edit_update_list">Update</string>
     <string name="purchase_edit_delete_list">Delete</string>
 
 </resources>

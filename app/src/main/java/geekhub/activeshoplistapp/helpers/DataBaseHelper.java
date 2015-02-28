@@ -34,6 +34,18 @@ public class DataBaseHelper {
         dbHelper.close();
     }
 
+    public int universalUpdateColumn(String table, String column, String val, long id) {
+        ContentValues values = new ContentValues();
+        values.put(column, val);
+        int update = database.update(
+                table,
+                values,
+                SqlDbHelper.COLUMN_ID + " = " + id,
+                null
+        );
+        return update;
+    }
+
     public long addPurchaseList(PurchaseListModel list) {
         ContentValues values = new ContentValues();
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID, list.getServerId());
@@ -51,12 +63,31 @@ public class DataBaseHelper {
         return rawId;
     }
 
-    public void deletePurchaseList(long dbId) {
-        database.delete(
+    public int updatePurchaseList(PurchaseListModel list) {
+        ContentValues values = new ContentValues();
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID, list.getServerId());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME, list.getListName());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID, list.getUserId());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID, list.getShopId());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM, list.getTimeAlarm());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE, list.getTimeCreate());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP, list.getTimeStamp());
+        int update = database.update(
+                SqlDbHelper.TABLE_PURCHASE_LIST,
+                values,
+                SqlDbHelper.PURCHASE_LIST_COLUMN_ID + " = " + list.getDbId(),
+                null
+        );
+        return update;
+    }
+
+    public int deletePurchaseList(long dbId) {
+        int count = database.delete(
                 SqlDbHelper.TABLE_PURCHASE_LIST,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_ID + " = " + dbId,
                 null
         );
+        return count;
     }
 
     public List<PurchaseListModel> getPurchaseLists(){

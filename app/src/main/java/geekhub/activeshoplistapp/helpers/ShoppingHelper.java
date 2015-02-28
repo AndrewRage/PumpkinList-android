@@ -68,4 +68,10 @@ public class ShoppingHelper {
         dataBaseHelper.close();
         purchaseLists.remove(purchaseList);
     }
+
+    public void updatePurchaseList(PurchaseListModel purchaseList) {
+        dataBaseHelper.open();
+        dataBaseHelper.updatePurchaseList(purchaseList);
+        dataBaseHelper.close();
+    }
 }

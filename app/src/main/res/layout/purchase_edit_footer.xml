@@ -9,7 +9,7 @@
         android:id="@+id/edit_list_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="4"
+        android:layout_weight="3"
         android:hint="@string/purchase_edit_new_list_hint"/>
 
     <Button
@@ -18,6 +18,13 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/purchase_edit_create_new_list"/>
+
+    <Button
+        android:id="@+id/button_update_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/purchase_edit_update_list"/>
 
     <Button
         android:id="@+id/button_delete_list"

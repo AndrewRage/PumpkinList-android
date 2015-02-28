@@ -29,6 +29,7 @@ public class PurchaseListEditFragment extends BaseFragment {
     private PurchaseListModel purchaseList;
     private EditText listNameEdit;
     private View addNewListButton;
+    private View updateListButton;
     private View deleteListButton;
     private boolean isEdit;
 
@@ -52,6 +53,7 @@ public class PurchaseListEditFragment extends BaseFragment {
         footer = inflater.inflate(R.layout.purchase_edit_footer, purchaseListView, false);
         listNameEdit = (EditText) footer.findViewById(R.id.edit_list_name);
         addNewListButton = footer.findViewById(R.id.button_new_list);
+        updateListButton = footer.findViewById(R.id.button_update_list);
         deleteListButton = footer.findViewById(R.id.button_delete_list);
         return view;
     }
@@ -68,6 +70,7 @@ public class PurchaseListEditFragment extends BaseFragment {
             isEdit = true;
         } else {
             purchaseList = new PurchaseListModel();
+            updateListButton.setVisibility(View.GONE);
             isEdit = false;
         }
 
@@ -95,6 +98,19 @@ public class PurchaseListEditFragment extends BaseFragment {
                 if (isEdit) {
                     ShoppingHelper.getInstance().deletePurchaseList(purchaseList);
                 }
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+        updateListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard();
+                if (TextUtils.isEmpty(listNameEdit.getText())) {
+                    listNameEdit.setText(R.string.purchase_edit_new_list_default);
+                }
+                purchaseList.setListName(listNameEdit.getText().toString());
+                ShoppingHelper.getInstance().updatePurchaseList(purchaseList);
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
