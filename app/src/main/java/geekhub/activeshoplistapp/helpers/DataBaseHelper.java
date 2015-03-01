@@ -156,6 +156,25 @@ public class DataBaseHelper {
         return rawId;
     }
 
+    public long updatePurchaseItem(PurchaseItemModel item) {
+        ContentValues values = new ContentValues();
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_ITEM_ID, item.getServerId());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT, item.isBought() ? 1 : 0);
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL, item.isCancel() ? 1 : 0);
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_ID, item.getGoodsId());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_LABEL, item.getGoodsLabel());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_QUANTITY, item.getGoodsQuantity());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_DESCRIPTION, item.getGoodsDescription());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_TIMESTAMP, item.getTimeStamp());
+        long rawId = database.update(
+                SqlDbHelper.TABLE_PURCHASE_ITEM,
+                values,
+                SqlDbHelper.COLUMN_ID + " = " + item.getDbId(),
+                null
+        );
+        return rawId;
+    }
+
     public int deletePurchaseItem(long listDbId) {
         int count = database.delete(
                 SqlDbHelper.TABLE_PURCHASE_ITEM,

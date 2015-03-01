@@ -57,6 +57,7 @@ public class ShoppingHelper {
     }
 
     public long addPurchaseList(PurchaseListModel purchaseList) {
+        purchaseList.setTimeCreate(System.currentTimeMillis());
         dataBaseHelper.open();
         long rawId = dataBaseHelper.addPurchaseList(purchaseList);
         dataBaseHelper.close();
@@ -77,6 +78,7 @@ public class ShoppingHelper {
     }
 
     public void updatePurchaseList(PurchaseListModel purchaseList) {
+        purchaseList.setTimeStamp(0);
         dataBaseHelper.open();
         dataBaseHelper.updatePurchaseList(purchaseList);
         dataBaseHelper.close();
@@ -91,15 +93,9 @@ public class ShoppingHelper {
     }
 
     public void updatePurchaseItem(PurchaseItemModel item) {
-        boolean status = item.isBought();
+        item.setTimeStamp(0);
         dataBaseHelper.open();
-        dataBaseHelper.universalUpdateColumn(
-                SqlDbHelper.TABLE_PURCHASE_ITEM,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT,
-                status ? String.valueOf("0") : String.valueOf("1"),
-                item.getDbId()
-        );
+        dataBaseHelper.updatePurchaseItem(item);
         dataBaseHelper.close();
-        item.setBought(!status);
     }
 }
