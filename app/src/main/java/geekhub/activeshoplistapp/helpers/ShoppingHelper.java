@@ -48,6 +48,9 @@ public class ShoppingHelper {
         if (purchaseLists == null) {
             dataBaseHelper.open();
             purchaseLists = dataBaseHelper.getPurchaseLists();
+            for (PurchaseListModel list: purchaseLists) {
+                list.setPurchasesItems(dataBaseHelper.getPurchaseItems(list.getDbId()));
+            }
             dataBaseHelper.close();
         }
         return purchaseLists;
@@ -68,6 +71,7 @@ public class ShoppingHelper {
     public void deletePurchaseList(PurchaseListModel purchaseList) {
         dataBaseHelper.open();
         dataBaseHelper.deletePurchaseList(purchaseList.getDbId());
+        dataBaseHelper.deletePurchaseItem(purchaseList.getDbId());
         dataBaseHelper.close();
         purchaseLists.remove(purchaseList);
     }

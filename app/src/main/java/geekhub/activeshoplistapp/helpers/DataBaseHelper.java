@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
@@ -75,7 +73,7 @@ public class DataBaseHelper {
         int update = database.update(
                 SqlDbHelper.TABLE_PURCHASE_LIST,
                 values,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_ID + " = " + list.getDbId(),
+                SqlDbHelper.COLUMN_ID + " = " + list.getDbId(),
                 null
         );
         return update;
@@ -84,7 +82,7 @@ public class DataBaseHelper {
     public int deletePurchaseList(long dbId) {
         int count = database.delete(
                 SqlDbHelper.TABLE_PURCHASE_LIST,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_ID + " = " + dbId,
+                SqlDbHelper.COLUMN_ID + " = " + dbId,
                 null
         );
         return count;
@@ -93,7 +91,7 @@ public class DataBaseHelper {
     public List<PurchaseListModel> getPurchaseLists(){
         List<PurchaseListModel> list = new ArrayList<>();
         String[] projection = {
-                SqlDbHelper.PURCHASE_LIST_COLUMN_ID,
+                SqlDbHelper.COLUMN_ID,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID,
@@ -102,7 +100,7 @@ public class DataBaseHelper {
                 SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP,
         };
-        String orderBy = SqlDbHelper.PURCHASE_LIST_COLUMN_ID + " DESC";
+        String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
         Cursor cursor = database.query(
                 SqlDbHelper.TABLE_PURCHASE_LIST,
                 projection,
@@ -114,7 +112,7 @@ public class DataBaseHelper {
         );
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            int indexId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_ID);
+            int indexId = cursor.getColumnIndex(SqlDbHelper.COLUMN_ID);
             int indexServerId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID);
             int indexName = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME);
             int indexUser = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID);
@@ -122,9 +120,8 @@ public class DataBaseHelper {
             int indexAlarm = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM);
             int indexCreate = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE);
             int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP);
-            List<PurchaseItemModel> purchasesItem = new ArrayList<>();
             PurchaseListModel listModel = new PurchaseListModel(
-                    cursor.getInt(indexId),
+                    cursor.getLong(indexId),
                     cursor.getLong(indexServerId),
                     cursor.getString(indexName),
                     cursor.getInt(indexUser),
@@ -132,7 +129,7 @@ public class DataBaseHelper {
                     cursor.getLong(indexAlarm),
                     cursor.getLong(indexCreate),
                     cursor.getLong(indexTimestamp),
-                    purchasesItem
+                    null
             );
             list.add(listModel);
             cursor.moveToNext();
@@ -157,5 +154,70 @@ public class DataBaseHelper {
                 values
         );
         return rawId;
+    }
+
+    public int deletePurchaseItem(long listDbId) {
+        int count = database.delete(
+                SqlDbHelper.TABLE_PURCHASE_ITEM,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID + " = " + listDbId,
+                null
+        );
+        return count;
+    }
+
+    public List<PurchaseItemModel> getPurchaseItems(long listDbId){
+        List<PurchaseItemModel> items = new ArrayList<>();
+        String[] projection = {
+                SqlDbHelper.COLUMN_ID,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_ITEM_ID,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_ID,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_LABEL,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_QUANTITY,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_DESCRIPTION,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_TIMESTAMP,
+        };
+        String[] selectionArgs = {
+                String.valueOf(listDbId)
+        };
+        String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
+        Cursor cursor = database.query(
+                SqlDbHelper.TABLE_PURCHASE_ITEM,
+                projection,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID + " = " + listDbId,
+                null,
+                null,
+                null,
+                orderBy
+        );
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int indexId = cursor.getColumnIndex(SqlDbHelper.COLUMN_ID);
+            int indexServerId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_ITEM_ID);
+            int indexIsBought = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT);
+            int indexIsCancel = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL);
+            int indexGoodsId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_ID);
+            int indexLabel = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_LABEL);
+            int indexQuantity = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_QUANTITY);
+            int indexDescription = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_DESCRIPTION);
+            int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_TIMESTAMP);
+            PurchaseItemModel itemModel = new PurchaseItemModel(
+                    cursor.getLong(indexId),
+                    cursor.getLong(indexServerId),
+                    listDbId,
+                    cursor.getInt(indexIsBought)>0,
+                    cursor.getInt(indexIsCancel)>0,
+                    cursor.getInt(indexGoodsId),
+                    cursor.getString(indexLabel),
+                    cursor.getFloat(indexQuantity),
+                    cursor.getString(indexDescription),
+                    cursor.getLong(indexTimestamp)
+            );
+            items.add(itemModel);
+            cursor.moveToNext();
+        }
+        return items;
     }
 }

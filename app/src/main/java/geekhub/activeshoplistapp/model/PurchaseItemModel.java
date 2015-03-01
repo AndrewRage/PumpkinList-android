@@ -6,6 +6,7 @@ package geekhub.activeshoplistapp.model;
 public class PurchaseItemModel {
     private long dbId;
     private long serverId;
+    private long listDbId;
     private boolean isBought; //true if bye
     private boolean isCancel; //if user decided not to buy goods -- for synchronize
     private int goodsId;
@@ -20,6 +21,7 @@ public class PurchaseItemModel {
 
     public PurchaseItemModel(long dbId,
                              long serverId,
+                             long listDbId,
                              boolean isBought,
                              boolean isCancel,
                              int goodsId,
@@ -29,6 +31,7 @@ public class PurchaseItemModel {
                              long timeStamp) {
         this.dbId = dbId;
         this.serverId = serverId;
+        this.listDbId = listDbId;
         this.isBought = isBought;
         this.isCancel = isCancel;
         this.goodsId = goodsId;
@@ -45,6 +48,10 @@ public class PurchaseItemModel {
 
     public void setServerId(long serverId) {
         this.serverId = serverId;
+    }
+
+    public void setListDbId(long listDbId) {
+        this.listDbId = listDbId;
     }
 
     public void setBought(boolean isBought) {
@@ -82,6 +89,10 @@ public class PurchaseItemModel {
 
     public long getServerId() {
         return serverId;
+    }
+
+    public long getListDbId() {
+        return listDbId;
     }
 
     public boolean isBought() {

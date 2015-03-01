@@ -130,6 +130,7 @@ public class PurchaseListEditFragment extends BaseFragment {
                     PurchaseItemModel item = new PurchaseItemModel(
                             0,
                             0,
+                            0,
                             false,
                             false,
                             0,
@@ -137,13 +138,13 @@ public class PurchaseListEditFragment extends BaseFragment {
                             0,
                             "",
                             System.currentTimeMillis());
-                    purchaseList.getPurchasesItems().add(item);
-                    adapter.notifyDataSetChanged();
+                    purchaseList.getPurchasesItems().add(0, item);
 
                     if (isEdit) {
                         ShoppingHelper.getInstance().addPurchaseItem(item, purchaseList.getDbId());
                     }
                     goodsLabelEdit.setText(null);
+                    adapter.notifyDataSetChanged();
                 }
             }
         });

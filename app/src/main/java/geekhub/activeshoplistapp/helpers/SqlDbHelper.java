@@ -75,8 +75,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String SQL_DELETE_PURCHASE_ITEM =
             "DROP TABLE IF EXISTS " + TABLE_PURCHASE_ITEM;
 
-    public final static String TABLE_PURCHASE_LIST = "purchase_list";
-    public final static String PURCHASE_LIST_COLUMN_ID = "_id";
+    public final static String TABLE_PURCHASE_LIST = "purchase_lists";
     public final static String PURCHASE_LIST_COLUMN_LIST_ID = "list_id";
     public final static String PURCHASE_LIST_COLUMN_LIST_NAME = "list_name";
     public final static String PURCHASE_LIST_COLUMN_USER_ID = "user_id";
