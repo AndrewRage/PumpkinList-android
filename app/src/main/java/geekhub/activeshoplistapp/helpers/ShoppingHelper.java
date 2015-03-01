@@ -89,4 +89,17 @@ public class ShoppingHelper {
         purchaseItem.setDbId(rawId);
         return rawId;
     }
+
+    public void updatePurchaseItem(PurchaseItemModel item) {
+        boolean status = item.isBought();
+        dataBaseHelper.open();
+        dataBaseHelper.universalUpdateColumn(
+                SqlDbHelper.TABLE_PURCHASE_ITEM,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT,
+                status ? String.valueOf("0") : String.valueOf("1"),
+                item.getDbId()
+        );
+        dataBaseHelper.close();
+        item.setBought(!status);
+    }
 }

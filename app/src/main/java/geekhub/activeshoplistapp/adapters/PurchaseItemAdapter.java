@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.List;
@@ -51,15 +52,18 @@ public class PurchaseItemAdapter extends BaseAdapter {
             convertView = inflater.inflate(resource, parent, false);
             holder = new Holder();
             holder.title = (TextView) convertView.findViewById(R.id.title);
+            holder.checkBox = (CheckBox) convertView.findViewById(R.id.check_bought);
             convertView.setTag(holder);
         } else {
             holder = (Holder) convertView.getTag();
         }
         holder.title.setText("rawId:" + purchaseItem.getDbId() + "id: " + purchaseItem.getGoodsId() + " label: " + purchaseItem.getGoodsLabel());
+        holder.checkBox.setChecked(purchaseItem.isBought());
         return convertView;
     }
 
     private class Holder {
         TextView title;
+        CheckBox checkBox;
     }
 }
