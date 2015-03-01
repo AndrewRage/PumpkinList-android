@@ -21,17 +21,6 @@ public class ShoppingHelper {
 
     private ShoppingHelper(Context context) {
         dataBaseHelper = new DataBaseHelper(context);
-
-        //===========
-        //Fake data!!!
-        /*purchaseLists = new ArrayList<>();
-        Map<Integer,PurchaseItemModel> purchasesItem = new TreeMap<>();
-        purchasesItem.put(1, new PurchaseItemModel(false, false, 1, "", 1, "Desc_str1", 123));
-        purchaseLists.add( new PurchaseListModel(1, 1,"List1", 1, 1, 0, 0, 0, purchasesItem));
-        purchaseLists.add( new PurchaseListModel(2, 2,"List2", 1, 1, 0, 0, 0, purchasesItem));
-        purchaseLists.add( new PurchaseListModel(3, 3,"List3", 1, 1, 0, 0, 0, purchasesItem));
-        purchaseLists.add( new PurchaseListModel(4, 4,"List4", 1, 1, 0, 0, 0, purchasesItem));*/
-        //===========
     }
     public static ShoppingHelper newInstance(Context context) {
         if (shoppingHelper == null) {
