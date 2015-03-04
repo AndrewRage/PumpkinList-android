@@ -13,6 +13,10 @@ public class ShopsModel {
     private boolean isDelete;
     private long timeStamp;
 
+    public ShopsModel() {
+
+    }
+
     public ShopsModel(long dbId,
                       long serverId,
                       String shopName,
