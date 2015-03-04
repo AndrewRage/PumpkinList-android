@@ -32,6 +32,8 @@ public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback 
         mapFragment.getMapAsync(this);
 
         map = mapFragment.getMap();
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        map.setMyLocationEnabled(true);
 
         Intent args = getIntent();
         int id = 0;
@@ -47,9 +49,6 @@ public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        googleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Marker"));
 
     }
 }
