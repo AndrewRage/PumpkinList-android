@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class SqlDbHelper extends SQLiteOpenHelper {
     private static final String LOG = "SqlDbHelper";
 
-    private final static int DB_VERSION = 1;
+    private final static int DB_VERSION = 2;
     private final static String DB_NAME = "aslistapp.db";
 
     private static final String INT_PRIMARI_KAY = " INTEGER PRIMARY KEY";
@@ -98,17 +98,23 @@ public class SqlDbHelper extends SQLiteOpenHelper {
             "DROP TABLE IF EXISTS " + TABLE_PURCHASE_LIST;
 
     public final static String TABLE_SHOPS = "shops";
+    public final static String SHOPS_COLUMN_SHOP_ID = "shop_id";
     public final static String SHOPS_COLUMN_NAME = "shop_name";
     public final static String SHOPS_COLUMN_DESCRIPTION = "shop_description";
     public final static String SHOPS_COLUMN_LATITUDE = "latitude";
-    public final static String SHOPS_COLUMN_LONGTITUDE = "longitude";
+    public final static String SHOPS_COLUMN_LONGITUDE = "longitude";
+    public final static String SHOPS_COLUMN_IS_DELETE = "is_delete";
+    public final static String SHOPS_COLUMN_TIMESTAMP = "timestamp";
     public final static String SQL_CREATE_SHOPS =
             "CREATE TABLE " + TABLE_SHOPS + " (" +
             COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
+            SHOPS_COLUMN_SHOP_ID + INTEGER_TYPE + COMMA_SEP +
             SHOPS_COLUMN_NAME + TEXT_TYPE + COMMA_SEP +
             SHOPS_COLUMN_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
             SHOPS_COLUMN_LATITUDE + REAL_TYPE + COMMA_SEP +
-            SHOPS_COLUMN_LONGTITUDE + REAL_TYPE +
+            SHOPS_COLUMN_LONGITUDE + REAL_TYPE + COMMA_SEP +
+            SHOPS_COLUMN_IS_DELETE + INTEGER_TYPE + COMMA_SEP +
+            SHOPS_COLUMN_TIMESTAMP + INTEGER_TYPE +
             " );";
     public final static String SQL_DELETE_SHOPS =
             "DROP TABLE IF EXISTS " + TABLE_SHOPS;
@@ -137,11 +143,9 @@ public class SqlDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        /*if (newVersion > oldVersion) {
-            db.execSQL(SQL_DELETE_PURCHASE_ITEM);
-            db.execSQL(SQL_DELETE_PURCHASE_LIST);
+        if (oldVersion == 1) {
+            db.execSQL(SQL_DELETE_SHOPS);
+            db.execSQL(SQL_CREATE_SHOPS);
         }
-        db.execSQL(SQL_CREATE_PURCHASE_ITEM);
-        db.execSQL(SQL_CREATE_PURCHASE_LIST);*/
     }
 }

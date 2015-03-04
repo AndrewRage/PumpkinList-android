@@ -4,18 +4,42 @@ package geekhub.activeshoplistapp.model;
  * Created by rage on 08.02.15. Create by task: 003
  */
 public class ShopsModel {
-    private int shopId;
+    private long dbId;
+    private long serverId;
     private String shopName;
     private String shopDescription;
     private double gpsLatitude;
     private double gpsLongitude;
+    private boolean isDelete;
+    private long timeStamp;
 
-    public ShopsModel(int shopId, String shopName) {
-        this.shopId = shopId;
+    public ShopsModel(long dbId,
+                      long serverId,
+                      String shopName,
+                      String shopDescription,
+                      double gpsLatitude,
+                      double gpsLongitude,
+                      boolean isDelete,
+                      long timeStamp) {
+        this.dbId = dbId;
+        this.serverId = serverId;
         this.shopName = shopName;
+        this.shopDescription = shopDescription;
+        this.gpsLatitude = gpsLatitude;
+        this.gpsLongitude = gpsLongitude;
+        this.isDelete = isDelete;
+        this.timeStamp = timeStamp;
     }
 
-    //Setter
+    //Setters
+    public void setDbId(long dbId) {
+        this.dbId = dbId;
+    }
+
+    public void setServerId(long serverId) {
+        this.serverId = serverId;
+    }
+
     public void setShopName(String shopName) {
         this.shopName = shopName;
     }
@@ -32,9 +56,21 @@ public class ShopsModel {
         this.gpsLongitude = gpsLongitude;
     }
 
-    //Getter
-    public int getShopId() {
-        return shopId;
+    public void setDelete(boolean isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    //Getters
+    public long getDbId() {
+        return dbId;
+    }
+
+    public long getServerId() {
+        return serverId;
     }
 
     public String getShopName() {
@@ -51,5 +87,13 @@ public class ShopsModel {
 
     public double getGpsLongitude() {
         return gpsLongitude;
+    }
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
     }
 }

@@ -10,6 +10,7 @@ import java.util.TreeMap;
 
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
+import geekhub.activeshoplistapp.model.ShopsModel;
 
 /**
  * Created by rage on 2/24/15.
@@ -17,6 +18,7 @@ import geekhub.activeshoplistapp.model.PurchaseListModel;
 public class ShoppingHelper {
     private static ShoppingHelper shoppingHelper;
     private List<PurchaseListModel> purchaseLists;
+    private List<ShopsModel> shopsList;
     private DataBaseHelper dataBaseHelper;
 
     private ShoppingHelper(Context context) {
@@ -85,6 +87,29 @@ public class ShoppingHelper {
         item.setTimeStamp(0);
         dataBaseHelper.open();
         dataBaseHelper.updatePurchaseItem(item);
+        dataBaseHelper.close();
+    }
+
+    public List<ShopsModel> getShopsList() {
+        if (shopsList == null) {
+            dataBaseHelper.open();
+            shopsList = dataBaseHelper.getShopsList();
+            dataBaseHelper.close();
+        }
+        return shopsList;
+    }
+
+    public long addShop(ShopsModel shop) {
+        dataBaseHelper.open();
+        long rawId = dataBaseHelper.addShop(shop);
+        dataBaseHelper.close();
+        return rawId;
+    }
+
+    public void updateShop(ShopsModel shop) {
+        shop.setTimeStamp(0);
+        dataBaseHelper.open();
+        dataBaseHelper.updateShop(shop);
         dataBaseHelper.close();
     }
 }
