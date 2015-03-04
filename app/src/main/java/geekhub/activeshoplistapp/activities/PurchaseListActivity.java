@@ -54,7 +54,7 @@ public class PurchaseListActivity extends BaseActivity implements PurchaseListMa
         }
 
         if (id == R.id.action_shops) {
-            Intent intent = new Intent(this, ShopMapActivity.class);
+            Intent intent = new Intent(this, ShopActivity.class);
             startActivity(intent);
         }
 

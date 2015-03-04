@@ -4,8 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="fab_button_size_big">56dp</dimen>
-    <dimen name="fab_button_right_margin">30dp</dimen>
-    <dimen name="fab_button_bottom_margin">50dp</dimen>
+    <dimen name="fab_button_right_margin">16dp</dimen>
+    <dimen name="fab_button_bottom_margin">16dp</dimen>
 
     <dimen name="purchase_list_item_margin">10dp</dimen>
 </resources>
