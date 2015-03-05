@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +25,7 @@ import geekhub.activeshoplistapp.model.ShopsModel;
 public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback {
     private ShopsModel shop;
     private GoogleMap map;
+    private EditText shopNameEdit;
     private boolean isOnceShowMyLocation = false;
     private Marker marker;
 
@@ -39,6 +41,8 @@ public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback 
         map = mapFragment.getMap();
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
+
+        shopNameEdit = (EditText) findViewById(R.id.title);
 
         Intent args = getIntent();
         int id = 0;
@@ -84,5 +88,16 @@ public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback 
                         17
                 )
         );
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (marker != null) {
+            shop.setGpsLatitude(marker.getPosition().latitude);
+            shop.setGpsLongitude(marker.getPosition().longitude);
+            shop.setShopName(shopNameEdit.getText().toString());
+            ShoppingHelper.getInstance().addShop(shop);
+        }
     }
 }

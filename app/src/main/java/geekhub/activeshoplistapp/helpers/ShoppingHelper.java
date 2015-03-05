@@ -103,6 +103,8 @@ public class ShoppingHelper {
         dataBaseHelper.open();
         long rawId = dataBaseHelper.addShop(shop);
         dataBaseHelper.close();
+        shop.setDbId(rawId);
+        shopsList.add(shop);
         return rawId;
     }
 
