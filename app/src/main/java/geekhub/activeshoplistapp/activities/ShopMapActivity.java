@@ -1,13 +1,16 @@
 package geekhub.activeshoplistapp.activities;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import geekhub.activeshoplistapp.R;
@@ -21,6 +24,8 @@ import geekhub.activeshoplistapp.model.ShopsModel;
 public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback {
     private ShopsModel shop;
     private GoogleMap map;
+    private boolean isOnceShowMyLocation = false;
+    private Marker marker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +53,36 @@ public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback 
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
+        googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+                if (!isOnceShowMyLocation) {
+                    showMyLocation(location);
+                    isOnceShowMyLocation = true;
+                }
+            }
+        });
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if (marker == null) {
+                    marker = googleMap.addMarker(new MarkerOptions()
+                            .position(latLng)
+                            .draggable(true));
+                } else {
+                    marker.setPosition(latLng);
+                }
+            }
+        });
+    }
 
+    private void showMyLocation(Location location) {
+        map.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(location.getLatitude(), location.getLongitude()),
+                        17
+                )
+        );
     }
 }
