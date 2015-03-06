@@ -3,6 +3,7 @@ package geekhub.activeshoplistapp.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ public class ShopsManageFragment extends BaseFragment {
     private ListView shopListView;
     private View plusButton;
     private List<ShopsModel> shopsList;
+    private ShopAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,7 +42,7 @@ public class ShopsManageFragment extends BaseFragment {
 
         shopsList = ShoppingHelper.getInstance().getShopsList();
 
-        final ShopAdapter adapter = new ShopAdapter(getActivity(), R.layout.shop_item, shopsList);
+        adapter = new ShopAdapter(getActivity(), R.layout.shop_item, shopsList);
         shopListView.setAdapter(adapter);
         shopListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -48,6 +50,7 @@ public class ShopsManageFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), ShopMapActivity.class)
                         .putExtra(AppConstants.EXTRA_SHOP_ID, position);
                 startActivityForResult(intent, AppConstants.SHOP_RESULT_CODE);
+                Log.d("ShopsManageFragment", "" + position);
             }
         });
 
@@ -58,5 +61,11 @@ public class ShopsManageFragment extends BaseFragment {
                 startActivityForResult(intent, AppConstants.SHOP_RESULT_CODE);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        adapter.notifyDataSetChanged();
     }
 }
