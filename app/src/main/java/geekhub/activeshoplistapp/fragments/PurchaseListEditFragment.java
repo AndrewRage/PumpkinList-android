@@ -2,6 +2,8 @@ package geekhub.activeshoplistapp.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +55,13 @@ public class PurchaseListEditFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_purchase_list_edit, container, false);
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+
+        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         purchaseListView = (ListView) view.findViewById(R.id.purchase_item_list);
         header = inflater.inflate(R.layout.purchase_edit_header, purchaseListView, false);
         footer = inflater.inflate(R.layout.purchase_edit_footer, purchaseListView, false);
