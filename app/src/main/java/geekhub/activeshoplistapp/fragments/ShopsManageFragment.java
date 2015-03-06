@@ -50,7 +50,6 @@ public class ShopsManageFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), ShopMapActivity.class)
                         .putExtra(AppConstants.EXTRA_SHOP_ID, position);
                 startActivityForResult(intent, AppConstants.SHOP_RESULT_CODE);
-                Log.d("ShopsManageFragment", "" + position);
             }
         });
 

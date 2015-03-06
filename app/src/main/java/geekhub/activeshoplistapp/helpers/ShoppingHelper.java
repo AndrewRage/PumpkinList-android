@@ -114,4 +114,11 @@ public class ShoppingHelper {
         dataBaseHelper.updateShop(shop);
         dataBaseHelper.close();
     }
+
+    public void deleteShop(ShopsModel shop) {
+        dataBaseHelper.open();
+        dataBaseHelper.deleteShop(shop.getDbId());
+        dataBaseHelper.close();
+        shopsList.remove(shop);
+    }
 }
