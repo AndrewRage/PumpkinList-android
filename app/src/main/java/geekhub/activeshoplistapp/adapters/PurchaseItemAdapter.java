@@ -57,7 +57,7 @@ public class PurchaseItemAdapter extends BaseAdapter {
         } else {
             holder = (Holder) convertView.getTag();
         }
-        holder.title.setText("rawId:" + purchaseItem.getDbId() + "id: " + purchaseItem.getGoodsId() + " label: " + purchaseItem.getGoodsLabel());
+        holder.title.setText(purchaseItem.getGoodsLabel());
         holder.checkBox.setChecked(purchaseItem.isBought());
         return convertView;
     }

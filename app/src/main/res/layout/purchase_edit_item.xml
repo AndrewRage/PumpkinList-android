@@ -4,14 +4,17 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_horizontal_margin" >
+    android:paddingTop="@dimen/purchase_item_margin"
+    android:paddingBottom="@dimen/purchase_item_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin" >
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/check_bought"
-        android:layout_toStartOf="@+id/check_bought"
+        android:layout_marginBottom="6dp"
+        android:layout_alignBottom="@+id/check_bought"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
