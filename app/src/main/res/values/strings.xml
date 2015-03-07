@@ -37,6 +37,12 @@
     <string name="purchase_edit_alert_delete_no">Cancel</string>
 
     <!--Shop edit-->
-    <string name="shop_edit_name_hint">Enter shop name</string>
+    <string name="shop_edit_name_hint">Shop name</string>
+    <string name="shop_edit_new_shop_default">Nameless shop</string>
+    <string name="shop_edit_this_shop_default">this shop</string>
+    <string name="shop_edit_alert_delete_title">Delete shopping shop?</string>
+    <string name="shop_edit_alert_delete_description">Are you sure you want to delete %s?</string>
+    <string name="shop_edit_alert_delete_yes">OK</string>
+    <string name="shop_edit_alert_delete_no">Cancel</string>
 
 </resources>

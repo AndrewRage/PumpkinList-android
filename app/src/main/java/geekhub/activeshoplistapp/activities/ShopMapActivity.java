@@ -1,5 +1,7 @@
 package geekhub.activeshoplistapp.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -133,8 +135,46 @@ public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback 
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_delete_shop) {
-            ShoppingHelper.getInstance().deleteShop(shop);
-            finish();
+            boolean isNeedDelet = false;
+            if (isEdit) {
+                isNeedDelet = true;
+            } else if (marker != null || !TextUtils.isEmpty(shopNameEdit.getText().toString())) {
+                isNeedDelet = true;
+            }
+            if (isNeedDelet) {
+                String shopName = shopNameEdit.getText().toString();
+                String message;
+                if (TextUtils.isEmpty(shopName)) {
+                    message = String.format(
+                            getString(R.string.shop_edit_alert_delete_description),
+                            getString(R.string.shop_edit_this_shop_default)
+                    );
+                } else {
+                    message = String.format(
+                            getString(R.string.shop_edit_alert_delete_description),
+                            shopName
+                    );
+                }
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.shop_edit_alert_delete_title)
+                        .setMessage(message)
+                        .setPositiveButton(R.string.shop_edit_alert_delete_yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (isEdit) {
+                                    ShoppingHelper.getInstance().deleteShop(shop);
+                                }
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(R.string.shop_edit_alert_delete_no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .show();
+            } else {
+                finish();
+            }
             return true;
         }
 
@@ -143,11 +183,14 @@ public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback 
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         if (!isEdit && marker != null) {
+            if (TextUtils.isEmpty(shopNameEdit.getText().toString())) {
+                shop.setShopName(getString(R.string.shop_edit_new_shop_default));
+            } else {
+                shop.setShopName(shopNameEdit.getText().toString());
+            }
             shop.setGpsLatitude(marker.getPosition().latitude);
             shop.setGpsLongitude(marker.getPosition().longitude);
-            shop.setShopName(shopNameEdit.getText().toString());
             ShoppingHelper.getInstance().addShop(shop);
         }
         if (isEdit) {
@@ -158,13 +201,19 @@ public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback 
                 shop.setGpsLatitude(marker.getPosition().latitude);
                 shop.setGpsLongitude(marker.getPosition().longitude);
             }
-            if (!TextUtils.equals(shopNameEdit.getText().toString(), shop.getShopName())) {
+            if (!TextUtils.equals(shopNameEdit.getText().toString(), shop.getShopName())
+                    || TextUtils.isEmpty(shopNameEdit.getText().toString())) {
                 edit = true;
-                shop.setShopName(shopNameEdit.getText().toString());
+                if (TextUtils.isEmpty(shopNameEdit.getText().toString())) {
+                    shop.setShopName(getString(R.string.shop_edit_new_shop_default));
+                } else {
+                    shop.setShopName(shopNameEdit.getText().toString());
+                }
             }
             if (edit) {
                 ShoppingHelper.getInstance().updateShop(shop);
             }
         }
+        super.onBackPressed();
     }
 }
