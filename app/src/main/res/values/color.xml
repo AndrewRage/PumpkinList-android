@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="theme_accent">#ffff8f2f</color>
-    <color name="theme_primary">#ffff8f2f</color>
-    <color name="theme_primary_dark">#ffff691c</color>
+    <color name="theme_accent">#ffffa520</color>
+    <color name="theme_primary">#ffef8200</color>
+    <color name="theme_primary_dark">#ffcd7226</color>
+
+    <color name="theme_toolbar_hint">#d4e3c09a</color>
+
+    <color name="theme_primary_text">#212121</color>
+    <color name="theme_secondary_text">#dec8c8c8</color>
+    <color name="theme_divider">#B6B6B6</color>
+
+    <color name="theme_background">#fff1eee8</color>
 </resources>

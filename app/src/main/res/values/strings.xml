@@ -24,10 +24,14 @@
     <!--Purchase edit-->
     <string name="purchase_edit_new_goods_hint">Enter goods label</string>
     <string name="purchase_edit_add_button">Add</string>
-    <string name="purchase_edit_new_list_hint">Enter new list name</string>
+    <string name="purchase_edit_new_list_hint">New shopping list</string>
+    <string name="purchase_edit_new_list_description_hint">description</string>
     <string name="purchase_edit_new_list_default">New list</string>
     <string name="purchase_edit_create_new_list">Create</string>
     <string name="purchase_edit_update_list">Update</string>
     <string name="purchase_edit_delete_list">Delete</string>
+
+    <!--Shop edit-->
+    <string name="shop_edit_name_hint">Enter shop name</string>
 
 </resources>

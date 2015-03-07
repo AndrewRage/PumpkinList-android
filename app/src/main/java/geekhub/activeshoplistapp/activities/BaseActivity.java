@@ -24,12 +24,13 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        if (onBackPressedListener != null)
+        if (onBackPressedListener != null) {
             if (onBackPressedListener.onBackPressed()) {
                 super.onBackPressed();
             }
-        else
-            super.onBackPressed();
+        } else {
+                super.onBackPressed();
+        }
     }
 
     protected OnBackPressedListener onBackPressedListener;

@@ -54,6 +54,7 @@ public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback 
         map.setMyLocationEnabled(true);
 
         shopNameEdit = (EditText) findViewById(R.id.title);
+        shopNameEdit.clearFocus();
 
         Intent args = getIntent();
         int id = -1;
