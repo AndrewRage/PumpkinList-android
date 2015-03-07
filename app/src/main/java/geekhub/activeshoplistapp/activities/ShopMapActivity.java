@@ -28,7 +28,7 @@ import geekhub.activeshoplistapp.model.ShopsModel;
 /**
  * Created by rage on 3/3/15.
  */
-public class ShopMapActivity extends ActionBarActivity implements OnMapReadyCallback {
+public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback {
     private ShopsModel shop;
     private GoogleMap map;
     private EditText shopNameEdit;
@@ -58,7 +58,7 @@ public class ShopMapActivity extends ActionBarActivity implements OnMapReadyCall
         Intent args = getIntent();
         int id = -1;
         if (args != null) {
-            id = args.getIntExtra(AppConstants.EXTRA_SHOP_ID, 0);
+            id = args.getIntExtra(AppConstants.EXTRA_SHOP_ID, -1);
         }
         if (id >= 0) {
             shop = ShoppingHelper.getInstance().getShopsList().get(id);
