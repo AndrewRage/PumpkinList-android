@@ -9,5 +9,7 @@
 
     <dimen name="purchase_list_item_margin">10dp</dimen>
 
-    <dimen name="bottom_toolbar_height">40dp</dimen>
+    <dimen name="bottom_toolbar_height">48dp</dimen>
+    <dimen name="toolbar_padding_vertical">4dp</dimen>
+    <dimen name="toolbar_edit_description_text_size">13dp</dimen>
 </resources>

@@ -1,25 +1,49 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/purchase_item_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:footerDividersEnabled="false"
-        android:layout_above="@+id/toolbar_bottom"  />
-
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_bottom"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:minHeight="@dimen/bottom_toolbar_height"
+        android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:theme="@style/ToolBarTheme"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        app:theme="@style/ToolBarTheme">
 
-</RelativeLayout>
+        <EditText
+            android:id="@+id/edit_list_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/purchase_edit_new_list_hint"
+            style="@style/ToolBarTitleEditText"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/purchase_item_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:footerDividersEnabled="false"
+            android:layout_above="@+id/toolbar_bottom"  />
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_bottom"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:minHeight="@dimen/bottom_toolbar_height"
+            android:background="?attr/colorPrimary"
+            app:theme="@style/ToolBarTheme"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+</LinearLayout>

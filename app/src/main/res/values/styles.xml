@@ -32,6 +32,7 @@
     <style name="ToolBarEditText" parent="Widget.AppCompat.EditText" >
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textColorHint">@color/theme_toolbar_hint</item>
+        <item name="android:textSize">@dimen/toolbar_edit_description_text_size</item>
     </style>
 
     <style name="ToolBarTitleEditText" parent="Widget.AppCompat.EditText" >

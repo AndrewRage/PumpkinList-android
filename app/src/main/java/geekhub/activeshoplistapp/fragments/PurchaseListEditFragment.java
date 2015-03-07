@@ -67,18 +67,18 @@ public class PurchaseListEditFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_purchase_list_edit, container, false);
 
-        purchaseListView = (ListView) view.findViewById(R.id.purchase_item_list);
-        header = inflater.inflate(R.layout.purchase_edit_header, purchaseListView, false);
-        //footer = inflater.inflate(R.layout.purchase_edit_footer, purchaseListView, false);
-        listNameEdit = (EditText) header.findViewById(R.id.edit_list_name);
-        goodsLabelEdit = (EditText) header.findViewById(R.id.edit_goods_label);
-        addItemButton = header.findViewById(R.id.button_goods_add);
-
-
-        Toolbar toolbar = (Toolbar) header.findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ActionBarActivity activity = (ActionBarActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        purchaseListView = (ListView) view.findViewById(R.id.purchase_item_list);
+        header = inflater.inflate(R.layout.purchase_edit_header, purchaseListView, false);
+        //footer = inflater.inflate(R.layout.purchase_edit_footer, purchaseListView, false);
+        goodsLabelEdit = (EditText) header.findViewById(R.id.edit_goods_label);
+        addItemButton = header.findViewById(R.id.button_goods_add);
+
+        listNameEdit = (EditText) view.findViewById(R.id.edit_list_name);
 
         return view;
     }
