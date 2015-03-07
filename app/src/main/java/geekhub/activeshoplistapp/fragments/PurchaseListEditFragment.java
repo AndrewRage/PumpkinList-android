@@ -1,6 +1,7 @@
 package geekhub.activeshoplistapp.fragments;
 
-import android.content.Intent;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
@@ -20,10 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import geekhub.activeshoplistapp.R;
-import geekhub.activeshoplistapp.activities.LoginActivity;
-import geekhub.activeshoplistapp.activities.ShopActivity;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
-import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
@@ -164,7 +162,6 @@ public class PurchaseListEditFragment extends BaseFragment {
         if (id == R.id.action_delete_list) {
             hideSoftKeyboard();
             deleteList();
-            getActivity().getSupportFragmentManager().popBackStack();
             return true;
         }
 
@@ -179,7 +176,7 @@ public class PurchaseListEditFragment extends BaseFragment {
             }
         } else {
             if (purchaseList.getPurchasesItems().size() > 0
-                    && !TextUtils.isEmpty(listNameEdit.getText().toString())) {
+                    || !TextUtils.isEmpty(listNameEdit.getText().toString())) {
                 addNewList();
             }
         }
@@ -221,8 +218,48 @@ public class PurchaseListEditFragment extends BaseFragment {
     }
 
     private void deleteList() {
+        boolean isNeedDelete = false;
         if (isEdit) {
-            ShoppingHelper.getInstance().deletePurchaseList(purchaseList);
+            isNeedDelete = true;
+        } else {
+            if (purchaseList.getPurchasesItems().size() > 0
+                    || !TextUtils.isEmpty(listNameEdit.getText().toString())) {
+                isNeedDelete = true;
+            }
+        }
+        if (isNeedDelete) {
+            String listName = listNameEdit.getText().toString();
+            String message;
+            if (TextUtils.isEmpty(listName)) {
+                message = String.format(
+                        getString(R.string.purchase_edit_alert_delete_description),
+                        getString(R.string.purchase_edit_this_list_default)
+                );
+            } else {
+                message = String.format(
+                        getString(R.string.purchase_edit_alert_delete_description),
+                        listName
+                );
+            }
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.purchase_edit_alert_delete_title)
+                    .setMessage(message)
+                    .setPositiveButton(R.string.purchase_edit_alert_delete_yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (isEdit) {
+                                ShoppingHelper.getInstance().deletePurchaseList(purchaseList);
+                            }
+                            getActivity().getSupportFragmentManager().popBackStack();
+                        }
+                    })
+                    .setNegativeButton(R.string.purchase_edit_alert_delete_no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .show();
+        } else {
+            getActivity().getSupportFragmentManager().popBackStack();
         }
     }
 
