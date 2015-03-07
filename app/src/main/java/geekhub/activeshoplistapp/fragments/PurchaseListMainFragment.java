@@ -35,6 +35,7 @@ public class PurchaseListMainFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_purchase_list_main, container, false);
+        addToolbar(view, false);
         purchaseView = (GridView) view.findViewById(R.id.purchase_view);
         return view;
     }

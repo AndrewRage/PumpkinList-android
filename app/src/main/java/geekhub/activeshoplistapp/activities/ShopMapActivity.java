@@ -3,6 +3,8 @@ package geekhub.activeshoplistapp.activities;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -26,7 +28,7 @@ import geekhub.activeshoplistapp.model.ShopsModel;
 /**
  * Created by rage on 3/3/15.
  */
-public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback {
+public class ShopMapActivity extends ActionBarActivity implements OnMapReadyCallback {
     private ShopsModel shop;
     private GoogleMap map;
     private EditText shopNameEdit;
@@ -38,6 +40,10 @@ public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_map);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -77,11 +83,11 @@ public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback 
                 if (!isOnceShowMyLocation) {
                     if (!isEdit) {
                         showMyLocation(location);
-                        isOnceShowMyLocation = true;
                     } else {
                         LatLng latLng = new LatLng(shop.getGpsLatitude(), shop.getGpsLongitude());
                         showMyLocation(latLng);
                     }
+                    isOnceShowMyLocation = true;
                 }
             }
         });

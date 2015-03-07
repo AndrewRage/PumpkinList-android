@@ -1,4 +1,4 @@
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -11,15 +11,19 @@
         android:layout_width="match_parent"
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:theme="@style/ToolBarTheme" />
+        app:theme="@style/ToolBarTheme">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="?attr/actionBarSize" />
+
+    </android.support.v7.widget.Toolbar>
 
     <ListView
         android:id="@+id/purchase_item_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="?attr/actionBarSize"
         android:footerDividersEnabled="false"/>
 
-</RelativeLayout>
+</LinearLayout>

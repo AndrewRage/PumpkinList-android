@@ -29,6 +29,7 @@ public class LoginFragment extends BaseFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+        addToolbar(view, false);
         emailEditText = (EditText) view.findViewById(R.id.edit_email);
         passwordEditText = (EditText) view.findViewById(R.id.edit_password);
         rememberCheckBox = (CheckBox) view.findViewById(R.id.checkbox_remember);

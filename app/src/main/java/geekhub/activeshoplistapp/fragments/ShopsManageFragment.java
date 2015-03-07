@@ -31,6 +31,7 @@ public class ShopsManageFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shop_manage, container, false);
+        addToolbar(view);
         shopListView = (ListView) view.findViewById(R.id.shop_list);
         plusButton = view.findViewById(R.id.plus_button);
         return view;
