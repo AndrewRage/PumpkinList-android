@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/purchase_edit_new_goods_hint"
             android:id="@+id/edit_goods_label"
+            android:singleLine="true"
             android:layout_weight="6" />
 
         <Button

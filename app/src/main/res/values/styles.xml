@@ -3,10 +3,11 @@
     <style name="ASlistTheme" parent="ASlistBase">
 
         <item name="windowActionBar">false</item>
-        <item name="android:buttonStyle">@style/CustomButton</item>
 
         <item name="android:textColorPrimary">@color/theme_primary_text</item>
         <item name="android:textColorSecondary">@color/theme_secondary_text</item>
+
+        <item name="android:buttonStyle">@style/CustomButton</item>
 
     </style>
 
