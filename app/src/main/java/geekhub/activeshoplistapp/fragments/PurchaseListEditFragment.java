@@ -1,11 +1,15 @@
 package geekhub.activeshoplistapp.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,7 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import geekhub.activeshoplistapp.R;
+import geekhub.activeshoplistapp.activities.LoginActivity;
+import geekhub.activeshoplistapp.activities.ShopActivity;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
+import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
@@ -30,12 +37,12 @@ public class PurchaseListEditFragment extends BaseFragment {
     private PurchaseItemAdapter adapter;
     private ListView purchaseListView;
     private View header;
-    private View footer;
+    //private View footer;
     private PurchaseListModel purchaseList;
     private EditText listNameEdit;
-    private View addNewListButton;
-    private View updateListButton;
-    private View deleteListButton;
+    //private View addNewListButton;
+    //private View updateListButton;
+    //private View deleteListButton;
     private EditText goodsLabelEdit;
     private View addItemButton;
     private boolean isEdit;
@@ -53,24 +60,28 @@ public class PurchaseListEditFragment extends BaseFragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_purchase_list_edit, container, false);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        purchaseListView = (ListView) view.findViewById(R.id.purchase_item_list);
+        header = inflater.inflate(R.layout.purchase_edit_header, purchaseListView, false);
+        //footer = inflater.inflate(R.layout.purchase_edit_footer, purchaseListView, false);
+        listNameEdit = (EditText) header.findViewById(R.id.edit_list_name);
+        goodsLabelEdit = (EditText) header.findViewById(R.id.edit_goods_label);
+        addItemButton = header.findViewById(R.id.button_goods_add);
 
+
+        Toolbar toolbar = (Toolbar) header.findViewById(R.id.toolbar);
         ActionBarActivity activity = (ActionBarActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        purchaseListView = (ListView) view.findViewById(R.id.purchase_item_list);
-        header = inflater.inflate(R.layout.purchase_edit_header, purchaseListView, false);
-        footer = inflater.inflate(R.layout.purchase_edit_footer, purchaseListView, false);
-        listNameEdit = (EditText) footer.findViewById(R.id.edit_list_name);
-        addNewListButton = footer.findViewById(R.id.button_new_list);
-        updateListButton = footer.findViewById(R.id.button_update_list);
-        deleteListButton = footer.findViewById(R.id.button_delete_list);
-        goodsLabelEdit = (EditText) header.findViewById(R.id.edit_goods_label);
-        addItemButton = header.findViewById(R.id.button_goods_add);
         return view;
     }
 
@@ -82,19 +93,19 @@ public class PurchaseListEditFragment extends BaseFragment {
             int id = getArguments().getInt(ARG_LIST_ID);
             purchaseList = ShoppingHelper.getInstance().getPurchaseLists().get(id);
             listNameEdit.setText(purchaseList.getListName());
-            addNewListButton.setVisibility(View.GONE);
+            //addNewListButton.setVisibility(View.GONE);
             isEdit = true;
         } else {
             purchaseList = new PurchaseListModel();
             List<PurchaseItemModel> purchaseItems = new ArrayList<>();
             purchaseList.setPurchasesItems(purchaseItems);
-            updateListButton.setVisibility(View.GONE);
+            //updateListButton.setVisibility(View.GONE);
             isEdit = false;
         }
 
         adapter = new PurchaseItemAdapter(getActivity(), R.layout.purchase_edit_item, purchaseList.getPurchasesItems());;
         purchaseListView.addHeaderView(header);
-        purchaseListView.addFooterView(footer);
+        //purchaseListView.addFooterView(footer);
         purchaseListView.setAdapter(adapter);
         purchaseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -103,7 +114,7 @@ public class PurchaseListEditFragment extends BaseFragment {
             }
         });
 
-        addNewListButton.setOnClickListener(new View.OnClickListener() {
+        /*addNewListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideSoftKeyboard();
@@ -125,9 +136,9 @@ public class PurchaseListEditFragment extends BaseFragment {
             public void onClick(View v) {
                 hideSoftKeyboard();
                 updateList();
-                getActivity().getSupportFragmentManager().popBackStack();
+                getActivity().getSupportFragmentManager().popBackStack();popBackStack();
             }
-        });
+        });*/
 
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +146,46 @@ public class PurchaseListEditFragment extends BaseFragment {
                 addItem();
             }
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_purchase_edit, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_delete_list) {
+            hideSoftKeyboard();
+            deleteList();
+            getActivity().getSupportFragmentManager().popBackStack();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (isEdit) {
+            if (!TextUtils.equals(listNameEdit.getText().toString(), purchaseList.getListName())) {
+                updateList();
+            }
+        } else {
+            if (purchaseList.getPurchasesItems().size() > 0
+                    && !TextUtils.isEmpty(listNameEdit.getText().toString())) {
+                addNewList();
+            }
+        }
+        hideSoftKeyboard();
+        getActivity().getSupportFragmentManager().popBackStack();
+        return false;
     }
 
     private void addItem() {

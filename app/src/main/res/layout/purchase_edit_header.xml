@@ -1,22 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:layout_height="wrap_content">
 
-    <EditText
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.Toolbar
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
         android:layout_height="wrap_content"
-        android:hint="@string/purchase_edit_new_goods_hint"
-        android:id="@+id/edit_goods_label"
-        android:layout_weight="6" />
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:theme="@style/ToolBarTheme">
 
-    <Button
-        android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/edit_list_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:hint="@string/purchase_edit_new_list_hint"
+                android:theme="@style/ToolBarTheme"
+                style="@style/ToolBarTitleEditText"/>
+
+            <EditText
+                android:id="@+id/edit_list_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:hint="@string/purchase_edit_new_list_description_hint"
+                style="@style/ToolBarEditText"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/purchase_edit_add_button"
-        android:id="@+id/button_goods_add"
-        android:layout_weight="1" />
+        android:orientation="horizontal"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/purchase_edit_new_goods_hint"
+            android:id="@+id/edit_goods_label"
+            android:layout_weight="6" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/purchase_edit_add_button"
+            android:id="@+id/button_goods_add"
+            android:layout_weight="1" />
+
+        </LinearLayout>
+
 </LinearLayout>
