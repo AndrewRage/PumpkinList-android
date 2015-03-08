@@ -14,17 +14,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
+import geekhub.activeshoplistapp.adapters.ShopSpinnerAdapter;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
+import geekhub.activeshoplistapp.model.ShopsModel;
 
 /**
  * Created by rage on 08.02.15. Create by task: 004
@@ -35,15 +39,13 @@ public class PurchaseListEditFragment extends BaseFragment {
     private PurchaseItemAdapter adapter;
     private ListView purchaseListView;
     private View header;
-    //private View footer;
     private PurchaseListModel purchaseList;
     private EditText listNameEdit;
-    //private View addNewListButton;
-    //private View updateListButton;
-    //private View deleteListButton;
     private EditText goodsLabelEdit;
     private View addItemButton;
     private boolean isEdit;
+    private Spinner shopsSpinner;
+    private ArrayList<String> shopsList;
 
     public static PurchaseListEditFragment newInstance(int purchaseListId) {
         PurchaseListEditFragment fragment = new PurchaseListEditFragment();
@@ -74,11 +76,11 @@ public class PurchaseListEditFragment extends BaseFragment {
 
         purchaseListView = (ListView) view.findViewById(R.id.purchase_item_list);
         header = inflater.inflate(R.layout.purchase_edit_header, purchaseListView, false);
-        //footer = inflater.inflate(R.layout.purchase_edit_footer, purchaseListView, false);
         goodsLabelEdit = (EditText) header.findViewById(R.id.edit_goods_label);
         addItemButton = header.findViewById(R.id.button_goods_add);
 
         listNameEdit = (EditText) view.findViewById(R.id.edit_list_name);
+        shopsSpinner = (Spinner) view.findViewById(R.id.shops_spinner);
 
         return view;
     }
@@ -91,19 +93,16 @@ public class PurchaseListEditFragment extends BaseFragment {
             int id = getArguments().getInt(ARG_LIST_ID);
             purchaseList = ShoppingHelper.getInstance().getPurchaseLists().get(id);
             listNameEdit.setText(purchaseList.getListName());
-            //addNewListButton.setVisibility(View.GONE);
             isEdit = true;
         } else {
             purchaseList = new PurchaseListModel();
             List<PurchaseItemModel> purchaseItems = new ArrayList<>();
             purchaseList.setPurchasesItems(purchaseItems);
-            //updateListButton.setVisibility(View.GONE);
             isEdit = false;
         }
 
         adapter = new PurchaseItemAdapter(getActivity(), R.layout.purchase_edit_item, purchaseList.getPurchasesItems());;
         purchaseListView.addHeaderView(header);
-        //purchaseListView.addFooterView(footer);
         purchaseListView.setAdapter(adapter);
         purchaseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -112,38 +111,31 @@ public class PurchaseListEditFragment extends BaseFragment {
             }
         });
 
-        /*addNewListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideSoftKeyboard();
-                addNewList();
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
-
-        deleteListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteList();
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
-
-        updateListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideSoftKeyboard();
-                updateList();
-                getActivity().getSupportFragmentManager().popBackStack();popBackStack();
-            }
-        });*/
-
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addItem();
             }
         });
+
+        //temporary
+        shopsList = new ArrayList<>();
+        for (ShopsModel shop: ShoppingHelper.getInstance().getShopsList()) {
+            shopsList.add(shop.getShopName());
+        }
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(
+                getActivity(),
+                android.R.layout.simple_spinner_item,
+                shopsList
+        );
+
+        ShopSpinnerAdapter shopSpinnerAdapter = new ShopSpinnerAdapter(
+                getActivity(),
+                R.layout.shop_spinner_item,
+                ShoppingHelper.getInstance().getShopsList()
+        );
+
+        shopsSpinner.setAdapter(shopSpinnerAdapter);
     }
 
     @Override

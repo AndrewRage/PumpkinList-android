@@ -33,16 +33,22 @@
             android:footerDividersEnabled="false"
             android:layout_above="@+id/toolbar_bottom"  />
 
-        <android.support.v7.widget.Toolbar
+        <RelativeLayout
             android:id="@+id/toolbar_bottom"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:minHeight="@dimen/bottom_toolbar_height"
             android:background="?attr/colorPrimary"
-            app:theme="@style/ToolBarTheme"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true">
+
+            <Spinner
+                android:id="@+id/shops_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
