@@ -4,6 +4,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import geekhub.activeshoplistapp.R;
@@ -22,7 +23,14 @@ public abstract class BaseActivity extends ActionBarActivity {
     public void initDrawer() {
         setContentView(R.layout.activity_with_fragment);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, 0); // this disables the animation
+            }
+
+        };
         drawerListView = (ListView) findViewById(R.id.left_drawer);
         drawerLayout.setDrawerListener(drawerToggle);
     }
