@@ -21,4 +21,7 @@
     <dimen name="bottom_toolbar_height">48dp</dimen>
     <dimen name="toolbar_padding_vertical">4dp</dimen>
     <dimen name="toolbar_edit_description_text_size">13dp</dimen>
+
+    <dimen name="shops_spinner_vertical_padding">15dp</dimen>
+    <dimen name="shops_spinner_horizontal_padding">10dp</dimen>
 </resources>

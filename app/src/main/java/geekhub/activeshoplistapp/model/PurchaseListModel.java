@@ -10,7 +10,7 @@ public class PurchaseListModel {
     private long serverId;
     private String listName;
     private int userId;
-    private int shopId;
+    private long shopId;
     private long timeAlarm;
     private long timeCreate;
     private long timeStamp;
@@ -24,7 +24,7 @@ public class PurchaseListModel {
                              long serverId,
                              String listName,
                              int userId,
-                             int shopId,
+                             long shopId,
                              long timeAlarm,
                              long timeCreate,
                              long timeStamp,
@@ -72,11 +72,11 @@ public class PurchaseListModel {
         this.userId = userId;
     }
 
-    public int getShopId() {
+    public long getShopId() {
         return shopId;
     }
 
-    public void setShopId(int shopId) {
+    public void setShopId(long shopId) {
         this.shopId = shopId;
     }
 

@@ -9,6 +9,8 @@
 
         <item name="android:buttonStyle">@style/CustomButton</item>
 
+        <item name="android:dropDownListViewStyle">@style/mySpinnerStyle</item>
+
     </style>
 
     <!-- Base application theme. -->
@@ -28,6 +30,11 @@
         <item name="android:textSize">@dimen/button_text_size</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:background">@drawable/custom_button</item>
+    </style>
+
+    <style name="mySpinnerStyle" parent="Widget.AppCompat.ListView.Menu">
+        <item name="android:dividerHeight">0.5dp</item>
+        <item name="android:divider">@color/theme_divider</item>
     </style>
 
     <style name="ToolBarTheme" parent="ASlistTheme">

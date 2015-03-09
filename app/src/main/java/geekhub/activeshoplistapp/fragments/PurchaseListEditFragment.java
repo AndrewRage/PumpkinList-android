@@ -2,11 +2,13 @@ package geekhub.activeshoplistapp.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import geekhub.activeshoplistapp.R;
+import geekhub.activeshoplistapp.activities.ShopActivity;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
 import geekhub.activeshoplistapp.adapters.ShopSpinnerAdapter;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
@@ -36,6 +39,7 @@ import geekhub.activeshoplistapp.model.ShopsModel;
 public class PurchaseListEditFragment extends BaseFragment {
     private static final String TAG = "PurchaseListEditFragment";
     private static final String ARG_LIST_ID = "PurchaseList_param";
+    private static final int REQUEST_SHOP = 10101;
     private PurchaseItemAdapter adapter;
     private ListView purchaseListView;
     private View header;
@@ -45,7 +49,7 @@ public class PurchaseListEditFragment extends BaseFragment {
     private View addItemButton;
     private boolean isEdit;
     private Spinner shopsSpinner;
-    private ArrayList<String> shopsList;
+    private ShopSpinnerAdapter shopSpinnerAdapter;
 
     public static PurchaseListEditFragment newInstance(int purchaseListId) {
         PurchaseListEditFragment fragment = new PurchaseListEditFragment();
@@ -118,24 +122,56 @@ public class PurchaseListEditFragment extends BaseFragment {
             }
         });
 
-        //temporary
-        shopsList = new ArrayList<>();
-        for (ShopsModel shop: ShoppingHelper.getInstance().getShopsList()) {
-            shopsList.add(shop.getShopName());
-        }
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_spinner_item,
-                shopsList
-        );
-
-        ShopSpinnerAdapter shopSpinnerAdapter = new ShopSpinnerAdapter(
+        shopSpinnerAdapter = new ShopSpinnerAdapter(
                 getActivity(),
                 R.layout.shop_spinner_item,
                 ShoppingHelper.getInstance().getShopsList()
         );
-
+        shopSpinnerAdapter.setSettingsClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shopsSpinner.setEnabled(false);
+                Intent intent = new Intent(getActivity(), ShopActivity.class);
+                startActivityForResult(intent, REQUEST_SHOP);
+            }
+        });
         shopsSpinner.setAdapter(shopSpinnerAdapter);
+        if (purchaseList.getShopId() != 0) {
+            for (ShopsModel shop : ShoppingHelper.getInstance().getShopsList()) {
+                if (purchaseList.getShopId() > 0) {
+                    if (shop.getServerId() == purchaseList.getShopId()) {
+                        shopsSpinner.setSelection(shopSpinnerAdapter.getPosition(shop));
+                    }
+                } else if (purchaseList.getShopId() < 0) {
+                    if ((shop.getDbId() * (-1) ) == purchaseList.getShopId()) {
+                        shopsSpinner.setSelection(shopSpinnerAdapter.getPosition(shop));
+                    }
+                }
+            }
+        }
+        shopsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position > 0) {
+                    if (shopSpinnerAdapter.getItem(position).getServerId() == 0) {
+                        purchaseList.setShopId(shopSpinnerAdapter.getItem(position).getDbId() * (-1));
+                    } else {
+                        purchaseList.setShopId(shopSpinnerAdapter.getItem(position).getServerId());
+                    }
+                } else if (position == 0) {
+                    purchaseList.setShopId(0);
+                }
+                if (isEdit) {
+                    ShoppingHelper.getInstance().updatePurchaseList(purchaseList);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //
+            }
+        });
     }
 
     @Override
@@ -273,5 +309,13 @@ public class PurchaseListEditFragment extends BaseFragment {
             );
         }
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_SHOP) {
+            shopSpinnerAdapter.notifyDataSetChanged();
+        }
     }
 }
