@@ -11,6 +11,16 @@
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
 
+    <string-array name="drawer_menu">
+        <item>Active Lists</item>
+        <item>Inbox Lists</item>
+        <item>Outbox Lists</item>
+        <item>My shops</item>
+        <item>My places</item>
+        <item>Settings</item>
+        <item>Logout</item>
+    </string-array>
+
     <!--Login-->
     <string name="login_email">E-mail</string>
     <string name="login_password">Password</string>

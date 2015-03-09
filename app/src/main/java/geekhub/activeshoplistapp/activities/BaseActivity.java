@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import geekhub.activeshoplistapp.R;
@@ -21,6 +22,8 @@ public abstract class BaseActivity extends ActionBarActivity {
     private boolean drawerHamburgerScreen = false;
 
     public void initDrawer() {
+        String[] menus = getResources().getStringArray(R.array.drawer_menu);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, menus);
         setContentView(R.layout.activity_with_fragment);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
@@ -32,6 +35,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         };
         drawerListView = (ListView) findViewById(R.id.left_drawer);
+        drawerListView.setAdapter(arrayAdapter);
         drawerLayout.setDrawerListener(drawerToggle);
     }
 
