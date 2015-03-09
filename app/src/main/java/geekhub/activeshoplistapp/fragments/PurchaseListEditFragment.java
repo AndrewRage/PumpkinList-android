@@ -175,6 +175,12 @@ public class PurchaseListEditFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        goodsLabelEdit.requestFocus();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_purchase_edit, menu);
     }
