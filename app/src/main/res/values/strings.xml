@@ -8,6 +8,9 @@
     <string name="action_delete_shop">Delete shop</string>
     <string name="action_delete_list">Delete shopping list</string>
 
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+
     <!--Login-->
     <string name="login_email">E-mail</string>
     <string name="login_password">Password</string>

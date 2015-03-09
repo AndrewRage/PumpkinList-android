@@ -1,7 +1,9 @@
 package geekhub.activeshoplistapp.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -15,18 +17,34 @@ import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 /**
  * Created by rage on 08.02.15.
  */
-public class PurchaseListActivity extends BaseActivity implements PurchaseListMainFragment.OnPurchaseListMainFragmentListener{
+public class PurchaseListActivity extends BaseActivity implements PurchaseListMainFragment.OnPurchaseListMainFragmentListener, FragmentManager.OnBackStackChangedListener {
     private static final String TAG = "PurchaseListActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_with_fragment);
+        initDrawer();
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.addOnBackStackChangedListener(this);
+            fragmentManager.beginTransaction()
                     .replace(R.id.container, new PurchaseListMainFragment())
                     .commit();
         }
+
+        getDrawerToggle().syncState();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        getDrawerToggle().syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        getDrawerToggle().onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -43,5 +61,13 @@ public class PurchaseListActivity extends BaseActivity implements PurchaseListMa
                 .replace(R.id.container, PurchaseListEditFragment.newInstance(id))
                 .addToBackStack(AppConstants.BACK_STACK_PURCHASE)
                 .commit();
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+        if(backStackEntryCount <= 0){
+            getDrawerToggle().syncState();
+        }
     }
 }

@@ -11,6 +11,8 @@
 
         <item name="android:dropDownListViewStyle">@style/mySpinnerStyle</item>
 
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+
     </style>
 
     <!-- Base application theme. -->
@@ -35,6 +37,11 @@
     <style name="mySpinnerStyle" parent="Widget.AppCompat.ListView.Menu">
         <item name="android:dividerHeight">0.5dp</item>
         <item name="android:divider">@color/theme_divider</item>
+    </style>
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
     </style>
 
     <style name="ToolBarTheme" parent="ASlistTheme">

@@ -178,6 +178,7 @@ public class PurchaseListEditFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         goodsLabelEdit.requestFocus();
+        shopsSpinner.setEnabled(true);
     }
 
     @Override

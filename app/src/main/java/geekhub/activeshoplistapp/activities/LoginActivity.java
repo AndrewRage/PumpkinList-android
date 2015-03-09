@@ -19,14 +19,14 @@ import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 public class LoginActivity extends BaseActivity implements LoginFragment.OnLoginFragmentListener {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPrefHelper sharedPrefHelper = SharedPrefHelper.getInstance();
         if (TextUtils.isEmpty(sharedPrefHelper.getUserName())) {
-            setContentView(R.layout.activity_with_fragment);
+            //setContentView(R.layout.activity_with_fragment);
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.container, new LoginFragment())
+                        .add(android.R.id.content, new LoginFragment())
                         .commit();
             }
         } else {
