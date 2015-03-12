@@ -40,12 +40,6 @@ public class PurchaseListMainFragment extends BaseFragment {
     private OnPurchaseListMainFragmentListener purchaseListMainFragmentListener;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_purchase_list_main, container, false);
         addToolbar(view);
@@ -87,36 +81,6 @@ public class PurchaseListMainFragment extends BaseFragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnLoginFragmentListener");
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_purchase_list, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_logout) {
-            SharedPrefHelper sharedPrefHelper = SharedPrefHelper.getInstance();
-            sharedPrefHelper.setUserName(null);
-            getActivity().finish();
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        if (id == R.id.action_shops) {
-            Intent intent = new Intent(getActivity(), ShopActivity.class);
-            startActivity(intent);
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public interface OnPurchaseListMainFragmentListener {
