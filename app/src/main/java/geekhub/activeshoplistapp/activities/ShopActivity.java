@@ -21,4 +21,12 @@ public class ShopActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void menuShowPurchaseLists() {
+        finish();
+    }
+
+    @Override
+    public void menuManageShop() {
+    }
 }

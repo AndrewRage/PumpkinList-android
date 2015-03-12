@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -71,6 +72,20 @@ public abstract class BaseActivity extends ActionBarActivity {
     public ActionBarDrawerToggle getDrawerToggle() {
         drawerHamburgerScreen = true;
         return drawerToggle;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPrefHelper sharedPrefHelper = SharedPrefHelper.getInstance();
+        if (TextUtils.isEmpty(sharedPrefHelper.getUserName())) {
+            finish();
+        }
+    }
+
+    protected void superOnResume() {
+        super.onResume();
     }
 
     @Override

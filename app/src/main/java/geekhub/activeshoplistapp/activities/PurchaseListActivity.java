@@ -70,4 +70,8 @@ public class PurchaseListActivity extends BaseActivity implements PurchaseListMa
             getDrawerToggle().syncState();
         }
     }
+
+    @Override
+    public void menuShowPurchaseLists() {
+    }
 }
