@@ -19,6 +19,7 @@ import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
  */
 public class PurchaseListActivity extends BaseActivity implements PurchaseListMainFragment.OnPurchaseListMainFragmentListener, FragmentManager.OnBackStackChangedListener {
     private static final String TAG = "PurchaseListActivity";
+    private PurchaseListEditFragment purchaseListEditFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,16 +50,18 @@ public class PurchaseListActivity extends BaseActivity implements PurchaseListMa
 
     @Override
     public void onPurchaseListMainFragmentClickListener() {
+        purchaseListEditFragment = new PurchaseListEditFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, new PurchaseListEditFragment())
+                .replace(R.id.container, purchaseListEditFragment)
                 .addToBackStack(AppConstants.BACK_STACK_PURCHASE)
                 .commit();
     }
 
     @Override
     public void onPurchaseListMainFragmentClickListener(int id) {
+        purchaseListEditFragment = PurchaseListEditFragment.newInstance(id);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, PurchaseListEditFragment.newInstance(id))
+                .replace(R.id.container, purchaseListEditFragment)
                 .addToBackStack(AppConstants.BACK_STACK_PURCHASE)
                 .commit();
     }
@@ -73,5 +76,9 @@ public class PurchaseListActivity extends BaseActivity implements PurchaseListMa
 
     @Override
     public void menuShowPurchaseLists() {
+        if (purchaseListEditFragment != null) {
+            purchaseListEditFragment.onBackPressed();
+            purchaseListEditFragment = null;
+        }
     }
 }
