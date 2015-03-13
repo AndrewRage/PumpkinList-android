@@ -5,10 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -23,14 +21,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.helpers.AppConstants;
-import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.model.ShopsModel;
 
 /**
  * Created by rage on 3/3/15.
  */
-public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback {
+public class MapActivity extends BaseActivity implements OnMapReadyCallback {
+    private static final String TAG = MapActivity.class.getSimpleName();
     private ShopsModel shop;
     private GoogleMap map;
     private EditText shopNameEdit;
@@ -41,7 +39,7 @@ public class ShopMapActivity extends BaseActivity implements OnMapReadyCallback 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shop_map);
+        setContentView(R.layout.activity_map);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

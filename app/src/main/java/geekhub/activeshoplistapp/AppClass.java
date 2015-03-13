@@ -14,7 +14,7 @@ import geekhub.activeshoplistapp.helpers.SqlDbHelper;
  */
 public class AppClass extends Application {
 
-    private static final String TAG = "AppLog AppClass";
+    private static final String TAG = AppClass.class.getSimpleName();
 
     @Override
     public void onCreate() {

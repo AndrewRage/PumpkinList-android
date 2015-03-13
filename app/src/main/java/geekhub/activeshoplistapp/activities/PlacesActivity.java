@@ -8,7 +8,8 @@ import geekhub.activeshoplistapp.fragments.ShopsManageFragment;
 /**
  * Created by rage on 08.02.15. Create by task: 004
  */
-public class ShopActivity extends BaseActivity {
+public class PlacesActivity extends BaseActivity {
+    private static final String TAG = PlacesActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

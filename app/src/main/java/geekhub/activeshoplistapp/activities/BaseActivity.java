@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -25,6 +24,7 @@ import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
  * Base activity
  */
 public abstract class BaseActivity extends ActionBarActivity {
+    private static final String TAG = BaseActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     private ListView drawerListView;
@@ -35,7 +35,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         menus.add(AppConstants.MENU_SHOW_PURCHASE_LIST);
         menus.add(AppConstants.MENU_SHOW_SHOPS);
         menus.add(AppConstants.MENU_LOGOUT);
-        final DrawerMenuAdapter drawerMenuAdapter = new DrawerMenuAdapter(this, R.layout.drawer_menu_item, menus);
+        final DrawerMenuAdapter drawerMenuAdapter = new DrawerMenuAdapter(this, R.layout.item_drawer_menu, menus);
         setContentView(R.layout.activity_with_fragment);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
@@ -139,7 +139,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     public void menuManageShop() {
-        Intent intent = new Intent(this, ShopActivity.class);
+        Intent intent = new Intent(this, PlacesActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }

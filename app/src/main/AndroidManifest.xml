@@ -28,16 +28,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.PurchaseListActivity"
+            android:name=".activities.PurchaseActivity"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".activities.ShopActivity"
+            android:name=".activities.PlacesActivity"
             android:label="@string/app_name">
         </activity>
         <activity
-            android:name=".activities.ShopMapActivity"
+            android:name=".activities.MapActivity"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:label="@string/app_name" >
         </activity>

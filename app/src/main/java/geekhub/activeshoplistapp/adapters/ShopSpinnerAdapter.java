@@ -17,6 +17,7 @@ import geekhub.activeshoplistapp.model.ShopsModel;
  * Created by rage on 3/8/15.
  */
 public class ShopSpinnerAdapter extends ArrayAdapter<ShopsModel> {
+    private static final String TAG = ShopSpinnerAdapter.class.getSimpleName();
     private List<ShopsModel> shopsList;
     private int resource;
     private LayoutInflater inflater;

@@ -10,8 +10,7 @@ import android.util.Log;
  *
  */
 public class SharedPrefHelper {
-
-    private static final String TAG = "AppLog SharedPrefHelper";
+    private static final String TAG = SharedPrefHelper.class.getSimpleName();
 
     private static SharedPrefHelper sharedPrefHelper;
     private SharedPreferences preferences;

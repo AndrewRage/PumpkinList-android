@@ -16,7 +16,7 @@ import geekhub.activeshoplistapp.model.ShopsModel;
  * Created by rage on 2/27/15.
  */
 public class DataBaseHelper {
-    private static final String LOG = "DataBaseHelper";
+    private static final String TAG = DataBaseHelper.class.getSimpleName();
 
     private SqlDbHelper dbHelper;
     private SQLiteDatabase database;

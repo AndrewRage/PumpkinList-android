@@ -16,6 +16,7 @@ import geekhub.activeshoplistapp.model.ShopsModel;
  * Created by rage on 2/24/15.
  */
 public class ShoppingHelper {
+    private static final String TAG = ShoppingHelper.class.getSimpleName();
     private static ShoppingHelper shoppingHelper;
     private List<PurchaseListModel> purchaseLists;
     private List<ShopsModel> shopsList;

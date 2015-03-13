@@ -12,6 +12,7 @@ import geekhub.activeshoplistapp.R;
  * Created by rage on 08.02.15. Create by task: 004
  */
 public class LoginRegisterFragment extends BaseFragment {
+    private static final String TAG = LoginRegisterFragment.class.getSimpleName();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

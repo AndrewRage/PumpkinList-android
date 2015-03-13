@@ -17,6 +17,7 @@ import geekhub.activeshoplistapp.helpers.AppConstants;
  * Created by rage on 3/12/15.
  */
 public class DrawerMenuAdapter extends BaseAdapter {
+    private static final String TAG = DrawerMenuAdapter.class.getSimpleName();
     private Context context;
     private List<Integer> menuList;
     private int resource;

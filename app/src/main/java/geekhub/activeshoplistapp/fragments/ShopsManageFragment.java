@@ -3,7 +3,6 @@ package geekhub.activeshoplistapp.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import android.widget.ListView;
 import java.util.List;
 
 import geekhub.activeshoplistapp.R;
-import geekhub.activeshoplistapp.activities.ShopMapActivity;
+import geekhub.activeshoplistapp.activities.MapActivity;
 import geekhub.activeshoplistapp.adapters.ShopAdapter;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
@@ -23,6 +22,7 @@ import geekhub.activeshoplistapp.model.ShopsModel;
  * Created by rage on 08.02.15. Create by task: 004
  */
 public class ShopsManageFragment extends BaseFragment {
+    private static final String TAG = ShopsManageFragment.class.getSimpleName();
     private ListView shopListView;
     private View plusButton;
     private List<ShopsModel> shopsList;
@@ -43,12 +43,12 @@ public class ShopsManageFragment extends BaseFragment {
 
         shopsList = ShoppingHelper.getInstance().getShopsList();
 
-        adapter = new ShopAdapter(getActivity(), R.layout.shop_item, shopsList);
+        adapter = new ShopAdapter(getActivity(), R.layout.item_shop, shopsList);
         shopListView.setAdapter(adapter);
         shopListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), ShopMapActivity.class)
+                Intent intent = new Intent(getActivity(), MapActivity.class)
                         .putExtra(AppConstants.EXTRA_SHOP_ID, position);
                 startActivityForResult(intent, AppConstants.SHOP_RESULT_CODE);
             }
@@ -57,7 +57,7 @@ public class ShopsManageFragment extends BaseFragment {
         plusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ShopMapActivity.class);
+                Intent intent = new Intent(getActivity(), MapActivity.class);
                 startActivityForResult(intent, AppConstants.SHOP_RESULT_CODE);
             }
         });

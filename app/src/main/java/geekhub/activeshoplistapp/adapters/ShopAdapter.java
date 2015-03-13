@@ -16,6 +16,7 @@ import geekhub.activeshoplistapp.model.ShopsModel;
  * Created by rage on 3/4/15.
  */
 public class ShopAdapter extends BaseAdapter {
+    private static final String TAG = ShopAdapter.class.getSimpleName();
     private Context context;
     private int resource;
     private List<ShopsModel> shopLists;

@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -25,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import geekhub.activeshoplistapp.R;
-import geekhub.activeshoplistapp.activities.ShopActivity;
+import geekhub.activeshoplistapp.activities.PlacesActivity;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
 import geekhub.activeshoplistapp.adapters.ShopSpinnerAdapter;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
@@ -36,8 +34,8 @@ import geekhub.activeshoplistapp.model.ShopsModel;
 /**
  * Created by rage on 08.02.15. Create by task: 004
  */
-public class PurchaseListEditFragment extends BaseFragment {
-    private static final String TAG = "PurchaseListEditFragment";
+public class PurchaseEditFragment extends BaseFragment {
+    private static final String TAG = PurchaseEditFragment.class.getSimpleName();
     private static final String ARG_LIST_ID = "PurchaseList_param";
     private static final int REQUEST_SHOP = 10101;
     private PurchaseItemAdapter adapter;
@@ -51,15 +49,15 @@ public class PurchaseListEditFragment extends BaseFragment {
     private Spinner shopsSpinner;
     private ShopSpinnerAdapter shopSpinnerAdapter;
 
-    public static PurchaseListEditFragment newInstance(int purchaseListId) {
-        PurchaseListEditFragment fragment = new PurchaseListEditFragment();
+    public static PurchaseEditFragment newInstance(int purchaseListId) {
+        PurchaseEditFragment fragment = new PurchaseEditFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_LIST_ID, purchaseListId);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public PurchaseListEditFragment() {
+    public PurchaseEditFragment() {
 
     }
 
@@ -71,7 +69,7 @@ public class PurchaseListEditFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_purchase_list_edit, container, false);
+        View view = inflater.inflate(R.layout.fragment_purchase_edit, container, false);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ActionBarActivity activity = (ActionBarActivity) getActivity();
@@ -105,7 +103,7 @@ public class PurchaseListEditFragment extends BaseFragment {
             isEdit = false;
         }
 
-        adapter = new PurchaseItemAdapter(getActivity(), R.layout.purchase_edit_item, purchaseList.getPurchasesItems());;
+        adapter = new PurchaseItemAdapter(getActivity(), R.layout.item_purchase_edit, purchaseList.getPurchasesItems());;
         purchaseListView.addHeaderView(header);
         purchaseListView.setAdapter(adapter);
         purchaseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -124,14 +122,14 @@ public class PurchaseListEditFragment extends BaseFragment {
 
         shopSpinnerAdapter = new ShopSpinnerAdapter(
                 getActivity(),
-                R.layout.shop_spinner_item,
+                R.layout.item_shop_spinner,
                 ShoppingHelper.getInstance().getShopsList()
         );
         shopSpinnerAdapter.setSettingsClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 shopsSpinner.setEnabled(false);
-                Intent intent = new Intent(getActivity(), ShopActivity.class);
+                Intent intent = new Intent(getActivity(), PlacesActivity.class);
                 startActivityForResult(intent, REQUEST_SHOP);
             }
         });

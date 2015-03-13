@@ -21,7 +21,7 @@ import geekhub.activeshoplistapp.activities.BaseActivity;
  * Base Fragment
  */
 public abstract class BaseFragment extends Fragment implements BaseActivity.OnBackPressedListener {
-    private static final String TAG = "BaseFragment";
+    private static final String TAG = BaseFragment.class.getSimpleName();
 
     public void addToolbar(View view) {
         addToolbar(view, true);

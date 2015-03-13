@@ -16,6 +16,7 @@ import geekhub.activeshoplistapp.model.PurchaseListModel;
  * Created by rage on 2/22/15.
  */
 public class PurchaseListAdapter extends BaseAdapter {
+    private static final String TAG = PurchaseListAdapter.class.getSimpleName();
     private Context context;
     private int resource;
     private List<PurchaseListModel> purchaseLists;

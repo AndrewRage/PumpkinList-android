@@ -19,6 +19,7 @@ import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
  * Created by rage on 08.02.15. Create by task: 004
  */
 public class LoginFragment extends BaseFragment{
+    private static final String TAG = LoginFragment.class.getSimpleName();
     private EditText emailEditText;
     private EditText passwordEditText;
     private CheckBox rememberCheckBox;

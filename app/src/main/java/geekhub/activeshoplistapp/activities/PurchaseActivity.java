@@ -5,22 +5,19 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import geekhub.activeshoplistapp.R;
-import geekhub.activeshoplistapp.fragments.PurchaseListEditFragment;
-import geekhub.activeshoplistapp.fragments.PurchaseListMainFragment;
+import geekhub.activeshoplistapp.fragments.PurchaseEditFragment;
+import geekhub.activeshoplistapp.fragments.PurchaseManageFragment;
 import geekhub.activeshoplistapp.helpers.AppConstants;
-import geekhub.activeshoplistapp.helpers.DataBaseHelper;
 import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 
 /**
  * Created by rage on 08.02.15.
  */
-public class PurchaseListActivity extends BaseActivity implements PurchaseListMainFragment.OnPurchaseListMainFragmentListener, FragmentManager.OnBackStackChangedListener {
-    private static final String TAG = "PurchaseListActivity";
-    private PurchaseListEditFragment purchaseListEditFragment;
+public class PurchaseActivity extends BaseActivity implements PurchaseManageFragment.OnPurchaseListMainFragmentListener, FragmentManager.OnBackStackChangedListener {
+    private static final String TAG = PurchaseActivity.class.getSimpleName();
+    private PurchaseEditFragment purchaseListEditFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,7 +27,7 @@ public class PurchaseListActivity extends BaseActivity implements PurchaseListMa
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.addOnBackStackChangedListener(this);
             fragmentManager.beginTransaction()
-                    .replace(R.id.container, new PurchaseListMainFragment())
+                    .replace(R.id.container, new PurchaseManageFragment())
                     .commit();
         }
 
@@ -63,7 +60,7 @@ public class PurchaseListActivity extends BaseActivity implements PurchaseListMa
 
     @Override
     public void onPurchaseListMainFragmentClickListener() {
-        purchaseListEditFragment = new PurchaseListEditFragment();
+        purchaseListEditFragment = new PurchaseEditFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, purchaseListEditFragment)
                 .addToBackStack(AppConstants.BACK_STACK_PURCHASE)
@@ -72,7 +69,7 @@ public class PurchaseListActivity extends BaseActivity implements PurchaseListMa
 
     @Override
     public void onPurchaseListMainFragmentClickListener(int id) {
-        purchaseListEditFragment = PurchaseListEditFragment.newInstance(id);
+        purchaseListEditFragment = PurchaseEditFragment.newInstance(id);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, purchaseListEditFragment)
                 .addToBackStack(AppConstants.BACK_STACK_PURCHASE)
