@@ -38,6 +38,7 @@ public class LoginActivity extends BaseActivity implements LoginFragment.OnLogin
     private void openApplication() {
         finish();
         Intent intent = new Intent(this, PurchaseListActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
 

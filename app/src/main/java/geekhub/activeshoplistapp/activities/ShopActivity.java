@@ -24,6 +24,7 @@ public class ShopActivity extends BaseActivity {
     @Override
     public void menuShowPurchaseLists() {
         finish();
+        overridePendingTransition(0, 0);
     }
 
     @Override
