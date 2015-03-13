@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import geekhub.activeshoplistapp.R;
@@ -20,20 +19,20 @@ import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.model.PlacesModel;
 
 /**
- * Created by rage on 08.02.15. Create by task: 004
+ * Created by rage on 3/13/15.
  */
-public class ShopsManageFragment extends BaseFragment {
-    private static final String TAG = ShopsManageFragment.class.getSimpleName();
-    private ListView shopListView;
+public class PlacesManageFragment extends BaseFragment {
+    private static final String TAG = PlacesManageFragment.class.getSimpleName();
+    private ListView placesListView;
     private View plusButton;
     private List<PlacesModel> shopsList;
     private ShopAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_shop_manage, container, false);
+        View view = inflater.inflate(R.layout.fragment_places_manage, container, false);
         addToolbar(view);
-        shopListView = (ListView) view.findViewById(R.id.shop_list);
+        placesListView = (ListView) view.findViewById(R.id.place_list);
         plusButton = view.findViewById(R.id.plus_button);
         return view;
     }
@@ -42,11 +41,11 @@ public class ShopsManageFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        shopsList = getShopsList();
+        shopsList = ShoppingHelper.getInstance().gePlacesList();
 
         adapter = new ShopAdapter(getActivity(), R.layout.item_shop, shopsList);
-        shopListView.setAdapter(adapter);
-        shopListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        placesListView.setAdapter(adapter);
+        placesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), MapActivity.class)
@@ -67,17 +66,6 @@ public class ShopsManageFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        shopsList = getShopsList();
         adapter.notifyDataSetChanged();
-    }
-
-    private List<PlacesModel> getShopsList() {
-        List<PlacesModel> list = new ArrayList<>();
-        for (PlacesModel placesModel : ShoppingHelper.getInstance().gePlacesList()) {
-            if (placesModel.getCategory() == AppConstants.PLACES_SHOP) {
-                list.add(placesModel);
-            }
-        }
-        return list;
     }
 }

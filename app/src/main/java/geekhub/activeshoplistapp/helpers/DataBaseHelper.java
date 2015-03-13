@@ -10,7 +10,7 @@ import java.util.List;
 
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
-import geekhub.activeshoplistapp.model.ShopsModel;
+import geekhub.activeshoplistapp.model.PlacesModel;
 
 /**
  * Created by rage on 2/27/15.
@@ -241,65 +241,68 @@ public class DataBaseHelper {
         return items;
     }
 
-    public long addShop(ShopsModel shop) {
+    public long addPlace(PlacesModel placesModel) {
         ContentValues values = new ContentValues();
-        values.put(SqlDbHelper.SHOPS_COLUMN_SHOP_ID, shop.getServerId());
-        values.put(SqlDbHelper.SHOPS_COLUMN_NAME, shop.getShopName());
-        values.put(SqlDbHelper.SHOPS_COLUMN_DESCRIPTION, shop.getShopDescription());
-        values.put(SqlDbHelper.SHOPS_COLUMN_LATITUDE, shop.getGpsLatitude());
-        values.put(SqlDbHelper.SHOPS_COLUMN_LONGITUDE, shop.getGpsLongitude());
-        values.put(SqlDbHelper.SHOPS_COLUMN_IS_DELETE, shop.isDelete() ? 1 : 0);
-        values.put(SqlDbHelper.SHOPS_COLUMN_TIMESTAMP, shop.getGpsLongitude());
+        values.put(SqlDbHelper.PLACES_COLUMN_PLACES_ID, placesModel.getServerId());
+        values.put(SqlDbHelper.PLACES_COLUMN_CATEGORY, placesModel.getCategory());
+        values.put(SqlDbHelper.PLACES_COLUMN_NAME, placesModel.getShopName());
+        values.put(SqlDbHelper.PLACES_COLUMN_DESCRIPTION, placesModel.getShopDescription());
+        values.put(SqlDbHelper.PLACES_COLUMN_LATITUDE, placesModel.getGpsLatitude());
+        values.put(SqlDbHelper.PLACES_COLUMN_LONGITUDE, placesModel.getGpsLongitude());
+        values.put(SqlDbHelper.PLACES_COLUMN_IS_DELETE, placesModel.isDelete() ? 1 : 0);
+        values.put(SqlDbHelper.PLACES_COLUMN_TIMESTAMP, placesModel.getGpsLongitude());
         long rawId = database.insert(
-                SqlDbHelper.TABLE_SHOPS,
+                SqlDbHelper.TABLE_PLACES,
                 null,
                 values
         );
         return rawId;
     }
 
-    public long updateShop(ShopsModel shop) {
+    public long updatePlace(PlacesModel placesModel) {
         ContentValues values = new ContentValues();
-        values.put(SqlDbHelper.SHOPS_COLUMN_SHOP_ID, shop.getServerId());
-        values.put(SqlDbHelper.SHOPS_COLUMN_NAME, shop.getShopName());
-        values.put(SqlDbHelper.SHOPS_COLUMN_DESCRIPTION, shop.getShopDescription());
-        values.put(SqlDbHelper.SHOPS_COLUMN_LATITUDE, shop.getGpsLatitude());
-        values.put(SqlDbHelper.SHOPS_COLUMN_LONGITUDE, shop.getGpsLongitude());
-        values.put(SqlDbHelper.SHOPS_COLUMN_IS_DELETE, shop.isDelete() ? 1 : 0);
-        values.put(SqlDbHelper.SHOPS_COLUMN_TIMESTAMP, shop.getGpsLongitude());
+        values.put(SqlDbHelper.PLACES_COLUMN_PLACES_ID, placesModel.getServerId());
+        values.put(SqlDbHelper.PLACES_COLUMN_CATEGORY, placesModel.getCategory());
+        values.put(SqlDbHelper.PLACES_COLUMN_NAME, placesModel.getShopName());
+        values.put(SqlDbHelper.PLACES_COLUMN_DESCRIPTION, placesModel.getShopDescription());
+        values.put(SqlDbHelper.PLACES_COLUMN_LATITUDE, placesModel.getGpsLatitude());
+        values.put(SqlDbHelper.PLACES_COLUMN_LONGITUDE, placesModel.getGpsLongitude());
+        values.put(SqlDbHelper.PLACES_COLUMN_IS_DELETE, placesModel.isDelete() ? 1 : 0);
+        values.put(SqlDbHelper.PLACES_COLUMN_TIMESTAMP, placesModel.getGpsLongitude());
         long rawId = database.update(
-                SqlDbHelper.TABLE_SHOPS,
+                SqlDbHelper.TABLE_PLACES,
                 values,
-                SqlDbHelper.COLUMN_ID + " = " + shop.getDbId(),
+                SqlDbHelper.COLUMN_ID + " = " + placesModel.getDbId(),
                 null
         );
         return rawId;
     }
 
-    public int deleteShop(long listDbId) {
+    public int deletePlace(long listDbId) {
         int count = database.delete(
-                SqlDbHelper.TABLE_SHOPS,
+                SqlDbHelper.TABLE_PLACES,
                 SqlDbHelper.COLUMN_ID + " = " + listDbId,
                 null
         );
         return count;
     }
 
-    public List<ShopsModel> getShopsList() {
-        List<ShopsModel> shops = new ArrayList<>();
+    public List<PlacesModel> getPlacesList() {
+        List<PlacesModel> placesModels = new ArrayList<>();
         String[] projection = {
                 SqlDbHelper.COLUMN_ID,
-                SqlDbHelper.SHOPS_COLUMN_SHOP_ID,
-                SqlDbHelper.SHOPS_COLUMN_NAME,
-                SqlDbHelper.SHOPS_COLUMN_DESCRIPTION,
-                SqlDbHelper.SHOPS_COLUMN_LATITUDE,
-                SqlDbHelper.SHOPS_COLUMN_LONGITUDE,
-                SqlDbHelper.SHOPS_COLUMN_IS_DELETE,
-                SqlDbHelper.SHOPS_COLUMN_TIMESTAMP,
+                SqlDbHelper.PLACES_COLUMN_PLACES_ID,
+                SqlDbHelper.PLACES_COLUMN_CATEGORY,
+                SqlDbHelper.PLACES_COLUMN_NAME,
+                SqlDbHelper.PLACES_COLUMN_DESCRIPTION,
+                SqlDbHelper.PLACES_COLUMN_LATITUDE,
+                SqlDbHelper.PLACES_COLUMN_LONGITUDE,
+                SqlDbHelper.PLACES_COLUMN_IS_DELETE,
+                SqlDbHelper.PLACES_COLUMN_TIMESTAMP,
         };
         String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
         Cursor cursor = database.query(
-                SqlDbHelper.TABLE_SHOPS,
+                SqlDbHelper.TABLE_PLACES,
                 projection,
                 null,
                 null,
@@ -310,16 +313,18 @@ public class DataBaseHelper {
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             int indexId = cursor.getColumnIndex(SqlDbHelper.COLUMN_ID);
-            int indexServerId = cursor.getColumnIndex(SqlDbHelper.SHOPS_COLUMN_SHOP_ID);
-            int indexName = cursor.getColumnIndex(SqlDbHelper.SHOPS_COLUMN_NAME);
-            int indexDescription = cursor.getColumnIndex(SqlDbHelper.SHOPS_COLUMN_DESCRIPTION);
-            int indexLatitude = cursor.getColumnIndex(SqlDbHelper.SHOPS_COLUMN_LATITUDE);
-            int indexLongitude = cursor.getColumnIndex(SqlDbHelper.SHOPS_COLUMN_LONGITUDE);
-            int indexIsDelete = cursor.getColumnIndex(SqlDbHelper.SHOPS_COLUMN_IS_DELETE);
-            int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.SHOPS_COLUMN_TIMESTAMP);
-            ShopsModel shopItem = new ShopsModel(
+            int indexServerId = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_PLACES_ID);
+            int indexCategory = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_CATEGORY);
+            int indexName = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_NAME);
+            int indexDescription = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_DESCRIPTION);
+            int indexLatitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LATITUDE);
+            int indexLongitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LONGITUDE);
+            int indexIsDelete = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_IS_DELETE);
+            int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_TIMESTAMP);
+            PlacesModel placesModel = new PlacesModel(
                     cursor.getLong(indexId),
                     cursor.getLong(indexServerId),
+                    cursor.getLong(indexCategory),
                     cursor.getString(indexName),
                     cursor.getString(indexDescription),
                     cursor.getDouble(indexLatitude),
@@ -327,9 +332,9 @@ public class DataBaseHelper {
                     cursor.getInt(indexIsDelete)>0,
                     cursor.getLong(indexTimestamp)
             );
-            shops.add(shopItem);
+            placesModels.add(placesModel);
             cursor.moveToNext();
         }
-        return shops;
+        return placesModels;
     }
 }

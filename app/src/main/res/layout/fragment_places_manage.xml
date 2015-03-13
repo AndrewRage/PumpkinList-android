@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/place_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageButton
+            android:id="@+id/plus_button"
+            android:layout_width="@dimen/fab_button_size_big"
+            android:layout_height="@dimen/fab_button_size_big"
+            android:background="@drawable/fab_background"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="@dimen/fab_button_right_margin"
+            android:layout_marginEnd="@dimen/fab_button_right_margin"
+            android:layout_marginBottom="@dimen/fab_button_bottom_margin"
+            android:contentDescription="@string/app_name" />
+
+    </RelativeLayout>
+
+</LinearLayout>

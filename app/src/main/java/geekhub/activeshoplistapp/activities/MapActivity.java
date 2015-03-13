@@ -22,14 +22,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
-import geekhub.activeshoplistapp.model.ShopsModel;
+import geekhub.activeshoplistapp.model.PlacesModel;
 
 /**
  * Created by rage on 3/3/15.
  */
 public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private static final String TAG = MapActivity.class.getSimpleName();
-    private ShopsModel shop;
+    private PlacesModel placesModel;
     private GoogleMap map;
     private EditText shopNameEdit;
     private boolean isEdit = false;
@@ -62,17 +62,17 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
             id = args.getIntExtra(AppConstants.EXTRA_SHOP_ID, -1);
         }
         if (id >= 0) {
-            shop = ShoppingHelper.getInstance().getShopsList().get(id);
+            placesModel = ShoppingHelper.getInstance().gePlacesList().get(id);
             isEdit = true;
             marker = map.addMarker(new MarkerOptions()
                     .position(new LatLng(
-                            shop.getGpsLatitude(),
-                            shop.getGpsLongitude()
+                            placesModel.getGpsLatitude(),
+                            placesModel.getGpsLongitude()
                     ))
                     .draggable(true));
-            shopNameEdit.setText(shop.getShopName());
+            shopNameEdit.setText(placesModel.getShopName());
         } else {
-            shop = new ShopsModel();
+            placesModel = new PlacesModel();
         }
     }
 
@@ -85,7 +85,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                     if (!isEdit) {
                         showMyLocation(location);
                     } else {
-                        LatLng latLng = new LatLng(shop.getGpsLatitude(), shop.getGpsLongitude());
+                        LatLng latLng = new LatLng(placesModel.getGpsLatitude(), placesModel.getGpsLongitude());
                         showMyLocation(latLng);
                     }
                     isOnceShowMyLocation = true;
@@ -133,13 +133,13 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_delete_shop) {
-            boolean isNeedDelet = false;
+            boolean isNeedDelete = false;
             if (isEdit) {
-                isNeedDelet = true;
+                isNeedDelete = true;
             } else if (marker != null || !TextUtils.isEmpty(shopNameEdit.getText().toString())) {
-                isNeedDelet = true;
+                isNeedDelete = true;
             }
-            if (isNeedDelet) {
+            if (isNeedDelete) {
                 String shopName = shopNameEdit.getText().toString();
                 String message;
                 if (TextUtils.isEmpty(shopName)) {
@@ -159,7 +159,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                         .setPositiveButton(R.string.shop_edit_alert_delete_yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 if (isEdit) {
-                                    ShoppingHelper.getInstance().deleteShop(shop);
+                                    ShoppingHelper.getInstance().deletePlace(placesModel);
                                 }
                                 finish();
                             }
@@ -183,33 +183,34 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     public void onBackPressed() {
         if (!isEdit && marker != null) {
             if (TextUtils.isEmpty(shopNameEdit.getText().toString())) {
-                shop.setShopName(getString(R.string.shop_edit_new_shop_default));
+                placesModel.setShopName(getString(R.string.shop_edit_new_shop_default));
             } else {
-                shop.setShopName(shopNameEdit.getText().toString());
+                placesModel.setShopName(shopNameEdit.getText().toString());
             }
-            shop.setGpsLatitude(marker.getPosition().latitude);
-            shop.setGpsLongitude(marker.getPosition().longitude);
-            ShoppingHelper.getInstance().addShop(shop);
+            placesModel.setCategory(AppConstants.PLACES_SHOP);
+            placesModel.setGpsLatitude(marker.getPosition().latitude);
+            placesModel.setGpsLongitude(marker.getPosition().longitude);
+            ShoppingHelper.getInstance().addPlace(placesModel);
         }
         if (isEdit) {
             boolean edit = false;
-            if (shop.getGpsLatitude() != marker.getPosition().latitude
-                    && shop.getGpsLongitude() != marker.getPosition().longitude) {
+            if (placesModel.getGpsLatitude() != marker.getPosition().latitude
+                    && placesModel.getGpsLongitude() != marker.getPosition().longitude) {
                 edit = true;
-                shop.setGpsLatitude(marker.getPosition().latitude);
-                shop.setGpsLongitude(marker.getPosition().longitude);
+                placesModel.setGpsLatitude(marker.getPosition().latitude);
+                placesModel.setGpsLongitude(marker.getPosition().longitude);
             }
-            if (!TextUtils.equals(shopNameEdit.getText().toString(), shop.getShopName())
+            if (!TextUtils.equals(shopNameEdit.getText().toString(), placesModel.getShopName())
                     || TextUtils.isEmpty(shopNameEdit.getText().toString())) {
                 edit = true;
                 if (TextUtils.isEmpty(shopNameEdit.getText().toString())) {
-                    shop.setShopName(getString(R.string.shop_edit_new_shop_default));
+                    placesModel.setShopName(getString(R.string.shop_edit_new_shop_default));
                 } else {
-                    shop.setShopName(shopNameEdit.getText().toString());
+                    placesModel.setShopName(shopNameEdit.getText().toString());
                 }
             }
             if (edit) {
-                ShoppingHelper.getInstance().updateShop(shop);
+                ShoppingHelper.getInstance().updatePlace(placesModel);
             }
         }
         super.onBackPressed();

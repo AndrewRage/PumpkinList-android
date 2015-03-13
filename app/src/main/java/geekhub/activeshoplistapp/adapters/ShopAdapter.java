@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import geekhub.activeshoplistapp.R;
-import geekhub.activeshoplistapp.model.ShopsModel;
+import geekhub.activeshoplistapp.model.PlacesModel;
 
 /**
  * Created by rage on 3/4/15.
@@ -19,10 +19,10 @@ public class ShopAdapter extends BaseAdapter {
     private static final String TAG = ShopAdapter.class.getSimpleName();
     private Context context;
     private int resource;
-    private List<ShopsModel> shopLists;
+    private List<PlacesModel> shopLists;
     private LayoutInflater inflater;
 
-    public ShopAdapter(Context context, int resource, List<ShopsModel> shopLists) {
+    public ShopAdapter(Context context, int resource, List<PlacesModel> shopLists) {
         this.context = context;
         this.resource = resource;
         this.shopLists = shopLists;
@@ -35,7 +35,7 @@ public class ShopAdapter extends BaseAdapter {
     }
 
     @Override
-    public ShopsModel getItem(int position) {
+    public PlacesModel getItem(int position) {
         return shopLists.get(position);
     }
 
@@ -46,7 +46,7 @@ public class ShopAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ShopsModel shop = shopLists.get(position);
+        PlacesModel shop = shopLists.get(position);
         Holder holder;
         if (convertView == null) {
             convertView = inflater.inflate(resource, parent, false);

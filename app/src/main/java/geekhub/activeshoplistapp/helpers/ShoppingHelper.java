@@ -2,15 +2,11 @@ package geekhub.activeshoplistapp.helpers;
 
 import android.content.Context;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
-import geekhub.activeshoplistapp.model.ShopsModel;
+import geekhub.activeshoplistapp.model.PlacesModel;
 
 /**
  * Created by rage on 2/24/15.
@@ -19,7 +15,7 @@ public class ShoppingHelper {
     private static final String TAG = ShoppingHelper.class.getSimpleName();
     private static ShoppingHelper shoppingHelper;
     private List<PurchaseListModel> purchaseLists;
-    private List<ShopsModel> shopsList;
+    private List<PlacesModel> placesList;
     private DataBaseHelper dataBaseHelper;
 
     private ShoppingHelper(Context context) {
@@ -91,35 +87,35 @@ public class ShoppingHelper {
         dataBaseHelper.close();
     }
 
-    public List<ShopsModel> getShopsList() {
-        if (shopsList == null) {
+    public List<PlacesModel> gePlacesList() {
+        if (placesList == null) {
             dataBaseHelper.open();
-            shopsList = dataBaseHelper.getShopsList();
+            placesList = dataBaseHelper.getPlacesList();
             dataBaseHelper.close();
         }
-        return shopsList;
+        return placesList;
     }
 
-    public long addShop(ShopsModel shop) {
+    public long addPlace(PlacesModel placesModel) {
         dataBaseHelper.open();
-        long rawId = dataBaseHelper.addShop(shop);
+        long rawId = dataBaseHelper.addPlace(placesModel);
         dataBaseHelper.close();
-        shop.setDbId(rawId);
-        shopsList.add(0, shop);
+        placesModel.setDbId(rawId);
+        placesList.add(0, placesModel);
         return rawId;
     }
 
-    public void updateShop(ShopsModel shop) {
-        shop.setTimeStamp(0);
+    public void updatePlace(PlacesModel placesModel) {
+        placesModel.setTimeStamp(0);
         dataBaseHelper.open();
-        dataBaseHelper.updateShop(shop);
+        dataBaseHelper.updatePlace(placesModel);
         dataBaseHelper.close();
     }
 
-    public void deleteShop(ShopsModel shop) {
+    public void deletePlace(PlacesModel placesModel) {
         dataBaseHelper.open();
-        dataBaseHelper.deleteShop(shop.getDbId());
+        dataBaseHelper.deletePlace(placesModel.getDbId());
         dataBaseHelper.close();
-        shopsList.remove(shop);
+        placesList.remove(placesModel);
     }
 }

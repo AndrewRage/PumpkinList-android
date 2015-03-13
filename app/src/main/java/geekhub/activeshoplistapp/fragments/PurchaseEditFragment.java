@@ -29,7 +29,7 @@ import geekhub.activeshoplistapp.adapters.ShopSpinnerAdapter;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
-import geekhub.activeshoplistapp.model.ShopsModel;
+import geekhub.activeshoplistapp.model.PlacesModel;
 
 /**
  * Created by rage on 08.02.15. Create by task: 004
@@ -123,7 +123,7 @@ public class PurchaseEditFragment extends BaseFragment {
         shopSpinnerAdapter = new ShopSpinnerAdapter(
                 getActivity(),
                 R.layout.item_shop_spinner,
-                ShoppingHelper.getInstance().getShopsList()
+                ShoppingHelper.getInstance().gePlacesList()
         );
         shopSpinnerAdapter.setSettingsClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +135,7 @@ public class PurchaseEditFragment extends BaseFragment {
         });
         shopsSpinner.setAdapter(shopSpinnerAdapter);
         if (purchaseList.getShopId() != 0) {
-            for (ShopsModel shop : ShoppingHelper.getInstance().getShopsList()) {
+            for (PlacesModel shop : ShoppingHelper.getInstance().gePlacesList()) {
                 if (purchaseList.getShopId() > 0) {
                     if (shop.getServerId() == purchaseList.getShopId()) {
                         shopsSpinner.setSelection(shopSpinnerAdapter.getPosition(shop));

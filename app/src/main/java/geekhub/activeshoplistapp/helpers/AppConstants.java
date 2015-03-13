@@ -24,4 +24,7 @@ public final class AppConstants {
 
     public static final String EXTRA_SHOP_ID = "extraShopId";
     public static final int SHOP_RESULT_CODE = 2001;
+
+    public static final int PLACES_SHOP = 1;
+    public static final int PLACES_USER = 2;
 }

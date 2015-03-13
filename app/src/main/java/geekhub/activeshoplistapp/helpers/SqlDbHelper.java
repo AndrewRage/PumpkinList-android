@@ -97,27 +97,28 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String SQL_DELETE_PURCHASE_LIST =
             "DROP TABLE IF EXISTS " + TABLE_PURCHASE_LIST;
 
-    public final static String TABLE_SHOPS = "shops";
-    public final static String SHOPS_COLUMN_SHOP_ID = "shop_id";
-    public final static String SHOPS_COLUMN_NAME = "shop_name";
-    public final static String SHOPS_COLUMN_DESCRIPTION = "shop_description";
-    public final static String SHOPS_COLUMN_LATITUDE = "latitude";
-    public final static String SHOPS_COLUMN_LONGITUDE = "longitude";
-    public final static String SHOPS_COLUMN_IS_DELETE = "is_delete";
-    public final static String SHOPS_COLUMN_TIMESTAMP = "timestamp";
-    public final static String SQL_CREATE_SHOPS =
-            "CREATE TABLE " + TABLE_SHOPS + " (" +
+    public final static String TABLE_PLACES = "places";
+    public final static String PLACES_COLUMN_PLACES_ID = "place_id";
+    public final static String PLACES_COLUMN_CATEGORY = "place_category";
+    public final static String PLACES_COLUMN_NAME = "place_name";
+    public final static String PLACES_COLUMN_DESCRIPTION = "place_description";
+    public final static String PLACES_COLUMN_LATITUDE = "latitude";
+    public final static String PLACES_COLUMN_LONGITUDE = "longitude";
+    public final static String PLACES_COLUMN_IS_DELETE = "is_delete";
+    public final static String PLACES_COLUMN_TIMESTAMP = "timestamp";
+    public final static String SQL_CREATE_PLACES =
+            "CREATE TABLE " + TABLE_PLACES + " (" +
             COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
-            SHOPS_COLUMN_SHOP_ID + INTEGER_TYPE + COMMA_SEP +
-            SHOPS_COLUMN_NAME + TEXT_TYPE + COMMA_SEP +
-            SHOPS_COLUMN_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-            SHOPS_COLUMN_LATITUDE + REAL_TYPE + COMMA_SEP +
-            SHOPS_COLUMN_LONGITUDE + REAL_TYPE + COMMA_SEP +
-            SHOPS_COLUMN_IS_DELETE + INTEGER_TYPE + COMMA_SEP +
-            SHOPS_COLUMN_TIMESTAMP + INTEGER_TYPE +
+                    PLACES_COLUMN_PLACES_ID + INTEGER_TYPE + COMMA_SEP +
+            PLACES_COLUMN_CATEGORY + INTEGER_TYPE + COMMA_SEP +
+            PLACES_COLUMN_NAME + TEXT_TYPE + COMMA_SEP +
+            PLACES_COLUMN_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
+            PLACES_COLUMN_LATITUDE + REAL_TYPE + COMMA_SEP + PLACES_COLUMN_LONGITUDE + REAL_TYPE + COMMA_SEP +
+            PLACES_COLUMN_IS_DELETE + INTEGER_TYPE + COMMA_SEP +
+            PLACES_COLUMN_TIMESTAMP + INTEGER_TYPE +
             " );";
-    public final static String SQL_DELETE_SHOPS =
-            "DROP TABLE IF EXISTS " + TABLE_SHOPS;
+    public final static String SQL_DELETE_PLACES =
+            "DROP TABLE IF EXISTS " + TABLE_PLACES;
 
     private static SqlDbHelper sqlDbHelper;
 
@@ -138,14 +139,14 @@ public class SqlDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_GOODS);
         db.execSQL(SQL_CREATE_PURCHASE_ITEM);
         db.execSQL(SQL_CREATE_PURCHASE_LIST);
-        db.execSQL(SQL_CREATE_SHOPS);
+        db.execSQL(SQL_CREATE_PLACES);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion == 1) {
-            db.execSQL(SQL_DELETE_SHOPS);
-            db.execSQL(SQL_CREATE_SHOPS);
+            db.execSQL(SQL_DELETE_PLACES);
+            db.execSQL(SQL_CREATE_PLACES);
         }
     }
 }

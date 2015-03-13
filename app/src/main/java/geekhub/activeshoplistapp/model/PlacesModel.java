@@ -3,9 +3,10 @@ package geekhub.activeshoplistapp.model;
 /**
  * Created by rage on 08.02.15. Create by task: 003
  */
-public class ShopsModel {
+public class PlacesModel {
     private long dbId;
     private long serverId;
+    private long category;
     private String shopName;
     private String shopDescription;
     private double gpsLatitude;
@@ -13,20 +14,22 @@ public class ShopsModel {
     private boolean isDelete;
     private long timeStamp;
 
-    public ShopsModel() {
+    public PlacesModel() {
 
     }
 
-    public ShopsModel(long dbId,
-                      long serverId,
-                      String shopName,
-                      String shopDescription,
-                      double gpsLatitude,
-                      double gpsLongitude,
-                      boolean isDelete,
-                      long timeStamp) {
+    public PlacesModel(long dbId,
+                       long serverId,
+                       long category,
+                       String shopName,
+                       String shopDescription,
+                       double gpsLatitude,
+                       double gpsLongitude,
+                       boolean isDelete,
+                       long timeStamp) {
         this.dbId = dbId;
         this.serverId = serverId;
+        this.category = category;
         this.shopName = shopName;
         this.shopDescription = shopDescription;
         this.gpsLatitude = gpsLatitude;
@@ -42,6 +45,10 @@ public class ShopsModel {
 
     public void setServerId(long serverId) {
         this.serverId = serverId;
+    }
+
+    public void setCategory(long category) {
+        this.category = category;
     }
 
     public void setShopName(String shopName) {
@@ -75,6 +82,10 @@ public class ShopsModel {
 
     public long getServerId() {
         return serverId;
+    }
+
+    public long getCategory() {
+        return category;
     }
 
     public String getShopName() {
