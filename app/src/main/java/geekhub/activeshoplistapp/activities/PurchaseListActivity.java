@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -34,6 +35,18 @@ public class PurchaseListActivity extends BaseActivity implements PurchaseListMa
         }
 
         getDrawerToggle().syncState();
+    }
+
+    @Override
+    protected void onResume() {
+        superOnResume();
+        SharedPrefHelper sharedPrefHelper = SharedPrefHelper.getInstance();
+        if (TextUtils.isEmpty(sharedPrefHelper.getUserName())) {
+            finish();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+        
     }
 
     @Override
@@ -71,6 +84,7 @@ public class PurchaseListActivity extends BaseActivity implements PurchaseListMa
         int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
         if(backStackEntryCount <= 0){
             getDrawerToggle().syncState();
+            purchaseListEditFragment = null;
         }
     }
 
@@ -80,5 +94,12 @@ public class PurchaseListActivity extends BaseActivity implements PurchaseListMa
             purchaseListEditFragment.onBackPressed();
             purchaseListEditFragment = null;
         }
+    }
+
+    @Override
+    public void menuLogout() {
+        super.menuLogout();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }

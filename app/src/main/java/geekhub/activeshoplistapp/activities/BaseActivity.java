@@ -136,8 +136,6 @@ public abstract class BaseActivity extends ActionBarActivity {
         SharedPrefHelper sharedPrefHelper = SharedPrefHelper.getInstance();
         sharedPrefHelper.setUserName(null);
         finish();
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
     }
 
     public void menuManageShop() {
