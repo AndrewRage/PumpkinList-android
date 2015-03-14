@@ -140,6 +140,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     public void menuManageShop() {
         Intent intent = new Intent(this, PlacesActivity.class);
+        intent.putExtra(AppConstants.EXTRA_MENU_ITEM, AppConstants.MENU_SHOW_SHOPS);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }

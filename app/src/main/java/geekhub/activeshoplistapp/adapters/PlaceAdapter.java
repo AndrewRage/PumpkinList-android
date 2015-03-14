@@ -15,14 +15,14 @@ import geekhub.activeshoplistapp.model.PlacesModel;
 /**
  * Created by rage on 3/4/15.
  */
-public class ShopAdapter extends BaseAdapter {
-    private static final String TAG = ShopAdapter.class.getSimpleName();
+public class PlaceAdapter extends BaseAdapter {
+    private static final String TAG = PlaceAdapter.class.getSimpleName();
     private Context context;
     private int resource;
     private List<PlacesModel> shopLists;
     private LayoutInflater inflater;
 
-    public ShopAdapter(Context context, int resource, List<PlacesModel> shopLists) {
+    public PlaceAdapter(Context context, int resource, List<PlacesModel> shopLists) {
         this.context = context;
         this.resource = resource;
         this.shopLists = shopLists;

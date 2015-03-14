@@ -6,6 +6,8 @@ package geekhub.activeshoplistapp.helpers;
  * On this class will be a constant application
  */
 public final class AppConstants {
+
+    public static final String EXTRA_MENU_ITEM = "extraMenuItem";
     public static final int MENU_LOGOUT = 0;
     public static final int MENU_SHOW_PURCHASE_LIST = 1;
     public static final int MENU_SHOW_PURCHASE_INBOX = 2;
