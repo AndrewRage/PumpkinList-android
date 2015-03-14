@@ -25,7 +25,7 @@ import java.util.List;
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.activities.PlacesActivity;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
-import geekhub.activeshoplistapp.adapters.ShopSpinnerAdapter;
+import geekhub.activeshoplistapp.adapters.SettingsSpinnerAdapter;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
@@ -39,6 +39,7 @@ public class PurchaseEditFragment extends BaseFragment {
     private static final String TAG = PurchaseEditFragment.class.getSimpleName();
     private static final String ARG_LIST_ID = "PurchaseList_param";
     private static final int REQUEST_SHOP = 10101;
+    private static final int REQUEST_PLACES = 10102;
     private PurchaseItemAdapter adapter;
     private ListView purchaseListView;
     private View header;
@@ -48,8 +49,11 @@ public class PurchaseEditFragment extends BaseFragment {
     private View addItemButton;
     private boolean isEdit;
     private Spinner shopsSpinner;
-    private ShopSpinnerAdapter shopSpinnerAdapter;
+    private Spinner placeSpinner;
+    private SettingsSpinnerAdapter shopSpinnerAdapter;
+    private SettingsSpinnerAdapter placeSpinnerAdapter;
     private List<PlacesModel> shopsList;
+    private List<PlacesModel> placesList;
 
     public static PurchaseEditFragment newInstance(int purchaseListId) {
         PurchaseEditFragment fragment = new PurchaseEditFragment();
@@ -85,6 +89,7 @@ public class PurchaseEditFragment extends BaseFragment {
 
         listNameEdit = (EditText) view.findViewById(R.id.edit_list_name);
         shopsSpinner = (Spinner) view.findViewById(R.id.shops_spinner);
+        placeSpinner = (Spinner) view.findViewById(R.id.place_spinner);
 
         return view;
     }
@@ -123,10 +128,18 @@ public class PurchaseEditFragment extends BaseFragment {
         });
 
         refreshShopsList();
-        shopSpinnerAdapter = new ShopSpinnerAdapter(
+        initShopSpinner();
+
+        refreshPlacesList();
+        initPlaceSpinner();
+    }
+
+    private void initShopSpinner() {
+        shopSpinnerAdapter = new SettingsSpinnerAdapter(
                 getActivity(),
-                R.layout.item_shop_spinner,
-                shopsList
+                R.layout.item_settings_spinner,
+                shopsList,
+                R.string.shop_edit_shop_spinner_default_entry
         );
         shopSpinnerAdapter.setSettingsClickListener(new View.OnClickListener() {
             @Override
@@ -176,11 +189,67 @@ public class PurchaseEditFragment extends BaseFragment {
         });
     }
 
+    private void initPlaceSpinner() {
+        placeSpinnerAdapter = new SettingsSpinnerAdapter(
+                getActivity(),
+                R.layout.item_settings_spinner,
+                placesList,
+                R.string.shop_edit_place_spinner_default_entry
+        );
+        placeSpinnerAdapter.setSettingsClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                placeSpinner.setEnabled(false);
+                Intent intent = new Intent(getActivity(), PlacesActivity.class);
+                intent.putExtra(AppConstants.EXTRA_MENU_ITEM, AppConstants.MENU_SHOW_PLACES);
+                startActivityForResult(intent, REQUEST_PLACES);
+            }
+        });
+        placeSpinner.setAdapter(placeSpinnerAdapter);
+        if (purchaseList.getPlaceId() != 0) {
+            for (PlacesModel place : placesList) {
+                if (purchaseList.getPlaceId() > 0) {
+                    if (place.getServerId() == purchaseList.getPlaceId()) {
+                        placeSpinner.setSelection(placeSpinnerAdapter.getPosition(place));
+                    }
+                } else if (purchaseList.getPlaceId() < 0) {
+                    if ((place.getDbId() * (-1) ) == purchaseList.getPlaceId()) {
+                        placeSpinner.setSelection(placeSpinnerAdapter.getPosition(place));
+                    }
+                }
+            }
+        }
+        placeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position > 0) {
+                    if (placeSpinnerAdapter.getItem(position).getServerId() == 0) {
+                        purchaseList.setPlaceId(placeSpinnerAdapter.getItem(position).getDbId() * (-1));
+                    } else {
+                        purchaseList.setPlaceId(placeSpinnerAdapter.getItem(position).getServerId());
+                    }
+                } else if (position == 0) {
+                    purchaseList.setPlaceId(0);
+                }
+                if (isEdit) {
+                    ShoppingHelper.getInstance().updatePurchaseList(purchaseList);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //
+            }
+        });
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         goodsLabelEdit.requestFocus();
         shopsSpinner.setEnabled(true);
+        placeSpinner.setEnabled(true);
     }
 
     @Override
@@ -334,12 +403,30 @@ public class PurchaseEditFragment extends BaseFragment {
         }
     }
 
+    private void refreshPlacesList() {
+        if (placesList == null) {
+            placesList = new ArrayList<>();
+        }
+        if (placesList.size() > 0) {
+            placesList.clear();
+        }
+        for (PlacesModel placesModel : ShoppingHelper.getInstance().getPlacesList()) {
+            if (placesModel.getCategory() == AppConstants.PLACES_USER) {
+                placesList.add(placesModel);
+            }
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_SHOP) {
             refreshShopsList();
             shopSpinnerAdapter.notifyDataSetChanged();
+        }
+        if (requestCode == REQUEST_PLACES) {
+            refreshPlacesList();
+            placeSpinnerAdapter.notifyDataSetChanged();
         }
     }
 }

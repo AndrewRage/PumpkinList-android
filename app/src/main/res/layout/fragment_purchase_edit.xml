@@ -50,6 +50,14 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content" />
 
+            <Spinner
+                android:id="@+id/place_spinner"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/shops_spinner"
+                android:layout_toEndOf="@+id/shops_spinner" />
+
         </RelativeLayout>
 
     </RelativeLayout>

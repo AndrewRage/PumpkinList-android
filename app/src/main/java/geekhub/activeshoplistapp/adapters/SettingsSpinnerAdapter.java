@@ -15,18 +15,19 @@ import geekhub.activeshoplistapp.model.PlacesModel;
 /**
  * Created by rage on 3/8/15.
  */
-public class ShopSpinnerAdapter extends ArrayAdapter<PlacesModel> {
-    private static final String TAG = ShopSpinnerAdapter.class.getSimpleName();
-    private List<PlacesModel> shopsList;
-    private int resource;
+public class SettingsSpinnerAdapter extends ArrayAdapter<PlacesModel> {
+    private static final String TAG = SettingsSpinnerAdapter.class.getSimpleName();
+    private List<PlacesModel> placesList;
+    private int resource, resDefault;
     private LayoutInflater inflater;
     private View.OnClickListener settingsClickListener;
 
-    public ShopSpinnerAdapter(Context context, int resource, List<PlacesModel> shopsList) {
-        super(context, resource, shopsList);
-        this.shopsList = shopsList;
+    public SettingsSpinnerAdapter(Context context, int resource, List<PlacesModel> placesList, int resDefault) {
+        super(context, resource, placesList);
+        this.placesList = placesList;
         this.resource = resource;
         this.inflater = LayoutInflater.from(context);
+        this.resDefault = resDefault;
     }
 
     public void setSettingsClickListener(View.OnClickListener settingsClickListener) {
@@ -40,12 +41,12 @@ public class ShopSpinnerAdapter extends ArrayAdapter<PlacesModel> {
 
     @Override
     public PlacesModel getItem(int position) {
-        return position == 0 ? null : shopsList.get(position - 1);
+        return position == 0 ? null : placesList.get(position - 1);
     }
 
     @Override
     public int getPosition(PlacesModel item) {
-        return shopsList.indexOf(item) + 1;
+        return placesList.indexOf(item) + 1;
     }
 
     @Override
@@ -72,7 +73,7 @@ public class ShopSpinnerAdapter extends ArrayAdapter<PlacesModel> {
         }
 
         if (position == 0) {
-            holder.title.setText(R.string.shop_edit_spinner_default_entry);
+            holder.title.setText(resDefault);
             if (settingsClickListener != null && isDropDown) {
                 holder.settings.setVisibility(View.VISIBLE);
                 holder.settings.setOnClickListener(settingsClickListener);
@@ -81,7 +82,7 @@ public class ShopSpinnerAdapter extends ArrayAdapter<PlacesModel> {
             }
         } else {
             holder.settings.setVisibility(View.INVISIBLE);
-            PlacesModel shop = shopsList.get(position - 1);
+            PlacesModel shop = placesList.get(position - 1);
             holder.title.setText(shop.getShopName());
         }
         return convertView;
