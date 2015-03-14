@@ -29,9 +29,10 @@ import geekhub.activeshoplistapp.model.PlacesModel;
  */
 public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private static final String TAG = MapActivity.class.getSimpleName();
+    private int menuItemId = -1;
     private PlacesModel placesModel;
     private GoogleMap map;
-    private EditText shopNameEdit;
+    private EditText placeNameEdit;
     private boolean isEdit = false;
     private boolean isOnceShowMyLocation = false;
     private Marker marker;
@@ -53,12 +54,13 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
 
-        shopNameEdit = (EditText) findViewById(R.id.title);
-        shopNameEdit.clearFocus();
+        placeNameEdit = (EditText) findViewById(R.id.title);
+        placeNameEdit.clearFocus();
 
         Intent args = getIntent();
         int id = -1;
         if (args != null) {
+            menuItemId = args.getExtras().getInt(AppConstants.EXTRA_MENU_ITEM);
             id = args.getIntExtra(AppConstants.EXTRA_SHOP_ID, -1);
         }
         if (id >= 0) {
@@ -70,9 +72,16 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                             placesModel.getGpsLongitude()
                     ))
                     .draggable(true));
-            shopNameEdit.setText(placesModel.getShopName());
+            placeNameEdit.setText(placesModel.getShopName());
         } else {
             placesModel = new PlacesModel();
+            if (menuItemId == AppConstants.MENU_SHOW_SHOPS) {
+                placesModel.setCategory(AppConstants.PLACES_SHOP);
+            } else if (menuItemId == AppConstants.MENU_SHOW_PLACES) {
+                placesModel.setCategory(AppConstants.PLACES_USER);
+            } else {
+                finish();
+            }
         }
     }
 
@@ -136,11 +145,11 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
             boolean isNeedDelete = false;
             if (isEdit) {
                 isNeedDelete = true;
-            } else if (marker != null || !TextUtils.isEmpty(shopNameEdit.getText().toString())) {
+            } else if (marker != null || !TextUtils.isEmpty(placeNameEdit.getText().toString())) {
                 isNeedDelete = true;
             }
             if (isNeedDelete) {
-                String shopName = shopNameEdit.getText().toString();
+                String shopName = placeNameEdit.getText().toString();
                 String message;
                 if (TextUtils.isEmpty(shopName)) {
                     message = String.format(
@@ -182,12 +191,11 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     @Override
     public void onBackPressed() {
         if (!isEdit && marker != null) {
-            if (TextUtils.isEmpty(shopNameEdit.getText().toString())) {
+            if (TextUtils.isEmpty(placeNameEdit.getText().toString())) {
                 placesModel.setShopName(getString(R.string.shop_edit_new_shop_default));
             } else {
-                placesModel.setShopName(shopNameEdit.getText().toString());
+                placesModel.setShopName(placeNameEdit.getText().toString());
             }
-            placesModel.setCategory(AppConstants.PLACES_SHOP);
             placesModel.setGpsLatitude(marker.getPosition().latitude);
             placesModel.setGpsLongitude(marker.getPosition().longitude);
             ShoppingHelper.getInstance().addPlace(placesModel);
@@ -200,13 +208,13 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                 placesModel.setGpsLatitude(marker.getPosition().latitude);
                 placesModel.setGpsLongitude(marker.getPosition().longitude);
             }
-            if (!TextUtils.equals(shopNameEdit.getText().toString(), placesModel.getShopName())
-                    || TextUtils.isEmpty(shopNameEdit.getText().toString())) {
+            if (!TextUtils.equals(placeNameEdit.getText().toString(), placesModel.getShopName())
+                    || TextUtils.isEmpty(placeNameEdit.getText().toString())) {
                 edit = true;
-                if (TextUtils.isEmpty(shopNameEdit.getText().toString())) {
+                if (TextUtils.isEmpty(placeNameEdit.getText().toString())) {
                     placesModel.setShopName(getString(R.string.shop_edit_new_shop_default));
                 } else {
-                    placesModel.setShopName(shopNameEdit.getText().toString());
+                    placesModel.setShopName(placeNameEdit.getText().toString());
                 }
             }
             if (edit) {

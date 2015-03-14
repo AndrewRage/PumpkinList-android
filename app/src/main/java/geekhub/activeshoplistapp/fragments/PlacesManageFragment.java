@@ -69,7 +69,12 @@ public class PlacesManageFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), MapActivity.class)
-                        .putExtra(AppConstants.EXTRA_SHOP_ID, position);
+                        .putExtra(AppConstants.EXTRA_MENU_ITEM, menuItemId)
+                        .putExtra(
+                                AppConstants.EXTRA_SHOP_ID,
+                                ShoppingHelper.getInstance().
+                                        gePlacesList().indexOf(adapter.getItem(position))
+                        );
                 startActivityForResult(intent, AppConstants.SHOP_RESULT_CODE);
             }
         });
@@ -77,7 +82,8 @@ public class PlacesManageFragment extends BaseFragment {
         plusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MapActivity.class);
+                Intent intent = new Intent(getActivity(), MapActivity.class)
+                        .putExtra(AppConstants.EXTRA_MENU_ITEM, menuItemId);
                 startActivityForResult(intent, AppConstants.SHOP_RESULT_CODE);
             }
         });
