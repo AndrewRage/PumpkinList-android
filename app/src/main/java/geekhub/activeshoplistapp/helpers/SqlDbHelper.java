@@ -10,16 +10,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class SqlDbHelper extends SQLiteOpenHelper {
     private static final String TAG = SqlDbHelper.class.getSimpleName();
 
-    private final static int DB_VERSION = 3;
+    private final static int DB_VERSION = 1;
     private final static String DB_NAME = "aslistapp.db";
 
-    private static final String INT_PRIMARI_KAY = " INTEGER PRIMARY KEY";
+    private static final String INT_PRIMARY_KAY = " INTEGER PRIMARY KEY";
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
     private static final String REAL_TYPE = " REAL";
     private static final String COMMA_SEP = ",";
     private static final String ADD_COLUMN = " ADD COLUMN ";
-    private static final String AFTER = " AFTER ";
 
     public final static String COLUMN_ID = "_id";
 
@@ -27,7 +26,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String FRIENDS_COLUMN_NAME = "user_name";
     public final static String SQL_CREATE_FRIENDS =
             "CREATE TABLE " + TABLE_FRIENDS + " (" +
-            COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
+            COLUMN_ID + INT_PRIMARY_KAY + COMMA_SEP +
             FRIENDS_COLUMN_NAME + TEXT_TYPE +
             " );";
     public final static String SQL_DELETE_FRIENDS =
@@ -41,7 +40,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String GOODS_COLUMN_DESCRIPTION = "goods_description";
     public final static String SQL_CREATE_GOODS =
             "CREATE TABLE " + TABLE_GOODS + " (" +
-            COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
+            COLUMN_ID + INT_PRIMARY_KAY + COMMA_SEP +
             GOODS_COLUMN_IS_USER_GOODS + INTEGER_TYPE + COMMA_SEP +
             GOODS_COLUMN_LABEL + INTEGER_TYPE + COMMA_SEP +
             GOODS_COLUMN_CATEGORY_ID + INTEGER_TYPE + COMMA_SEP +
@@ -63,7 +62,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String PURCHASE_ITEM_COLUMN_TIMESTAMP = "timestamp";
     public final static String SQL_CREATE_PURCHASE_ITEM =
             "CREATE TABLE " + TABLE_PURCHASE_ITEM + " (" +
-            COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
+            COLUMN_ID + INT_PRIMARY_KAY + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_ITEM_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_LIST_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_IS_BOUGHT + INTEGER_TYPE + COMMA_SEP +
@@ -89,24 +88,23 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String PURCHASE_LIST_COLUMN_DONE = "is_done";
     public final static String SQL_CREATE_PURCHASE_LIST =
             "CREATE TABLE " + TABLE_PURCHASE_LIST + " (" +
-            COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
+            COLUMN_ID + INT_PRIMARY_KAY + COMMA_SEP +
             PURCHASE_LIST_COLUMN_LIST_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_LIST_NAME + TEXT_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_USER_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_SHOP_ID + INTEGER_TYPE + COMMA_SEP +
+            PURCHASE_LIST_COLUMN_PLACE_ID + INTEGER_TYPE + COMMA_SEP +
+            PURCHASE_LIST_COLUMN_DONE + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_TIME_ALARM + TEXT_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_TIME_CREATE + INTEGER_TYPE + COMMA_SEP +
-            PURCHASE_LIST_COLUMN_TIMESTAMP + INTEGER_TYPE + COMMA_SEP +
-            PURCHASE_LIST_COLUMN_PLACE_ID + INTEGER_TYPE + COMMA_SEP +
-            PURCHASE_LIST_COLUMN_DONE + INTEGER_TYPE +
+            PURCHASE_LIST_COLUMN_TIMESTAMP + INTEGER_TYPE +
             " );";
     public final static String SQL_DELETE_PURCHASE_LIST =
             "DROP TABLE IF EXISTS " + TABLE_PURCHASE_LIST;
-    public final static String SQL_UPDATE_TO_V3_PURCHASE_LIST_PLACE =
+    /*public final static String SQL_UPDATE_TO_V3_PURCHASE_LIST_PLACE =
             "ALTER TABLE " + TABLE_PURCHASE_LIST + ADD_COLUMN + PURCHASE_LIST_COLUMN_PLACE_ID + INTEGER_TYPE + ";";
-
     public final static String SQL_UPDATE_TO_V3_PURCHASE_LIST_DONE =
-            "ALTER TABLE " + TABLE_PURCHASE_LIST + ADD_COLUMN + PURCHASE_LIST_COLUMN_DONE + INTEGER_TYPE + ";";
+            "ALTER TABLE " + TABLE_PURCHASE_LIST + ADD_COLUMN + PURCHASE_LIST_COLUMN_DONE + INTEGER_TYPE + ";";*/
 
     public final static String TABLE_PLACES = "places";
     public final static String PLACES_COLUMN_PLACES_ID = "place_id";
@@ -119,8 +117,8 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String PLACES_COLUMN_TIMESTAMP = "timestamp";
     public final static String SQL_CREATE_PLACES =
             "CREATE TABLE " + TABLE_PLACES + " (" +
-            COLUMN_ID + INT_PRIMARI_KAY + COMMA_SEP +
-                    PLACES_COLUMN_PLACES_ID + INTEGER_TYPE + COMMA_SEP +
+            COLUMN_ID + INT_PRIMARY_KAY + COMMA_SEP +
+            PLACES_COLUMN_PLACES_ID + INTEGER_TYPE + COMMA_SEP +
             PLACES_COLUMN_CATEGORY + INTEGER_TYPE + COMMA_SEP +
             PLACES_COLUMN_NAME + TEXT_TYPE + COMMA_SEP +
             PLACES_COLUMN_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
@@ -155,13 +153,6 @@ public class SqlDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion == 1) {
-            db.execSQL(SQL_DELETE_PLACES);
-            db.execSQL(SQL_CREATE_PLACES);
-        }
-        if (oldVersion < 3) {
-            db.execSQL(SQL_UPDATE_TO_V3_PURCHASE_LIST_PLACE);
-            db.execSQL(SQL_UPDATE_TO_V3_PURCHASE_LIST_DONE);
-        }
+
     }
 }
