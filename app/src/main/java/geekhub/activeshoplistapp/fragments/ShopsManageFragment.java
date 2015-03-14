@@ -67,7 +67,8 @@ public class ShopsManageFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        shopsList = getShopsList();
+        shopsList.clear();
+        shopsList.addAll(getShopsList());
         adapter.notifyDataSetChanged();
     }
 
