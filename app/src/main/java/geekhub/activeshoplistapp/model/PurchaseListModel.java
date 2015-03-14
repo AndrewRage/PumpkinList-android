@@ -11,6 +11,8 @@ public class PurchaseListModel {
     private String listName;
     private int userId;
     private long shopId;
+    private long placeId;
+    private boolean isDone;
     private long timeAlarm;
     private long timeCreate;
     private long timeStamp;
@@ -25,6 +27,8 @@ public class PurchaseListModel {
                              String listName,
                              int userId,
                              long shopId,
+                             long placeId,
+                             boolean isDone,
                              long timeAlarm,
                              long timeCreate,
                              long timeStamp,
@@ -34,6 +38,8 @@ public class PurchaseListModel {
         this.listName = listName;
         this.userId = userId;
         this.shopId = shopId;
+        this.placeId = placeId;
+        this.isDone = isDone;
         this.timeAlarm = timeAlarm;
         this.timeCreate = timeCreate;
         this.timeStamp = timeStamp;
@@ -78,6 +84,22 @@ public class PurchaseListModel {
 
     public void setShopId(long shopId) {
         this.shopId = shopId;
+    }
+
+    public long getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(long placeId) {
+        this.placeId = placeId;
+    }
+
+    public boolean isDone() {
+        return isDone;
+    }
+
+    public void setIsDone(boolean isDone) {
+        this.isDone = isDone;
     }
 
     public long getTimeAlarm() {

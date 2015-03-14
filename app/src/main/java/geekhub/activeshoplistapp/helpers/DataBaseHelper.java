@@ -51,6 +51,8 @@ public class DataBaseHelper {
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME, list.getListName());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID, list.getUserId());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID, list.getShopId());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID, list.getPlaceId());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_DONE, list.isDone() ? 1 : 0);
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM, list.getTimeAlarm());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE, list.getTimeCreate());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP, list.getTimeStamp());
@@ -68,6 +70,8 @@ public class DataBaseHelper {
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME, list.getListName());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID, list.getUserId());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID, list.getShopId());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID, list.getPlaceId());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_DONE, list.isDone() ? 1 : 0);
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM, list.getTimeAlarm());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE, list.getTimeCreate());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP, list.getTimeStamp());
@@ -97,6 +101,8 @@ public class DataBaseHelper {
                 SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID,
+                SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID,
+                SqlDbHelper.PURCHASE_LIST_COLUMN_DONE,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP,
@@ -118,6 +124,8 @@ public class DataBaseHelper {
             int indexName = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME);
             int indexUser = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID);
             int indexShop = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID);
+            int indexPlace = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID);
+            int indexDone = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_DONE);
             int indexAlarm = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM);
             int indexCreate = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE);
             int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP);
@@ -127,6 +135,8 @@ public class DataBaseHelper {
                     cursor.getString(indexName),
                     cursor.getInt(indexUser),
                     cursor.getInt(indexShop),
+                    cursor.getInt(indexPlace),
+                    cursor.getInt(indexDone)>0,
                     cursor.getLong(indexAlarm),
                     cursor.getLong(indexCreate),
                     cursor.getLong(indexTimestamp),
