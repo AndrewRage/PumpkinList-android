@@ -86,11 +86,16 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
     }
 
     @Override
-    public void menuShowPurchaseLists() {
-        if (purchaseListEditFragment != null) {
+    public void menuOnClick(int menuId) {
+        super.menuOnClick(menuId);
+        if (menuId != AppConstants.MENU_LOGOUT && purchaseListEditFragment != null) {
             purchaseListEditFragment.onBackPressed();
             purchaseListEditFragment = null;
         }
+    }
+
+    @Override
+    public void menuShowPurchaseLists() {
     }
 
     @Override

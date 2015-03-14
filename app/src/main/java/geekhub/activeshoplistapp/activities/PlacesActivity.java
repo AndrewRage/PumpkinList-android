@@ -34,12 +34,6 @@ public class PlacesActivity extends BaseActivity {
     }
 
     @Override
-    public void menuShowPurchaseLists() {
-        finish();
-        overridePendingTransition(0, 0);
-    }
-
-    @Override
     public void menuManageShop() {
         showFragment(AppConstants.MENU_SHOW_SHOPS);
     }

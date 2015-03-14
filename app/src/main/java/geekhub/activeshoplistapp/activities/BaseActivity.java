@@ -53,6 +53,7 @@ public abstract class BaseActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 drawerLayout.closeDrawer(drawerListView);
+                menuOnClick(drawerMenuAdapter.getItem(position));
                 int menuId = drawerMenuAdapter.getItem(position);
                 switch (menuId) {
                     case AppConstants.MENU_LOGOUT:
@@ -136,6 +137,9 @@ public abstract class BaseActivity extends ActionBarActivity {
         public boolean onBackPressed();
     }
 
+    public void menuOnClick(int menuId) {
+    }
+
     public void menuLogout() {
         SharedPrefHelper sharedPrefHelper = SharedPrefHelper.getInstance();
         sharedPrefHelper.setUserName(null);
@@ -157,5 +161,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     public void menuShowPurchaseLists() {
+        finish();
+        overridePendingTransition(0, 0);
     }
 }
