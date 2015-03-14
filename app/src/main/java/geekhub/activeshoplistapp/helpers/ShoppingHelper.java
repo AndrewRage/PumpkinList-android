@@ -87,7 +87,7 @@ public class ShoppingHelper {
         dataBaseHelper.close();
     }
 
-    public List<PlacesModel> gePlacesList() {
+    public List<PlacesModel> getPlacesList() {
         if (placesList == null) {
             dataBaseHelper.open();
             placesList = dataBaseHelper.getPlacesList();

@@ -64,7 +64,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
             id = args.getIntExtra(AppConstants.EXTRA_SHOP_ID, -1);
         }
         if (id >= 0) {
-            placesModel = ShoppingHelper.getInstance().gePlacesList().get(id);
+            placesModel = ShoppingHelper.getInstance().getPlacesList().get(id);
             isEdit = true;
             marker = map.addMarker(new MarkerOptions()
                     .position(new LatLng(

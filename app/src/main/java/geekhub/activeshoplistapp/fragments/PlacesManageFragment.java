@@ -27,7 +27,7 @@ public class PlacesManageFragment extends BaseFragment {
     private static final String ARG_MENU_ID = "argMenuId";
     private ListView shopListView;
     private View plusButton;
-    private List<PlacesModel> shopsList;
+    private List<PlacesModel> placesList;
     private PlaceAdapter adapter;
     private int menuItemId = -1;
 
@@ -55,15 +55,12 @@ public class PlacesManageFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        shopsList = new ArrayList<>();
-
         if (getArguments() != null) {
             menuItemId = getArguments().getInt(ARG_MENU_ID);
         }
 
-        getPlaces();
-
-        adapter = new PlaceAdapter(getActivity(), R.layout.item_shop, shopsList);
+        refreshPlaces();
+        adapter = new PlaceAdapter(getActivity(), R.layout.item_shop, placesList);
         shopListView.setAdapter(adapter);
         shopListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -73,7 +70,7 @@ public class PlacesManageFragment extends BaseFragment {
                         .putExtra(
                                 AppConstants.EXTRA_SHOP_ID,
                                 ShoppingHelper.getInstance().
-                                        gePlacesList().indexOf(adapter.getItem(position))
+                                        getPlacesList().indexOf(adapter.getItem(position))
                         );
                 startActivityForResult(intent, AppConstants.SHOP_RESULT_CODE);
             }
@@ -92,22 +89,27 @@ public class PlacesManageFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        shopsList.clear();
-        getPlaces();
+        refreshPlaces();
         adapter.notifyDataSetChanged();
     }
 
-    private void getPlaces() {
+    private void refreshPlaces() {
+        if (placesList == null) {
+            placesList = new ArrayList<>();
+        }
+        if (placesList.size() > 0) {
+            placesList.clear();
+        }
         if (menuItemId == AppConstants.MENU_SHOW_SHOPS) {
-            shopsList.addAll(getShopsList());
+            placesList.addAll(getShopsList());
         } else if (menuItemId == AppConstants.MENU_SHOW_PLACES) {
-            shopsList.addAll(getUserPlacesList());
+            placesList.addAll(getUserPlacesList());
         }
     }
 
     private List<PlacesModel> getShopsList() {
         List<PlacesModel> list = new ArrayList<>();
-        for (PlacesModel placesModel : ShoppingHelper.getInstance().gePlacesList()) {
+        for (PlacesModel placesModel : ShoppingHelper.getInstance().getPlacesList()) {
             if (placesModel.getCategory() == AppConstants.PLACES_SHOP) {
                 list.add(placesModel);
             }
@@ -117,7 +119,7 @@ public class PlacesManageFragment extends BaseFragment {
 
     private List<PlacesModel> getUserPlacesList() {
         List<PlacesModel> list = new ArrayList<>();
-        for (PlacesModel placesModel : ShoppingHelper.getInstance().gePlacesList()) {
+        for (PlacesModel placesModel : ShoppingHelper.getInstance().getPlacesList()) {
             if (placesModel.getCategory() == AppConstants.PLACES_USER) {
                 list.add(placesModel);
             }
