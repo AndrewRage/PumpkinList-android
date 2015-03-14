@@ -23,10 +23,14 @@ public class PlacesActivity extends BaseActivity {
         }
         initDrawer();
         if (savedInstanceState == null && menuItemId >= 0) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, PlacesManageFragment.newInstance(menuItemId))
-                    .commit();
+            showFragment(menuItemId);
         }
+    }
+
+    private void showFragment(int id) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, PlacesManageFragment.newInstance(id))
+                .commit();
     }
 
     @Override
@@ -37,5 +41,11 @@ public class PlacesActivity extends BaseActivity {
 
     @Override
     public void menuManageShop() {
+        showFragment(AppConstants.MENU_SHOW_SHOPS);
+    }
+
+    @Override
+    public void menuManagePlaces() {
+        showFragment(AppConstants.MENU_SHOW_PLACES);
     }
 }

@@ -34,6 +34,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         List<Integer> menus = new ArrayList<>();
         menus.add(AppConstants.MENU_SHOW_PURCHASE_LIST);
         menus.add(AppConstants.MENU_SHOW_SHOPS);
+        menus.add(AppConstants.MENU_SHOW_PLACES);
         menus.add(AppConstants.MENU_LOGOUT);
         final DrawerMenuAdapter drawerMenuAdapter = new DrawerMenuAdapter(this, R.layout.item_drawer_menu, menus);
         setContentView(R.layout.activity_with_fragment);
@@ -62,6 +63,9 @@ public abstract class BaseActivity extends ActionBarActivity {
                         break;
                     case AppConstants.MENU_SHOW_SHOPS:
                         menuManageShop();
+                        break;
+                    case AppConstants.MENU_SHOW_PLACES:
+                        menuManagePlaces();
                         break;
                 }
             }
@@ -141,6 +145,13 @@ public abstract class BaseActivity extends ActionBarActivity {
     public void menuManageShop() {
         Intent intent = new Intent(this, PlacesActivity.class);
         intent.putExtra(AppConstants.EXTRA_MENU_ITEM, AppConstants.MENU_SHOW_SHOPS);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+    }
+
+    public void menuManagePlaces() {
+        Intent intent = new Intent(this, PlacesActivity.class);
+        intent.putExtra(AppConstants.EXTRA_MENU_ITEM, AppConstants.MENU_SHOW_PLACES);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }

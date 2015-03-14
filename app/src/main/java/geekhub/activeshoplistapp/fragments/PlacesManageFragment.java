@@ -61,9 +61,7 @@ public class PlacesManageFragment extends BaseFragment {
             menuItemId = getArguments().getInt(ARG_MENU_ID);
         }
 
-        if (menuItemId == AppConstants.MENU_SHOW_SHOPS) {
-            shopsList.addAll(getShopsList());
-        }
+        getPlaces();
 
         adapter = new PlaceAdapter(getActivity(), R.layout.item_shop, shopsList);
         shopListView.setAdapter(adapter);
@@ -89,14 +87,32 @@ public class PlacesManageFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         shopsList.clear();
-        shopsList.addAll(getShopsList());
+        getPlaces();
         adapter.notifyDataSetChanged();
+    }
+
+    private void getPlaces() {
+        if (menuItemId == AppConstants.MENU_SHOW_SHOPS) {
+            shopsList.addAll(getShopsList());
+        } else if (menuItemId == AppConstants.MENU_SHOW_PLACES) {
+            shopsList.addAll(getUserPlacesList());
+        }
     }
 
     private List<PlacesModel> getShopsList() {
         List<PlacesModel> list = new ArrayList<>();
         for (PlacesModel placesModel : ShoppingHelper.getInstance().gePlacesList()) {
             if (placesModel.getCategory() == AppConstants.PLACES_SHOP) {
+                list.add(placesModel);
+            }
+        }
+        return list;
+    }
+
+    private List<PlacesModel> getUserPlacesList() {
+        List<PlacesModel> list = new ArrayList<>();
+        for (PlacesModel placesModel : ShoppingHelper.getInstance().gePlacesList()) {
+            if (placesModel.getCategory() == AppConstants.PLACES_USER) {
                 list.add(placesModel);
             }
         }
