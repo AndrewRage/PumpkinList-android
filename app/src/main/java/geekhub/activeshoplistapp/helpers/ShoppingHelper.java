@@ -1,12 +1,15 @@
 package geekhub.activeshoplistapp.helpers;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 
 import java.util.List;
 
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
 import geekhub.activeshoplistapp.model.PlacesModel;
+import geekhub.activeshoplistapp.services.GpsAppointmentService;
 
 /**
  * Created by rage on 2/24/15.
@@ -14,12 +17,15 @@ import geekhub.activeshoplistapp.model.PlacesModel;
 public class ShoppingHelper {
     private static final String TAG = ShoppingHelper.class.getSimpleName();
     private static ShoppingHelper shoppingHelper;
+    private Context context;
     private List<PurchaseListModel> purchaseLists;
     private List<PlacesModel> placesList;
     private DataBaseHelper dataBaseHelper;
+    private boolean isServiceStart = false;
 
     private ShoppingHelper(Context context) {
         dataBaseHelper = new DataBaseHelper(context);
+        this.context = context;
     }
     public static ShoppingHelper newInstance(Context context) {
         if (shoppingHelper == null) {
@@ -36,10 +42,17 @@ public class ShoppingHelper {
         if (purchaseLists == null) {
             dataBaseHelper.open();
             purchaseLists = dataBaseHelper.getPurchaseLists();
+            boolean isNeedGps = false;
             for (PurchaseListModel list: purchaseLists) {
                 list.setPurchasesItems(dataBaseHelper.getPurchaseItems(list.getDbId()));
+                if (list.getPlaceId() != 0) {
+                    isNeedGps = true;
+                }
             }
             dataBaseHelper.close();
+            if (!isServiceStart && isNeedGps) {
+                startGpsService();
+            }
         }
         return purchaseLists;
     }
@@ -117,5 +130,13 @@ public class ShoppingHelper {
         dataBaseHelper.deletePlace(placesModel.getDbId());
         dataBaseHelper.close();
         placesList.remove(placesModel);
+    }
+
+    private void startGpsService() {
+        Log.d(TAG, "GpsAppointment: start");
+        Intent intent = new Intent(context, GpsAppointmentService.class);
+        //intent.putExtra(AppConstants.EXTRA_GPS_APPOINTMENT, Long.parseLong("0"));
+        context.startService(intent);
+        isServiceStart = true;
     }
 }
