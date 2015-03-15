@@ -81,11 +81,13 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String PURCHASE_LIST_COLUMN_LIST_NAME = "list_name";
     public final static String PURCHASE_LIST_COLUMN_USER_ID = "user_id";
     public final static String PURCHASE_LIST_COLUMN_SHOP_ID = "shop_id";
+    public final static String PURCHASE_LIST_COLUMN_PLACE_ID = "place_id";
+    public final static String PURCHASE_LIST_COLUMN_DONE = "is_done";
+    public final static String PURCHASE_LIST_COLUMN_MAX_DISTANCE = "max_distance";
+    public final static String PURCHASE_LIST_COLUMN_IS_ALARM = "is_alarm";
     public final static String PURCHASE_LIST_COLUMN_TIME_ALARM = "time_alarm";
     public final static String PURCHASE_LIST_COLUMN_TIME_CREATE = "time_create";
     public final static String PURCHASE_LIST_COLUMN_TIMESTAMP = "timestamp";
-    public final static String PURCHASE_LIST_COLUMN_PLACE_ID = "place_id";
-    public final static String PURCHASE_LIST_COLUMN_DONE = "is_done";
     public final static String SQL_CREATE_PURCHASE_LIST =
             "CREATE TABLE " + TABLE_PURCHASE_LIST + " (" +
             COLUMN_ID + INT_PRIMARY_KAY + COMMA_SEP +
@@ -95,6 +97,8 @@ public class SqlDbHelper extends SQLiteOpenHelper {
             PURCHASE_LIST_COLUMN_SHOP_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_PLACE_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_DONE + INTEGER_TYPE + COMMA_SEP +
+            PURCHASE_LIST_COLUMN_MAX_DISTANCE + REAL_TYPE + COMMA_SEP +
+            PURCHASE_LIST_COLUMN_IS_ALARM + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_TIME_ALARM + TEXT_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_TIME_CREATE + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_TIMESTAMP + INTEGER_TYPE +

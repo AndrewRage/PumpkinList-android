@@ -1,5 +1,7 @@
 package geekhub.activeshoplistapp.model;
 
+import android.location.Location;
+
 import java.util.List;
 
 /**
@@ -13,10 +15,15 @@ public class PurchaseListModel {
     private long shopId;
     private long placeId;
     private boolean isDone;
+    private float maxDistance;
+    private boolean isAlarm;
     private long timeAlarm;
     private long timeCreate;
     private long timeStamp;
     private List<PurchaseItemModel> purchasesItems;
+
+    private Location point;
+    private float radius;
 
     public PurchaseListModel() {
 
@@ -29,6 +36,8 @@ public class PurchaseListModel {
                              long shopId,
                              long placeId,
                              boolean isDone,
+                             float maxDistance,
+                             boolean isAlarm,
                              long timeAlarm,
                              long timeCreate,
                              long timeStamp,
@@ -40,6 +49,8 @@ public class PurchaseListModel {
         this.shopId = shopId;
         this.placeId = placeId;
         this.isDone = isDone;
+        this.maxDistance = maxDistance;
+        this.isAlarm = isAlarm;
         this.timeAlarm = timeAlarm;
         this.timeCreate = timeCreate;
         this.timeStamp = timeStamp;
@@ -102,6 +113,22 @@ public class PurchaseListModel {
         this.isDone = isDone;
     }
 
+    public float getMaxDistance() {
+        return maxDistance;
+    }
+
+    public void setMaxDistance(float maxDistance) {
+        this.maxDistance = maxDistance;
+    }
+
+    public boolean isAlarm() {
+        return isAlarm;
+    }
+
+    public void setIsAlarm(boolean isAlarm) {
+        this.isAlarm = isAlarm;
+    }
+
     public long getTimeAlarm() {
         return timeAlarm;
     }
@@ -132,5 +159,21 @@ public class PurchaseListModel {
 
     public void setPurchasesItems(List<PurchaseItemModel> purchasesItems) {
         this.purchasesItems = purchasesItems;
+    }
+
+    public Location getPoint() {
+        return point;
+    }
+
+    public void setPoint(Location point) {
+        this.point = point;
+    }
+
+    public float getRadius() {
+        return radius;
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
     }
 }

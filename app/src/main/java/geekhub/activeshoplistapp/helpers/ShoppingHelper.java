@@ -2,14 +2,17 @@ package geekhub.activeshoplistapp.helpers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
 import geekhub.activeshoplistapp.model.PlacesModel;
 import geekhub.activeshoplistapp.services.GpsAppointmentService;
+import geekhub.activeshoplistapp.utils.Coordinate;
 
 /**
  * Created by rage on 2/24/15.
@@ -19,6 +22,7 @@ public class ShoppingHelper {
     private static ShoppingHelper shoppingHelper;
     private Context context;
     private List<PurchaseListModel> purchaseLists;
+    private List<PurchaseListModel> appointmentLists;
     private List<PlacesModel> placesList;
     private DataBaseHelper dataBaseHelper;
     private boolean isServiceStart = false;
@@ -38,6 +42,45 @@ public class ShoppingHelper {
         return shoppingHelper;
     }
 
+    public List<PurchaseListModel> getAppointmentLists() {
+        if (appointmentLists == null) {
+            appointmentLists = new ArrayList<>();
+            for (PurchaseListModel list : getPurchaseLists()) {
+                addAppointment(list);
+            }
+        }
+        return appointmentLists;
+    }
+
+    private void addAppointment(PurchaseListModel purchaseList) {
+        if (appointmentLists == null) {
+            appointmentLists = new ArrayList<>();
+        }
+        if (purchaseList.getPlaceId() != 0 || purchaseList.getShopId() != 0) {
+            PlacesModel place = getPlaceById(purchaseList.getPlaceId());
+            PlacesModel shop = getPlaceById(purchaseList.getPlaceId());
+            if (place != null) {
+                Location point;
+                if (purchaseList.getShopId() != 0 && shop != null) {
+                    point = Coordinate.middlePoint(
+                            place.getGpsLatitude(),
+                            place.getGpsLongitude(),
+                            shop.getGpsLatitude(),
+                            shop.getGpsLongitude()
+                    );
+                } else {
+                    point = new Location(AppConstants.LOCATION);
+                    point.setLatitude(place.getGpsLatitude());
+                    point.setLongitude(place.getGpsLongitude());
+                }
+                purchaseList.setPoint(point);
+                appointmentLists.add(purchaseList);
+            }
+        } else if (getPurchaseLists().indexOf(purchaseList) > -1) {
+            appointmentLists.remove(purchaseList);
+        }
+    }
+
     public List<PurchaseListModel> getPurchaseLists() {
         if (purchaseLists == null) {
             dataBaseHelper.open();
@@ -45,7 +88,7 @@ public class ShoppingHelper {
             boolean isNeedGps = false;
             for (PurchaseListModel list: purchaseLists) {
                 list.setPurchasesItems(dataBaseHelper.getPurchaseItems(list.getDbId()));
-                if (list.getPlaceId() != 0) {
+                if (!isNeedGps || list.getPlaceId() != 0 || list.getShopId() != 0) {
                     isNeedGps = true;
                 }
             }
@@ -55,6 +98,24 @@ public class ShoppingHelper {
             }
         }
         return purchaseLists;
+    }
+
+    public PurchaseListModel getPurchaseListByDbId (long id) {
+        for (PurchaseListModel list : getPurchaseLists()) {
+            if (list.getDbId() == id) {
+                return list;
+            }
+        }
+        return null;
+    }
+
+    public PurchaseListModel getPurchaseListByServerId (long id) {
+        for (PurchaseListModel list : getPurchaseLists()) {
+            if (list.getServerId() == id) {
+                return list;
+            }
+        }
+        return null;
     }
 
     public long addPurchaseList(PurchaseListModel purchaseList) {
@@ -67,6 +128,7 @@ public class ShoppingHelper {
         }
         purchaseList.setDbId(rawId);
         purchaseLists.add(0, purchaseList);
+        addAppointment(purchaseList);
         return rawId;
     }
 
@@ -75,6 +137,7 @@ public class ShoppingHelper {
         dataBaseHelper.deletePurchaseList(purchaseList.getDbId());
         dataBaseHelper.deletePurchaseItem(purchaseList.getDbId());
         dataBaseHelper.close();
+        getAppointmentLists().remove(purchaseList);
         purchaseLists.remove(purchaseList);
     }
 
@@ -82,6 +145,19 @@ public class ShoppingHelper {
         purchaseList.setTimeStamp(0);
         dataBaseHelper.open();
         dataBaseHelper.updatePurchaseList(purchaseList);
+        dataBaseHelper.close();
+        addAppointment(purchaseList);
+    }
+
+    public void updatePurchaseListMaxDistamce(long dbId, float maxDistance) {
+        dataBaseHelper.open();
+        dataBaseHelper.updatePurchaseListMaxDistamce(dbId, maxDistance);
+        dataBaseHelper.close();
+    }
+
+    public void updatePurchaseListIsAlarm(long dbId, boolean isAlarm) {
+        dataBaseHelper.open();
+        dataBaseHelper.updatePurchaseListIsAlarm(dbId, isAlarm);
         dataBaseHelper.close();
     }
 
@@ -132,10 +208,21 @@ public class ShoppingHelper {
         placesList.remove(placesModel);
     }
 
+    public PlacesModel getPlaceById(long id) {
+        for (PlacesModel item : getPlacesList()) {
+            if (id > 0 && id == item.getServerId()) {
+                return item;
+            }
+            if (id < 0 && id == (item.getDbId() * (-1))) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     private void startGpsService() {
         Log.d(TAG, "GpsAppointment: start");
         Intent intent = new Intent(context, GpsAppointmentService.class);
-        //intent.putExtra(AppConstants.EXTRA_GPS_APPOINTMENT, Long.parseLong("0"));
         context.startService(intent);
         isServiceStart = true;
     }

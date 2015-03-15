@@ -53,6 +53,8 @@ public class DataBaseHelper {
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID, list.getShopId());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID, list.getPlaceId());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_DONE, list.isDone() ? 1 : 0);
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE, list.getMaxDistance());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM, list.isAlarm() ? 1 : 0);
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM, list.getTimeAlarm());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE, list.getTimeCreate());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP, list.getTimeStamp());
@@ -72,6 +74,8 @@ public class DataBaseHelper {
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID, list.getShopId());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID, list.getPlaceId());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_DONE, list.isDone() ? 1 : 0);
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE, list.getMaxDistance());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM, list.isAlarm() ? 1 : 0);
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM, list.getTimeAlarm());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE, list.getTimeCreate());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP, list.getTimeStamp());
@@ -79,6 +83,30 @@ public class DataBaseHelper {
                 SqlDbHelper.TABLE_PURCHASE_LIST,
                 values,
                 SqlDbHelper.COLUMN_ID + " = " + list.getDbId(),
+                null
+        );
+        return update;
+    }
+
+    public int updatePurchaseListMaxDistamce(long dbId, float maxDistance) {
+        ContentValues values = new ContentValues();
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE, maxDistance);
+        int update = database.update(
+                SqlDbHelper.TABLE_PURCHASE_LIST,
+                values,
+                SqlDbHelper.COLUMN_ID + " = " + dbId,
+                null
+        );
+        return update;
+    }
+
+    public int updatePurchaseListIsAlarm(long dbId, boolean isAlarm) {
+        ContentValues values = new ContentValues();
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM, isAlarm ? 1 : 0);
+        int update = database.update(
+                SqlDbHelper.TABLE_PURCHASE_LIST,
+                values,
+                SqlDbHelper.COLUMN_ID + " = " + dbId,
                 null
         );
         return update;
@@ -103,6 +131,8 @@ public class DataBaseHelper {
                 SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_DONE,
+                SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE,
+                SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP,
@@ -126,6 +156,8 @@ public class DataBaseHelper {
             int indexShop = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID);
             int indexPlace = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID);
             int indexDone = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_DONE);
+            int indexMaxDistance = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE);
+            int indexIsAlarm = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM);
             int indexAlarm = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM);
             int indexCreate = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE);
             int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP);
@@ -137,6 +169,8 @@ public class DataBaseHelper {
                     cursor.getInt(indexShop),
                     cursor.getInt(indexPlace),
                     cursor.getInt(indexDone)>0,
+                    cursor.getFloat(indexMaxDistance),
+                    cursor.getInt(indexIsAlarm)>0,
                     cursor.getLong(indexAlarm),
                     cursor.getLong(indexCreate),
                     cursor.getLong(indexTimestamp),
