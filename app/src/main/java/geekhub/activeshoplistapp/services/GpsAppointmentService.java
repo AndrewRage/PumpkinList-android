@@ -24,9 +24,9 @@ import geekhub.activeshoplistapp.model.PurchaseListModel;
  */
 public class GpsAppointmentService extends Service {
     private static final String TAG = GpsAppointmentService.class.getSimpleName();
-    private static final int UPDATE_TIME_NETWORK = 1000 * 60;
+    private static final int UPDATE_TIME_NETWORK = 0;
     private static final int UPDATE_TIME_GPS = 1000 * 10;
-    private static final int UPDATE_PLACE_NETWORK = 10;
+    private static final int UPDATE_PLACE_NETWORK = 0;
     private static final int UPDATE_PLACE_GPS = 10;
     private static final int GPS_RADIUS = 1500;
     private static final int MIN_RADIUS = 100;
@@ -140,11 +140,11 @@ public class GpsAppointmentService extends Service {
                 PurchaseListModel list = ShoppingHelper.getInstance().getPurchaseListByDbId(dbId);
                 float distance = location.distanceTo(list.getPoint());
                 if (list.getMaxDistance() < distance && distance > MIN_RADIUS) {
-                    ShoppingHelper.getInstance().updatePurchaseListMaxDistamce(list.getDbId(), distance);
+                    ShoppingHelper.getInstance().updatePurchaseListMaxDistance(list.getDbId(), distance);
                 } else if (list.getMaxDistance() / 2 > distance) {
                     showNotification("/2 distance: " + list.getListName());
-                    ShoppingHelper.getInstance().updatePurchaseListMaxDistamce(list.getDbId(), distance);
-                    ShoppingHelper.getInstance().updatePurchaseListIsAlarm(list.getDbId(), false);
+                    ShoppingHelper.getInstance().updatePurchaseListMaxDistance(list.getDbId(), 0);
+                    //ShoppingHelper.getInstance().updatePurchaseListIsAlarm(list.getDbId(), false);
                 }
                 if (!list.isAlarm() && distance < list.getRadius() + APPOINTMENT_RADIUS) {
                     showNotification("Appointment distance: " + list.getListName());

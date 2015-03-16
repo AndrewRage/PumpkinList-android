@@ -55,7 +55,7 @@ public class ShoppingHelper {
         if (appointmentLists == null) {
             appointmentLists = new ArrayList<>();
         }
-        int startSize = appointmentLists.size();
+        int startService = 0;
         if (purchaseList.getPlaceId() != 0 || purchaseList.getShopId() != 0) {
             PlacesModel place = getPlaceById(purchaseList.getPlaceId());
             PlacesModel shop = getPlaceById(purchaseList.getPlaceId());
@@ -96,14 +96,15 @@ public class ShoppingHelper {
                 } else {
                     Log.d(TAG, "Update appointment. size " + appointmentLists.size());
                 }
-                if (startSize == 0) {
-                    startGpsService();
-                    startSize = 1;
-                }
+                startService++;
             }
         } else if (getPurchaseLists().indexOf(purchaseList) > -1) {
             appointmentLists.remove(purchaseList.getDbId());
             Log.d(TAG, "Remove appointment. size " + appointmentLists.size());
+        }
+
+        if (startService > 0) {
+            startGpsService();
         }
     }
 
@@ -113,9 +114,11 @@ public class ShoppingHelper {
             purchaseLists = dataBaseHelper.getPurchaseLists();
             for (PurchaseListModel list: purchaseLists) {
                 list.setPurchasesItems(dataBaseHelper.getPurchaseItems(list.getDbId()));
-                addAppointment(list);
             }
             dataBaseHelper.close();
+            for (PurchaseListModel list: purchaseLists) {
+                addAppointment(list);
+            }
         }
         return purchaseLists;
     }
@@ -169,13 +172,15 @@ public class ShoppingHelper {
         addAppointment(purchaseList);
     }
 
-    public void updatePurchaseListMaxDistamce(long dbId, float maxDistance) {
+    public void updatePurchaseListMaxDistance(long dbId, float maxDistance) {
+        getPurchaseListByDbId(dbId).setMaxDistance(maxDistance);
         dataBaseHelper.open();
         dataBaseHelper.updatePurchaseListMaxDistamce(dbId, maxDistance);
         dataBaseHelper.close();
     }
 
     public void updatePurchaseListIsAlarm(long dbId, boolean isAlarm) {
+        getPurchaseListByDbId(dbId).setIsAlarm(isAlarm);
         dataBaseHelper.open();
         dataBaseHelper.updatePurchaseListIsAlarm(dbId, isAlarm);
         dataBaseHelper.close();
