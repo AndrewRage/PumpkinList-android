@@ -22,7 +22,7 @@ public class ShoppingHelper {
     private static ShoppingHelper shoppingHelper;
     private Context context;
     private List<PurchaseListModel> purchaseLists;
-    private List<PurchaseListModel> appointmentLists;
+    private List<Long> appointmentLists;
     private List<PlacesModel> placesList;
     private DataBaseHelper dataBaseHelper;
     private boolean isServiceStart = false;
@@ -42,9 +42,8 @@ public class ShoppingHelper {
         return shoppingHelper;
     }
 
-    public List<PurchaseListModel> getAppointmentLists() {
+    public List<Long> getAppointmentLists() {
         if (appointmentLists == null) {
-            appointmentLists = new ArrayList<>();
             for (PurchaseListModel list : getPurchaseLists()) {
                 addAppointment(list);
             }
@@ -56,28 +55,55 @@ public class ShoppingHelper {
         if (appointmentLists == null) {
             appointmentLists = new ArrayList<>();
         }
+        int startSize = appointmentLists.size();
         if (purchaseList.getPlaceId() != 0 || purchaseList.getShopId() != 0) {
             PlacesModel place = getPlaceById(purchaseList.getPlaceId());
             PlacesModel shop = getPlaceById(purchaseList.getPlaceId());
+            Location point = null;
+            float radius = 0;
             if (place != null) {
-                Location point;
-                if (purchaseList.getShopId() != 0 && shop != null) {
+                if (shop != null) {
                     point = Coordinate.middlePoint(
                             place.getGpsLatitude(),
                             place.getGpsLongitude(),
                             shop.getGpsLatitude(),
                             shop.getGpsLongitude()
                     );
+                    Location l1 = new Location(AppConstants.LOCATION);
+                    l1.setLatitude(place.getGpsLatitude());
+                    l1.setLongitude(place.getGpsLongitude());
+                    Location l2 = new Location(AppConstants.LOCATION);
+                    l2.setLatitude(shop.getGpsLatitude());
+                    l2.setLongitude(shop.getGpsLongitude());
+                    radius = l1.distanceTo(l2);
                 } else {
                     point = new Location(AppConstants.LOCATION);
                     point.setLatitude(place.getGpsLatitude());
                     point.setLongitude(place.getGpsLongitude());
                 }
+
+            } else if (shop != null) {
+                point = new Location(AppConstants.LOCATION);
+                point.setLatitude(shop.getGpsLatitude());
+                point.setLongitude(shop.getGpsLongitude());
+            }
+            if (point != null) {
                 purchaseList.setPoint(point);
-                appointmentLists.add(purchaseList);
+                purchaseList.setRadius(radius);
+                if (appointmentLists.indexOf(purchaseList.getDbId()) == -1) {
+                    appointmentLists.add(purchaseList.getDbId());
+                    Log.d(TAG, "Add appointment. size " + appointmentLists.size());
+                } else {
+                    Log.d(TAG, "Update appointment. size " + appointmentLists.size());
+                }
+                if (startSize == 0) {
+                    startGpsService();
+                    startSize = 1;
+                }
             }
         } else if (getPurchaseLists().indexOf(purchaseList) > -1) {
-            appointmentLists.remove(purchaseList);
+            appointmentLists.remove(purchaseList.getDbId());
+            Log.d(TAG, "Remove appointment. size " + appointmentLists.size());
         }
     }
 
@@ -85,17 +111,11 @@ public class ShoppingHelper {
         if (purchaseLists == null) {
             dataBaseHelper.open();
             purchaseLists = dataBaseHelper.getPurchaseLists();
-            boolean isNeedGps = false;
             for (PurchaseListModel list: purchaseLists) {
                 list.setPurchasesItems(dataBaseHelper.getPurchaseItems(list.getDbId()));
-                if (!isNeedGps || list.getPlaceId() != 0 || list.getShopId() != 0) {
-                    isNeedGps = true;
-                }
+                addAppointment(list);
             }
             dataBaseHelper.close();
-            if (!isServiceStart && isNeedGps) {
-                startGpsService();
-            }
         }
         return purchaseLists;
     }

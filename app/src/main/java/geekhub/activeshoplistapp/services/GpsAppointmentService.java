@@ -12,13 +12,11 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
-import geekhub.activeshoplistapp.model.GpsAppointmentModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
 
 /**
@@ -30,14 +28,14 @@ public class GpsAppointmentService extends Service {
     private static final int UPDATE_TIME_GPS = 1000 * 10;
     private static final int UPDATE_PLACE_NETWORK = 10;
     private static final int UPDATE_PLACE_GPS = 10;
-    private static final int STATIC_RADIUS = 100;
+    private static final int GPS_RADIUS = 1500;
+    private static final int MIN_RADIUS = 100;
+    private static final int APPOINTMENT_RADIUS = 150;
     private LocationManager locationManager;
-    private List<PurchaseListModel> appointmentLists;
 
     @Override
     public void onCreate() {
         Log.d(TAG, "onCreate");
-        appointmentLists = ShoppingHelper.newInstance(getApplicationContext()).getAppointmentLists();
         super.onCreate();
     }
 
@@ -131,29 +129,27 @@ public class GpsAppointmentService extends Service {
         }
     };
 
-
-
     private void locationAction(Location location) {
-        for (GpsAppointmentModel item : appointmentList) {
-            Location place = new Location("locA");
-            place.setLatitude(item.getLatitude());
-            place.setLongitude(item.getLongitude());
-            float distance = location.distanceTo(place);
-            /*if (distance < 1000) {
-                locationManager.requestLocationUpdates(
-                        LocationManager.GPS_PROVIDER, UPDATE_TIME_GPS, UPDATE_PLACE_GPS, gpsListener);
-            } else {
-                locationManager.removeUpdates(gpsListener);
-            }*/
-            if (item.getMaxDistance() < distance && distance > STATIC_RADIUS) {
-                item.setMaxDistance(distance);
-            } else if (item.getMaxDistance() / 2 > distance) {
-                showNotification("id: " + item.getPurchaseId());
-                item.setMaxDistance(0);
-            }
-            if (!item.isAlert() && distance < STATIC_RADIUS) {
-                showNotification("id: " + item.getPurchaseId());
-                item.setIsStartAlertPosition(true);
+        Log.d(TAG, "locationAction: " + location.getProvider());
+        List<Long> appointmentLists = ShoppingHelper.newInstance(getApplicationContext()).getAppointmentLists();
+        if (appointmentLists.size() == 0) {
+            stopSelf();
+            Log.d(TAG, "serviceStop");
+        } else {
+            for (long dbId : appointmentLists) {
+                PurchaseListModel list = ShoppingHelper.getInstance().getPurchaseListByDbId(dbId);
+                float distance = location.distanceTo(list.getPoint());
+                if (list.getMaxDistance() < distance && distance > MIN_RADIUS) {
+                    ShoppingHelper.getInstance().updatePurchaseListMaxDistamce(list.getDbId(), distance);
+                } else if (list.getMaxDistance() / 2 > distance) {
+                    showNotification("/2 distance: " + list.getListName());
+                    ShoppingHelper.getInstance().updatePurchaseListMaxDistamce(list.getDbId(), distance);
+                    ShoppingHelper.getInstance().updatePurchaseListIsAlarm(list.getDbId(), false);
+                }
+                if (!list.isAlarm() && distance < list.getRadius() + APPOINTMENT_RADIUS) {
+                    showNotification("Appointment distance: " + list.getListName());
+                    ShoppingHelper.getInstance().updatePurchaseListIsAlarm(list.getDbId(), true);
+                }
             }
         }
     }
