@@ -6,6 +6,8 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 
+import geekhub.activeshoplistapp.helpers.SqlDbHelper;
+
 public class ShoppingContentProvider extends ContentProvider {
     private static final String TAG = ShoppingContentProvider.class.getSimpleName();
 
@@ -30,6 +32,7 @@ public class ShoppingContentProvider extends ContentProvider {
     static final int URI_FRIENDS_ID = 501;
 
     private static final UriMatcher sUriMatcher = initUriMatcher();
+    private SqlDbHelper dbHelper;
 
     public ShoppingContentProvider() {
     }
@@ -55,8 +58,8 @@ public class ShoppingContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        // TODO: Implement this to initialize your content provider on startup.
-        return false;
+        dbHelper = SqlDbHelper.getInstance(getContext());
+        return true;
     }
 
     @Override
