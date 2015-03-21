@@ -1,6 +1,7 @@
 package geekhub.activeshoplistapp.model;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -17,8 +18,14 @@ public class ShoppingContentProvider extends ContentProvider {
     public static final String PATH_GOODS = "goods";
     public static final String PATH_PURCHASE_LIST = "purchase_list";
     public static final String PATH_PURCHASE_ITEM = "purchase_item";
-    public static final String PATH_FRIENDS = "friends";
-    public static final String PATH_PLACES = "friends";
+    public static final String PATH_FRIEND = "friend";
+    public static final String PATH_PLACE = "place";
+
+    public static final Uri GOODS_CONTENT_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_GOODS);
+    public static final Uri PURCHASE_LIST_CONTENT_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_PURCHASE_LIST);
+    public static final Uri PURCHASE_ITEM_CONTENT_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_PURCHASE_ITEM);
+    public static final Uri FRIEND_CONTENT_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_FRIEND);
+    public static final Uri PLACE_CONTENT_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_PLACE);
 
     static final int URI_GOODS = 100;
     static final int URI_GOODS_ID = 101;
@@ -26,10 +33,31 @@ public class ShoppingContentProvider extends ContentProvider {
     static final int URI_PURCHASE_LIST_ID = 201;
     static final int URI_PURCHASE_ITEM = 300;
     static final int URI_PURCHASE_ITEM_ID = 301;
-    static final int URI_PLACES = 400;
-    static final int URI_PLACES_ID = 401;
-    static final int URI_FRIENDS = 500;
-    static final int URI_FRIENDS_ID = 501;
+    static final int URI_PLACE = 400;
+    static final int URI_PLACE_ID = 401;
+    static final int URI_FRIEND = 500;
+    static final int URI_FRIEND_ID = 501;
+
+    public static final String GOODS_CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/"
+            + CONTENT_AUTHORITY + "/" + PATH_GOODS;
+    public static final String GOODS_CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"
+            + CONTENT_AUTHORITY + "/" + PATH_GOODS;
+    public static final String PURCHASE_LIST_CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/"
+            + CONTENT_AUTHORITY + "/" + PATH_PURCHASE_LIST;
+    public static final String PURCHASE_LIST_CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"
+            + CONTENT_AUTHORITY + "/" + PATH_PURCHASE_LIST;
+    public static final String PURCHASE_ITEM_CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/"
+            + CONTENT_AUTHORITY + "/" + PATH_PURCHASE_ITEM;
+    public static final String PURCHASE_ITEM_CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"
+            + CONTENT_AUTHORITY + "/" + PATH_PURCHASE_ITEM;
+    public static final String PLACE_CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/"
+            + CONTENT_AUTHORITY + "/" + PATH_PLACE;
+    public static final String PLACE_CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"
+            + CONTENT_AUTHORITY + "/" + PATH_PLACE;
+    public static final String FRIEND_CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/"
+            + CONTENT_AUTHORITY + "/" + PATH_FRIEND;
+    public static final String FRIEND_CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"
+            + CONTENT_AUTHORITY + "/" + PATH_FRIEND;
 
     private static final UriMatcher sUriMatcher = initUriMatcher();
     private SqlDbHelper dbHelper;
@@ -38,28 +66,38 @@ public class ShoppingContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // Implement this to handle requests to delete one or more rows.
-        throw new UnsupportedOperationException("Not yet implemented");
+    public boolean onCreate() {
+        dbHelper = SqlDbHelper.getInstance(getContext());
+        return true;
     }
 
     @Override
     public String getType(Uri uri) {
-        // TODO: Implement this to handle requests for the MIME type of the data
-        // at the given URI.
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    @Override
-    public Uri insert(Uri uri, ContentValues values) {
-        // TODO: Implement this to handle requests to insert a new row.
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    @Override
-    public boolean onCreate() {
-        dbHelper = SqlDbHelper.getInstance(getContext());
-        return true;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case URI_GOODS:
+                return GOODS_CONTENT_TYPE;
+            case URI_GOODS_ID:
+                return GOODS_CONTENT_ITEM_TYPE;
+            case URI_PURCHASE_LIST:
+                return PURCHASE_LIST_CONTENT_TYPE;
+            case URI_PURCHASE_LIST_ID:
+                return PURCHASE_LIST_CONTENT_ITEM_TYPE;
+            case URI_PURCHASE_ITEM:
+                return PURCHASE_ITEM_CONTENT_TYPE;
+            case URI_PURCHASE_ITEM_ID:
+                return PURCHASE_LIST_CONTENT_ITEM_TYPE;
+            case URI_PLACE:
+                return PLACE_CONTENT_TYPE;
+            case URI_PLACE_ID:
+                return PLACE_CONTENT_ITEM_TYPE;
+            case URI_FRIEND:
+                return FRIEND_CONTENT_TYPE;
+            case URI_FRIEND_ID:
+                return FRIEND_CONTENT_ITEM_TYPE;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
     }
 
     @Override
@@ -70,17 +108,29 @@ public class ShoppingContentProvider extends ContentProvider {
     }
 
     @Override
+    public Uri insert(Uri uri, ContentValues values) {
+        // TODO: Implement this to handle requests to insert a new row.
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
         // TODO: Implement this to handle requests to update one or more rows.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        // Implement this to handle requests to delete one or more rows.
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
     static UriMatcher initUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-        matcher.addURI(CONTENT_AUTHORITY, PATH_FRIENDS, URI_FRIENDS);
-        matcher.addURI(CONTENT_AUTHORITY, PATH_FRIENDS + "/#", URI_FRIENDS_ID);
+        matcher.addURI(CONTENT_AUTHORITY, PATH_FRIEND, URI_FRIEND);
+        matcher.addURI(CONTENT_AUTHORITY, PATH_FRIEND + "/#", URI_FRIEND_ID);
 
         matcher.addURI(CONTENT_AUTHORITY, PATH_PURCHASE_LIST, URI_PURCHASE_LIST);
         matcher.addURI(CONTENT_AUTHORITY, PATH_PURCHASE_LIST + "/#", URI_PURCHASE_LIST_ID);
@@ -91,8 +141,8 @@ public class ShoppingContentProvider extends ContentProvider {
         matcher.addURI(CONTENT_AUTHORITY, PATH_GOODS, URI_GOODS);
         matcher.addURI(CONTENT_AUTHORITY, PATH_GOODS + "/#", URI_GOODS_ID);
 
-        matcher.addURI(CONTENT_AUTHORITY, PATH_PLACES, URI_PLACES);
-        matcher.addURI(CONTENT_AUTHORITY, PATH_PLACES + "/#", URI_PLACES_ID);
+        matcher.addURI(CONTENT_AUTHORITY, PATH_PLACE, URI_PLACE);
+        matcher.addURI(CONTENT_AUTHORITY, PATH_PLACE + "/#", URI_PLACE_ID);
 
         return matcher;
     }
