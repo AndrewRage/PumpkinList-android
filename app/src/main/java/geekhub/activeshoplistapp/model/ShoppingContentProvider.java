@@ -353,8 +353,73 @@ public class ShoppingContentProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // Implement this to handle requests to delete one or more rows.
-        throw new UnsupportedOperationException("Not yet implemented");
+        final String table;
+        final String sel;
+        final String[] args;
+        int rowsDelete;
+        switch (sUriMatcher.match(uri)) {
+            case URI_GOODS:
+                table = SqlDbHelper.TABLE_GOODS;
+                sel = selection;
+                args = selectionArgs;
+                break;
+            case URI_GOODS_ID:
+                table = SqlDbHelper.TABLE_GOODS;
+                sel = SqlDbHelper.COLUMN_ID;
+                args = new String[]{uri.getLastPathSegment()};
+                break;
+            case URI_PURCHASE_LIST:
+                table = SqlDbHelper.TABLE_PURCHASE_LIST;
+                sel = selection;
+                args = selectionArgs;
+                break;
+            case URI_PURCHASE_LIST_ID:
+                table = SqlDbHelper.TABLE_PURCHASE_LIST;
+                sel = SqlDbHelper.COLUMN_ID;
+                args = new String[]{uri.getLastPathSegment()};
+                break;
+            case URI_PURCHASE_ITEM:
+                table = SqlDbHelper.TABLE_PURCHASE_ITEM;
+                sel = selection;
+                args = selectionArgs;
+                break;
+            case URI_PURCHASE_ITEM_ID:
+                table = SqlDbHelper.TABLE_PURCHASE_ITEM;
+                sel = SqlDbHelper.COLUMN_ID;
+                args = new String[]{uri.getLastPathSegment()};
+                break;
+            case URI_PLACE:
+                table = SqlDbHelper.TABLE_PLACES;
+                sel = selection;
+                args = selectionArgs;
+                break;
+            case URI_PLACE_ID:
+                table = SqlDbHelper.TABLE_PLACES;
+                sel = SqlDbHelper.COLUMN_ID;
+                args = new String[]{uri.getLastPathSegment()};
+                break;
+            case URI_FRIEND:
+                table = SqlDbHelper.TABLE_FRIENDS;
+                sel = selection;
+                args = selectionArgs;
+                break;
+            case URI_FRIEND_ID:
+                table = SqlDbHelper.TABLE_FRIENDS;
+                sel = SqlDbHelper.COLUMN_ID;
+                args = new String[]{uri.getLastPathSegment()};
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        rowsDelete = dbHelper.getWritableDatabase().delete(
+                table,
+                sel,
+                args
+        );
+        if (rowsDelete != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsDelete;
     }
 
     static UriMatcher initUriMatcher() {
