@@ -1,7 +1,7 @@
 package geekhub.activeshoplistapp.fragments;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -136,7 +136,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         purchaseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //updateItem(position - 1);
+                changeBought((Cursor) purchaseListView.getItemAtPosition(position));
             }
         });
 
@@ -331,27 +331,6 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     }
 
     private void addItem() {
-        /*if (!TextUtils.isEmpty(goodsLabelEdit.getText().toString())) {
-            PurchaseItemModel item = new PurchaseItemModel(
-                    0,
-                    0,
-                    0,
-                    false,
-                    false,
-                    0,
-                    goodsLabelEdit.getText().toString(),
-                    0,
-                    "",
-                    0
-            );
-            purchaseList.getPurchasesItems().add(0, item);
-
-            if (isEdit) {
-                ShoppingHelper.getInstance().addPurchaseItem(item, purchaseList.getDbId());
-            }
-            goodsLabelEdit.setText(null);
-            adapter.notifyDataSetChanged();
-        }*/
         if (!TextUtils.isEmpty(goodsLabelEdit.getText().toString())) {
             if (purchaseList.getDbId() == 0) {
                 Uri uri = addNewList();
@@ -436,8 +415,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         return ContentHelper.insertPurchaseList(getActivity(), purchaseList);
     }
 
-    private void updateItem(int position) {
-        purchaseList.getPurchasesItems().get(position).setBought(
+    private void updateItem(Cursor cursor) {
+        /*purchaseList.getPurchasesItems().get(position).setBought(
                 !(purchaseList.getPurchasesItems().get(position).isBought())
         );
         if (purchaseList.getDbId() != 0) {
@@ -445,7 +424,44 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                     purchaseList.getPurchasesItems().get(position)
             );
         }
-        adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();*/
+        int indexId = cursor.getColumnIndex(SqlDbHelper.COLUMN_ID);
+        int indexServerId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_ITEM_ID);
+        int indexIsBought = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT);
+        int indexIsCancel = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL);
+        int indexGoodsId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_ID);
+        int indexLabel = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_LABEL);
+        int indexQuantity = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_QUANTITY);
+        int indexDescription = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_DESCRIPTION);
+        int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_TIMESTAMP);
+        PurchaseItemModel item = new PurchaseItemModel(
+                cursor.getLong(indexId),
+                cursor.getLong(indexServerId),
+                purchaseList.getDbId(),
+                cursor.getInt(indexIsBought)==0,
+                cursor.getInt(indexIsCancel)>0,
+                cursor.getInt(indexGoodsId),
+                cursor.getString(indexLabel),
+                cursor.getFloat(indexQuantity),
+                cursor.getString(indexDescription),
+                cursor.getLong(indexTimestamp)
+        );
+        int raw = ContentHelper.updatePurchaseItem(getActivity(), item);
+        Log.d(TAG, "update: " + raw);
+    }
+
+    private void changeBought(Cursor cursor) {
+        long dbId = ContentHelper.getDbId(cursor);
+        int indexBought = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT);
+        boolean bought = cursor.getInt(indexBought) > 0;
+        ContentValues values = new ContentValues();
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT, !bought ? 1 : 0);
+        getActivity().getContentResolver().update(
+                ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
+                values,
+                SqlDbHelper.COLUMN_ID + "=?",
+                new String[]{Long.toString(dbId)}
+        );
     }
 
     private void refreshShopsList() {
