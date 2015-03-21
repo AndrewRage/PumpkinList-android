@@ -17,6 +17,7 @@ import geekhub.activeshoplistapp.utils.Coordinate;
 /**
  * Created by rage on 2/24/15.
  */
+@Deprecated
 public class ShoppingHelper {
     private static final String TAG = ShoppingHelper.class.getSimpleName();
     private static ShoppingHelper shoppingHelper;

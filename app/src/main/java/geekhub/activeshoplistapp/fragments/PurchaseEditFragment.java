@@ -27,6 +27,7 @@ import geekhub.activeshoplistapp.activities.PlacesActivity;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
 import geekhub.activeshoplistapp.adapters.SettingsSpinnerAdapter;
 import geekhub.activeshoplistapp.helpers.AppConstants;
+import geekhub.activeshoplistapp.helpers.ContentHelper;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
@@ -55,10 +56,10 @@ public class PurchaseEditFragment extends BaseFragment {
     private List<PlacesModel> shopsList;
     private List<PlacesModel> placesList;
 
-    public static PurchaseEditFragment newInstance(int purchaseListId) {
+    public static PurchaseEditFragment newInstance(long purchaseListId) {
         PurchaseEditFragment fragment = new PurchaseEditFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_LIST_ID, purchaseListId);
+        args.putLong(ARG_LIST_ID, purchaseListId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,8 +100,8 @@ public class PurchaseEditFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (getArguments() != null) {
-            int id = getArguments().getInt(ARG_LIST_ID);
-            purchaseList = ShoppingHelper.getInstance().getPurchaseLists().get(id);
+            long id = getArguments().getLong(ARG_LIST_ID);
+            purchaseList = ContentHelper.getPurchaseList(getActivity(), id);
             listNameEdit.setText(purchaseList.getListName());
             isEdit = true;
         } else {
@@ -320,7 +321,7 @@ public class PurchaseEditFragment extends BaseFragment {
             listNameEdit.setText(R.string.purchase_edit_new_list_default);
         }
         purchaseList.setListName(listNameEdit.getText().toString());
-        ShoppingHelper.getInstance().updatePurchaseList(purchaseList);
+        ContentHelper.updatePurchaseList(getActivity(), purchaseList);
     }
 
     private void deleteList() {
@@ -353,7 +354,7 @@ public class PurchaseEditFragment extends BaseFragment {
                     .setPositiveButton(R.string.purchase_edit_alert_delete_yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             if (isEdit) {
-                                ShoppingHelper.getInstance().deletePurchaseList(purchaseList);
+                                ContentHelper.deletePurchaseList(getActivity(), purchaseList);
                             }
                             getActivity().getSupportFragmentManager().popBackStack();
                         }
@@ -374,7 +375,7 @@ public class PurchaseEditFragment extends BaseFragment {
             listNameEdit.setText(R.string.purchase_edit_new_list_default);
         }
         purchaseList.setListName(listNameEdit.getText().toString());
-        ShoppingHelper.getInstance().addPurchaseList(purchaseList);
+        ContentHelper.insertPurchaseList(getActivity(), purchaseList);
     }
 
     private void updateItem(int position) {

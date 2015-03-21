@@ -8,6 +8,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
 
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 
@@ -69,12 +70,14 @@ public class ShoppingContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
+        Log.d(TAG, "onCreate");
         dbHelper = SqlDbHelper.getInstance(getContext());
         return true;
     }
 
     @Override
     public String getType(Uri uri) {
+        Log.d(TAG, "getType: " + uri.toString());
         switch (sUriMatcher.match(uri)) {
             case URI_GOODS:
                 return GOODS_CONTENT_TYPE;
@@ -87,7 +90,7 @@ public class ShoppingContentProvider extends ContentProvider {
             case URI_PURCHASE_ITEM:
                 return PURCHASE_ITEM_CONTENT_TYPE;
             case URI_PURCHASE_ITEM_ID:
-                return PURCHASE_LIST_CONTENT_ITEM_TYPE;
+                return PURCHASE_ITEM_CONTENT_ITEM_TYPE;
             case URI_PLACE:
                 return PLACE_CONTENT_TYPE;
             case URI_PLACE_ID:
@@ -104,6 +107,7 @@ public class ShoppingContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
+        Log.d(TAG, "query: " + uri.toString());
         Cursor cursor;
         String[] args;
         switch (sUriMatcher.match(uri)) {
@@ -123,7 +127,7 @@ public class ShoppingContentProvider extends ContentProvider {
                 cursor = dbHelper.getReadableDatabase().query(
                         SqlDbHelper.TABLE_GOODS,
                         projection,
-                        SqlDbHelper.COLUMN_ID,
+                        SqlDbHelper.COLUMN_ID + "=?",
                         args,
                         null,
                         null,
@@ -146,7 +150,7 @@ public class ShoppingContentProvider extends ContentProvider {
                 cursor = dbHelper.getReadableDatabase().query(
                         SqlDbHelper.TABLE_PURCHASE_LIST,
                         projection,
-                        SqlDbHelper.COLUMN_ID,
+                        SqlDbHelper.COLUMN_ID + "=?",
                         args,
                         null,
                         null,
@@ -169,7 +173,7 @@ public class ShoppingContentProvider extends ContentProvider {
                 cursor = dbHelper.getReadableDatabase().query(
                         SqlDbHelper.TABLE_PURCHASE_ITEM,
                         projection,
-                        SqlDbHelper.COLUMN_ID,
+                        SqlDbHelper.COLUMN_ID + "=?",
                         args,
                         null,
                         null,
@@ -192,7 +196,7 @@ public class ShoppingContentProvider extends ContentProvider {
                 cursor = dbHelper.getReadableDatabase().query(
                         SqlDbHelper.TABLE_PLACES,
                         projection,
-                        SqlDbHelper.COLUMN_ID,
+                        SqlDbHelper.COLUMN_ID + "=?",
                         args,
                         null,
                         null,
@@ -215,7 +219,7 @@ public class ShoppingContentProvider extends ContentProvider {
                 cursor = dbHelper.getReadableDatabase().query(
                         SqlDbHelper.TABLE_FRIENDS,
                         projection,
-                        SqlDbHelper.COLUMN_ID,
+                        SqlDbHelper.COLUMN_ID + "=?",
                         args,
                         null,
                         null,
@@ -231,6 +235,7 @@ public class ShoppingContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
+        Log.d(TAG, "insert: " + uri.toString());
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         Uri resultUri = null;
         switch (sUriMatcher.match(uri)) {
@@ -281,6 +286,7 @@ public class ShoppingContentProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        Log.d(TAG, "update: " + uri.toString());
         final String table;
         final String sel;
         final String[] args;
@@ -293,7 +299,7 @@ public class ShoppingContentProvider extends ContentProvider {
                 break;
             case URI_GOODS_ID:
                 table = SqlDbHelper.TABLE_GOODS;
-                sel = SqlDbHelper.COLUMN_ID;
+                sel = SqlDbHelper.COLUMN_ID + "=?";
                 args = new String[]{uri.getLastPathSegment()};
                 break;
             case URI_PURCHASE_LIST:
@@ -303,7 +309,7 @@ public class ShoppingContentProvider extends ContentProvider {
                 break;
             case URI_PURCHASE_LIST_ID:
                 table = SqlDbHelper.TABLE_PURCHASE_LIST;
-                sel = SqlDbHelper.COLUMN_ID;
+                sel = SqlDbHelper.COLUMN_ID + "=?";
                 args = new String[]{uri.getLastPathSegment()};
                 break;
             case URI_PURCHASE_ITEM:
@@ -313,7 +319,7 @@ public class ShoppingContentProvider extends ContentProvider {
                 break;
             case URI_PURCHASE_ITEM_ID:
                 table = SqlDbHelper.TABLE_PURCHASE_ITEM;
-                sel = SqlDbHelper.COLUMN_ID;
+                sel = SqlDbHelper.COLUMN_ID + "=?";
                 args = new String[]{uri.getLastPathSegment()};
                 break;
             case URI_PLACE:
@@ -323,7 +329,7 @@ public class ShoppingContentProvider extends ContentProvider {
                 break;
             case URI_PLACE_ID:
                 table = SqlDbHelper.TABLE_PLACES;
-                sel = SqlDbHelper.COLUMN_ID;
+                sel = SqlDbHelper.COLUMN_ID + "=?";
                 args = new String[]{uri.getLastPathSegment()};
                 break;
             case URI_FRIEND:
@@ -333,7 +339,7 @@ public class ShoppingContentProvider extends ContentProvider {
                 break;
             case URI_FRIEND_ID:
                 table = SqlDbHelper.TABLE_FRIENDS;
-                sel = SqlDbHelper.COLUMN_ID;
+                sel = SqlDbHelper.COLUMN_ID + "=?";
                 args = new String[]{uri.getLastPathSegment()};
                 break;
             default:
@@ -353,6 +359,7 @@ public class ShoppingContentProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
+        Log.d(TAG, "delete: " + uri.toString());
         final String table;
         final String sel;
         final String[] args;
@@ -365,7 +372,7 @@ public class ShoppingContentProvider extends ContentProvider {
                 break;
             case URI_GOODS_ID:
                 table = SqlDbHelper.TABLE_GOODS;
-                sel = SqlDbHelper.COLUMN_ID;
+                sel = SqlDbHelper.COLUMN_ID + "=?";
                 args = new String[]{uri.getLastPathSegment()};
                 break;
             case URI_PURCHASE_LIST:
@@ -375,7 +382,7 @@ public class ShoppingContentProvider extends ContentProvider {
                 break;
             case URI_PURCHASE_LIST_ID:
                 table = SqlDbHelper.TABLE_PURCHASE_LIST;
-                sel = SqlDbHelper.COLUMN_ID;
+                sel = SqlDbHelper.COLUMN_ID + "=?";
                 args = new String[]{uri.getLastPathSegment()};
                 break;
             case URI_PURCHASE_ITEM:
@@ -385,7 +392,7 @@ public class ShoppingContentProvider extends ContentProvider {
                 break;
             case URI_PURCHASE_ITEM_ID:
                 table = SqlDbHelper.TABLE_PURCHASE_ITEM;
-                sel = SqlDbHelper.COLUMN_ID;
+                sel = SqlDbHelper.COLUMN_ID + "=?";
                 args = new String[]{uri.getLastPathSegment()};
                 break;
             case URI_PLACE:
@@ -395,7 +402,7 @@ public class ShoppingContentProvider extends ContentProvider {
                 break;
             case URI_PLACE_ID:
                 table = SqlDbHelper.TABLE_PLACES;
-                sel = SqlDbHelper.COLUMN_ID;
+                sel = SqlDbHelper.COLUMN_ID + "=?";
                 args = new String[]{uri.getLastPathSegment()};
                 break;
             case URI_FRIEND:
@@ -405,7 +412,7 @@ public class ShoppingContentProvider extends ContentProvider {
                 break;
             case URI_FRIEND_ID:
                 table = SqlDbHelper.TABLE_FRIENDS;
-                sel = SqlDbHelper.COLUMN_ID;
+                sel = SqlDbHelper.COLUMN_ID + "=?";
                 args = new String[]{uri.getLastPathSegment()};
                 break;
             default:

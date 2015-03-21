@@ -68,7 +68,7 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
     }
 
     @Override
-    public void onPurchaseListMainFragmentClickListener(int id) {
+    public void onPurchaseListMainFragmentClickListener(long id) {
         purchaseListEditFragment = PurchaseEditFragment.newInstance(id);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, purchaseListEditFragment)

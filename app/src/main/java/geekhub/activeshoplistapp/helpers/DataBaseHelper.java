@@ -15,6 +15,7 @@ import geekhub.activeshoplistapp.model.PlacesModel;
 /**
  * Created by rage on 2/27/15.
  */
+@Deprecated
 public class DataBaseHelper {
     private static final String TAG = DataBaseHelper.class.getSimpleName();
 

@@ -1,6 +1,7 @@
 package geekhub.activeshoplistapp.fragments;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,7 +14,7 @@ import java.util.List;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.adapters.PurchaseListAdapter;
-import geekhub.activeshoplistapp.helpers.ShoppingHelper;
+import geekhub.activeshoplistapp.helpers.ContentHelper;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
 
 /**
@@ -38,14 +39,15 @@ public class PurchaseManageFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        purchaseLists = ShoppingHelper.getInstance().getPurchaseLists();
-
-        final PurchaseListAdapter adapter = new PurchaseListAdapter(getActivity(), R.layout.item_purchase_view, purchaseLists);
+        Cursor cursor = ContentHelper.getPurchaseLists(getActivity());
+        PurchaseListAdapter adapter = new PurchaseListAdapter(getActivity(), cursor, 0, R.layout.item_purchase_view);
         purchaseView.setAdapter(adapter);
         purchaseView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                purchaseListMainFragmentListener.onPurchaseListMainFragmentClickListener(position);
+                purchaseListMainFragmentListener.onPurchaseListMainFragmentClickListener(
+                        ContentHelper.getDbId((Cursor) purchaseView.getItemAtPosition(position))
+                );
             }
         });
 
@@ -71,7 +73,7 @@ public class PurchaseManageFragment extends BaseFragment {
     }
 
     public interface OnPurchaseListMainFragmentListener {
-        public void onPurchaseListMainFragmentClickListener();
-        public void onPurchaseListMainFragmentClickListener(int id);
+        void onPurchaseListMainFragmentClickListener();
+        void onPurchaseListMainFragmentClickListener(long id);
     }
 }

@@ -32,7 +32,7 @@ public class PurchaseItemAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return purchaseItems.size();
+        return purchaseItems == null ? 0 : purchaseItems.size();
     }
 
     @Override
