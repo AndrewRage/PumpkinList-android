@@ -67,6 +67,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private SettingsSpinnerAdapter placeSpinnerAdapter;
     private List<PlacesModel> shopsList;
     private List<PlacesModel> placesList;
+    private View progressBar;
 
     public static PurchaseEditFragment newInstance(long purchaseListId) {
         PurchaseEditFragment fragment = new PurchaseEditFragment();
@@ -104,6 +105,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         shopsSpinner = (Spinner) view.findViewById(R.id.shops_spinner);
         placeSpinner = (Spinner) view.findViewById(R.id.place_spinner);
 
+        progressBar = view.findViewById(R.id.progress_bar);
+
         return view;
     }
 
@@ -139,7 +142,10 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             }
         });
 
-        getLoaderManager().initLoader(0, null, this);
+        if (purchaseList.getDbId() != 0) {
+            getLoaderManager().initLoader(0, null, this);
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -333,23 +339,44 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
     private void addItem() {
         if (!TextUtils.isEmpty(goodsLabelEdit.getText().toString())) {
-            if (purchaseList.getDbId() == 0) {
-                Uri uri = addNewList();
-                purchaseList.setDbId(Long.parseLong(uri.getLastPathSegment()));
+            progressBar.setVisibility(View.VISIBLE);
+            if (TextUtils.isEmpty(purchaseList.getListName()) && TextUtils.isEmpty(listNameEdit.getText())) {
+                purchaseList.setListName(getString(R.string.purchase_edit_new_list_default));
             }
-            PurchaseItemModel item = new PurchaseItemModel(
-                    0,
-                    0,
-                    0,
-                    false,
-                    false,
-                    0,
-                    goodsLabelEdit.getText().toString(),
-                    0,
-                    "",
-                    0
-            );
-            ContentHelper.insertPurchaseItem(getActivity(), item, purchaseList.getDbId());
+            final String name = goodsLabelEdit.getText().toString();
+            final Handler handler = new Handler();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (purchaseList.getDbId() == 0) {
+                        Uri uri = ContentHelper.insertPurchaseList(getActivity(), purchaseList);
+                        purchaseList.setDbId(Long.parseLong(uri.getLastPathSegment()));
+                    }
+                    PurchaseItemModel item = new PurchaseItemModel(
+                            0,
+                            0,
+                            0,
+                            false,
+                            false,
+                            0,
+                            name,
+                            0,
+                            "",
+                            0
+                    );
+                    ContentHelper.insertPurchaseItem(getActivity(), item, purchaseList.getDbId());
+
+                    if (adapter.getCursor() == null) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                getLoaderManager().initLoader(0, null, PurchaseEditFragment.this);
+                            }
+                        });
+                    }
+                }
+            }).start();
+
             goodsLabelEdit.setText(null);
         }
     }
@@ -359,7 +386,12 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             listNameEdit.setText(R.string.purchase_edit_new_list_default);
         }
         purchaseList.setListName(listNameEdit.getText().toString());
-        ContentHelper.updatePurchaseList(getActivity(), purchaseList);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ContentHelper.updatePurchaseList(getActivity(), purchaseList);
+            }
+        }).start();
     }
 
     private void deleteList() {
@@ -392,7 +424,12 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                     .setPositiveButton(R.string.purchase_edit_alert_delete_yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             if (purchaseList.getDbId() != 0) {
-                                ContentHelper.deletePurchaseList(getActivity(), purchaseList);
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ContentHelper.deletePurchaseList(getActivity(), purchaseList);
+                                    }
+                                }).start();
                             }
                             getActivity().getSupportFragmentManager().popBackStack();
                         }
@@ -442,18 +479,23 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         Log.d(TAG, "update: " + raw);
     }
 
-    private void changeBought(Cursor cursor) {
-        long dbId = ContentHelper.getDbId(cursor);
-        int indexBought = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT);
-        boolean bought = cursor.getInt(indexBought) > 0;
-        ContentValues values = new ContentValues();
-        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT, !bought ? 1 : 0);
-        getActivity().getContentResolver().update(
-                ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
-                values,
-                SqlDbHelper.COLUMN_ID + "=?",
-                new String[]{Long.toString(dbId)}
-        );
+    private void changeBought(final Cursor cursor) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long dbId = ContentHelper.getDbId(cursor);
+                int indexBought = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT);
+                boolean bought = cursor.getInt(indexBought) > 0;
+                ContentValues values = new ContentValues();
+                values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT, !bought ? 1 : 0);
+                getActivity().getContentResolver().update(
+                        ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
+                        values,
+                        SqlDbHelper.COLUMN_ID + "=?",
+                        new String[]{Long.toString(dbId)}
+                );
+            }
+        }).start();
     }
 
     private void refreshShopsList() {
@@ -526,11 +568,13 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         //adapter.swapCursor(data);
         adapter.changeCursor(data);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         //adapter.swapCursor(null);
         adapter.changeCursor(null);
+        progressBar.setVisibility(View.VISIBLE);
     }
 }

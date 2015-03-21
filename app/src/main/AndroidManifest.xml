@@ -59,6 +59,7 @@
         <provider
             android:name=".model.ShoppingContentProvider"
             android:authorities="geekhub.activeshoplistapp.provider"
+            android:process=":remote"
             android:enabled="true"
             android:exported="false" >
         </provider>
