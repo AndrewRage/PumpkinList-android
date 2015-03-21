@@ -2,9 +2,11 @@ package geekhub.activeshoplistapp.model;
 
 import android.content.ContentProvider;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
@@ -102,7 +104,7 @@ public class ShoppingContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        Cursor cursor = null;
+        Cursor cursor;
         String[] args;
         switch (sUriMatcher.match(uri)) {
             case URI_GOODS:
@@ -229,8 +231,52 @@ public class ShoppingContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        // TODO: Implement this to handle requests to insert a new row.
-        throw new UnsupportedOperationException("Not yet implemented");
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Uri resultUri = null;
+        switch (sUriMatcher.match(uri)) {
+            case URI_GOODS: {
+                long rowID = db.insert(SqlDbHelper.TABLE_GOODS, null, values);
+                if (rowID > 0) {
+                    resultUri = ContentUris.withAppendedId(GOODS_CONTENT_URI, rowID);
+                }
+                break;
+            }
+            case URI_PURCHASE_LIST: {
+                long rowID = db.insert(SqlDbHelper.TABLE_PURCHASE_LIST, null, values);
+                if (rowID > 0) {
+                    resultUri = ContentUris.withAppendedId(PURCHASE_LIST_CONTENT_URI, rowID);
+                }
+                break;
+            }
+            case URI_PURCHASE_ITEM: {
+                long rowID = db.insert(SqlDbHelper.TABLE_PURCHASE_ITEM, null, values);
+                if (rowID > 0) {
+                    resultUri = ContentUris.withAppendedId(PURCHASE_ITEM_CONTENT_URI, rowID);
+                }
+                break;
+            }
+            case URI_PLACE: {
+                long rowID = db.insert(SqlDbHelper.TABLE_PLACES, null, values);
+                if (rowID > 0) {
+                    resultUri = ContentUris.withAppendedId(PLACE_CONTENT_URI, rowID);
+                }
+                break;
+            }
+            case URI_FRIEND: {
+                long rowID = db.insert(SqlDbHelper.TABLE_FRIENDS, null, values);
+                if (rowID > 0) {
+                    resultUri = ContentUris.withAppendedId(FRIEND_CONTENT_URI, rowID);
+                }
+                break;
+            }
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        if (resultUri == null) {
+            throw new android.database.SQLException("Failed to insert row into: " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return resultUri;
     }
 
     @Override
