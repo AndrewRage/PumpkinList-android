@@ -153,7 +153,7 @@ public class PurchaseEditFragment extends BaseFragment {
         });
         shopsSpinner.setAdapter(shopSpinnerAdapter);
         if (purchaseList.getShopId() != 0) {
-            for (PlacesModel shop : ShoppingHelper.getInstance().getPlacesList()) {
+            for (PlacesModel shop : placesList) {
                 if (purchaseList.getShopId() > 0) {
                     if (shop.getServerId() == purchaseList.getShopId()) {
                         shopsSpinner.setSelection(shopSpinnerAdapter.getPosition(shop));
@@ -179,7 +179,7 @@ public class PurchaseEditFragment extends BaseFragment {
                     purchaseList.setShopId(0);
                 }
                 if (isEdit) {
-                    ShoppingHelper.getInstance().updatePurchaseList(purchaseList);
+                    ContentHelper.updatePurchaseList(getActivity(), purchaseList);
                 }
             }
 
@@ -234,7 +234,7 @@ public class PurchaseEditFragment extends BaseFragment {
                     purchaseList.setPlaceId(0);
                 }
                 if (isEdit) {
-                    ShoppingHelper.getInstance().updatePurchaseList(purchaseList);
+                    ContentHelper.updatePurchaseList(getActivity(), purchaseList);
                 }
             }
 
