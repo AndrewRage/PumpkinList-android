@@ -145,29 +145,6 @@ public class ContentHelper {
         );
     }
 
-    public static Cursor getPurchaseItems(Context context, long listId) {
-        String[] projection = {
-                SqlDbHelper.COLUMN_ID,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_ITEM_ID,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_ID,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_LABEL,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_QUANTITY,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_DESCRIPTION,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_TIMESTAMP,
-        };
-        String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
-        return context.getContentResolver().query(
-                ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
-                projection,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID + "=?",
-                new String[]{Long.toString(listId)},
-                orderBy
-        );
-    }
-
     public static Uri insertPurchaseItem(Context context, PurchaseItemModel item, long listId) {
         ContentValues values = new ContentValues();
         values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_ITEM_ID, item.getServerId());

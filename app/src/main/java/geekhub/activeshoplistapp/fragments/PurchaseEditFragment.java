@@ -11,6 +11,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -36,6 +39,7 @@ import geekhub.activeshoplistapp.adapters.SettingsSpinnerAdapter;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ContentHelper;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
+import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
 import geekhub.activeshoplistapp.model.PlacesModel;
@@ -44,7 +48,7 @@ import geekhub.activeshoplistapp.model.ShoppingContentProvider;
 /**
  * Created by rage on 08.02.15. Create by task: 004
  */
-public class PurchaseEditFragment extends BaseFragment {
+public class PurchaseEditFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = PurchaseEditFragment.class.getSimpleName();
     private static final String ARG_LIST_ID = "PurchaseList_param";
     private static final int REQUEST_SHOP = 10101;
@@ -119,13 +123,14 @@ public class PurchaseEditFragment extends BaseFragment {
             //isEdit = false;
         }
 
-        Cursor cursor = ContentHelper.getPurchaseItems(getActivity(), purchaseList.getDbId());
+        //Cursor cursor = ContentHelper.getPurchaseItems(getActivity(), purchaseList.getDbId());
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            adapter = new PurchaseItemAdapter(getActivity(), cursor, R.layout.item_purchase_edit);
+            adapter = new PurchaseItemAdapter(getActivity(), null, R.layout.item_purchase_edit);
         } else {
-            adapter = new PurchaseItemAdapter(getActivity(), cursor, 0, R.layout.item_purchase_edit);
+            adapter = new PurchaseItemAdapter(getActivity(), null, 0, R.layout.item_purchase_edit);
         }
+        getLoaderManager().initLoader(0, null, this);
         purchaseListView.addHeaderView(header);
         purchaseListView.setAdapter(adapter);
         purchaseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -280,12 +285,9 @@ public class PurchaseEditFragment extends BaseFragment {
     }
 
     private ContentObserver contentObserver = new ContentObserver(new Handler()) {
-        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
-            Log.d(TAG,"onChange: ");
-            adapter.swapCursor(ContentHelper.getPurchaseItems(getActivity(), purchaseList.getDbId()));
         }
     };
 
@@ -485,5 +487,42 @@ public class PurchaseEditFragment extends BaseFragment {
             refreshPlacesList();
             placeSpinnerAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = {
+                SqlDbHelper.COLUMN_ID,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_ITEM_ID,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_ID,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_LABEL,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_QUANTITY,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_DESCRIPTION,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_TIMESTAMP,
+        };
+        String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
+        return new CursorLoader(
+                getActivity(),
+                ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
+                projection,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID + "=?",
+                new String[]{Long.toString(purchaseList.getDbId())},
+                orderBy
+                );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        //adapter.swapCursor(data);
+        adapter.changeCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        //adapter.swapCursor(null);
+        adapter.changeCursor(null);
     }
 }
