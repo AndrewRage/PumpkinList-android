@@ -73,8 +73,7 @@ public class ShoppingContentProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri) {
-        final int match = sUriMatcher.match(uri);
-        switch (match) {
+        switch (sUriMatcher.match(uri)) {
             case URI_GOODS:
                 return GOODS_CONTENT_TYPE;
             case URI_GOODS_ID:
@@ -103,8 +102,129 @@ public class ShoppingContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        // TODO: Implement this to handle query requests from clients.
-        throw new UnsupportedOperationException("Not yet implemented");
+        Cursor cursor = null;
+        String[] args;
+        switch (sUriMatcher.match(uri)) {
+            case URI_GOODS:
+                cursor = dbHelper.getReadableDatabase().query(
+                        SqlDbHelper.TABLE_GOODS,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case URI_GOODS_ID:
+                args = new String[]{uri.getLastPathSegment()};
+                cursor = dbHelper.getReadableDatabase().query(
+                        SqlDbHelper.TABLE_GOODS,
+                        projection,
+                        SqlDbHelper.COLUMN_ID,
+                        args,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case URI_PURCHASE_LIST:
+                cursor = dbHelper.getReadableDatabase().query(
+                        SqlDbHelper.TABLE_PURCHASE_LIST,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case URI_PURCHASE_LIST_ID:
+                args = new String[]{uri.getLastPathSegment()};
+                cursor = dbHelper.getReadableDatabase().query(
+                        SqlDbHelper.TABLE_PURCHASE_LIST,
+                        projection,
+                        SqlDbHelper.COLUMN_ID,
+                        args,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case URI_PURCHASE_ITEM:
+                cursor = dbHelper.getReadableDatabase().query(
+                        SqlDbHelper.TABLE_PURCHASE_ITEM,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case URI_PURCHASE_ITEM_ID:
+                args = new String[]{uri.getLastPathSegment()};
+                cursor = dbHelper.getReadableDatabase().query(
+                        SqlDbHelper.TABLE_PURCHASE_ITEM,
+                        projection,
+                        SqlDbHelper.COLUMN_ID,
+                        args,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case URI_PLACE:
+                cursor = dbHelper.getReadableDatabase().query(
+                        SqlDbHelper.TABLE_PLACES,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case URI_PLACE_ID:
+                args = new String[]{uri.getLastPathSegment()};
+                cursor = dbHelper.getReadableDatabase().query(
+                        SqlDbHelper.TABLE_PLACES,
+                        projection,
+                        SqlDbHelper.COLUMN_ID,
+                        args,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case URI_FRIEND:
+                cursor = dbHelper.getReadableDatabase().query(
+                        SqlDbHelper.TABLE_FRIENDS,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case URI_FRIEND_ID:
+                args = new String[]{uri.getLastPathSegment()};
+                cursor = dbHelper.getReadableDatabase().query(
+                        SqlDbHelper.TABLE_FRIENDS,
+                        projection,
+                        SqlDbHelper.COLUMN_ID,
+                        args,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return cursor;
     }
 
     @Override
