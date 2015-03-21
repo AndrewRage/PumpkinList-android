@@ -33,7 +33,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
             "DROP TABLE IF EXISTS " + TABLE_FRIENDS;
 
     public final static String TABLE_GOODS = "goods";
-    public final static String GOODS_COLUMN_IS_USER_GOODS = "is_user_goods";
+    public final static String GOODS_COLUMN_GOODS = "goods_id";
     public final static String GOODS_COLUMN_LABEL = "good_label";
     public final static String GOODS_COLUMN_CATEGORY_ID = "good_category_id";
     public final static String GOODS_COLUMN_MEASURE_ID = "good_measure_id";
@@ -41,7 +41,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String SQL_CREATE_GOODS =
             "CREATE TABLE " + TABLE_GOODS + " (" +
             COLUMN_ID + INT_PRIMARY_KAY + COMMA_SEP +
-            GOODS_COLUMN_IS_USER_GOODS + INTEGER_TYPE + COMMA_SEP +
+            GOODS_COLUMN_GOODS + INTEGER_TYPE + COMMA_SEP +
             GOODS_COLUMN_LABEL + INTEGER_TYPE + COMMA_SEP +
             GOODS_COLUMN_CATEGORY_ID + INTEGER_TYPE + COMMA_SEP +
             GOODS_COLUMN_MEASURE_ID + INTEGER_TYPE + COMMA_SEP +
