@@ -14,31 +14,6 @@ import geekhub.activeshoplistapp.model.ShoppingContentProvider;
  */
 public class ContentHelper {
 
-    public static Cursor getPurchaseLists(Context context) {
-        String[] projection = {
-                SqlDbHelper.COLUMN_ID,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_DONE,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP,
-        };
-        String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
-        return context.getContentResolver().query(
-                ShoppingContentProvider.PURCHASE_LIST_CONTENT_URI,
-                projection,
-                null,
-                null,
-                orderBy
-        );
-    }
-
     public static PurchaseListModel getPurchaseList(Context context, long dbId) {
         Uri uri = Uri.parse(ShoppingContentProvider.PURCHASE_LIST_CONTENT_URI + "/" + dbId);
         String[] projection = {

@@ -130,7 +130,6 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         } else {
             adapter = new PurchaseItemAdapter(getActivity(), null, 0, R.layout.item_purchase_edit);
         }
-        getLoaderManager().initLoader(0, null, this);
         purchaseListView.addHeaderView(header);
         purchaseListView.setAdapter(adapter);
         purchaseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -139,6 +138,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 changeBought((Cursor) purchaseListView.getItemAtPosition(position));
             }
         });
+
+        getLoaderManager().initLoader(0, null, this);
 
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -416,15 +417,6 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     }
 
     private void updateItem(Cursor cursor) {
-        /*purchaseList.getPurchasesItems().get(position).setBought(
-                !(purchaseList.getPurchasesItems().get(position).isBought())
-        );
-        if (purchaseList.getDbId() != 0) {
-            ShoppingHelper.getInstance().updatePurchaseItem(
-                    purchaseList.getPurchasesItems().get(position)
-            );
-        }
-        adapter.notifyDataSetChanged();*/
         int indexId = cursor.getColumnIndex(SqlDbHelper.COLUMN_ID);
         int indexServerId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_ITEM_ID);
         int indexIsBought = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT);
@@ -438,7 +430,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 cursor.getLong(indexId),
                 cursor.getLong(indexServerId),
                 purchaseList.getDbId(),
-                cursor.getInt(indexIsBought)==0,
+                cursor.getInt(indexIsBought)>0,
                 cursor.getInt(indexIsCancel)>0,
                 cursor.getInt(indexGoodsId),
                 cursor.getString(indexLabel),
