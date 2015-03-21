@@ -9,7 +9,6 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import geekhub.activeshoplistapp.R;
-import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 
 /**
@@ -38,9 +37,7 @@ public class PurchaseListAdapter extends CursorAdapter {
         holder.title = (TextView) view.findViewById(R.id.title);
         view.setTag(holder);
 
-        int nameCol = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME);
-
-        holder.title.setText(cursor.getString(nameCol));
+        populateHolder(cursor, holder);
 
         return view;
     }
@@ -49,12 +46,16 @@ public class PurchaseListAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         Holder holder = (Holder) view.getTag();
 
-        int nameCol = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME);
-
-        holder.title.setText(cursor.getString(nameCol));
+        populateHolder(cursor, holder);
     }
 
     private class Holder {
         TextView title;
+    }
+
+    private void populateHolder(Cursor cursor, Holder holder) {
+        int indexName = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME);
+
+        holder.title.setText(cursor.getString(indexName));
     }
 }

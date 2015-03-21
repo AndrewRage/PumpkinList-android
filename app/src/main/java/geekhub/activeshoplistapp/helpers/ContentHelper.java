@@ -5,9 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
 import geekhub.activeshoplistapp.model.ShoppingContentProvider;
 
@@ -138,11 +136,68 @@ public class ContentHelper {
     }
 
     public static int deletePurchaseList(Context context, PurchaseListModel list) {
+        deletePurchaseItems(context, list.getDbId());
         Uri uri = Uri.parse(ShoppingContentProvider.PURCHASE_LIST_CONTENT_URI + "/" + list.getDbId());
         return context.getContentResolver().delete(
                 uri,
                 null,
                 null
+        );
+    }
+
+    public static Cursor getPurchaseItems(Context context, long listId) {
+        String[] projection = {
+                SqlDbHelper.COLUMN_ID,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_ITEM_ID,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_ID,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_LABEL,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_QUANTITY,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_DESCRIPTION,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_TIMESTAMP,
+        };
+        String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
+        return context.getContentResolver().query(
+                ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
+                projection,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID + "=?",
+                new String[]{Long.toString(listId)},
+                orderBy
+        );
+    }
+
+    public static Uri insertPurchaseItem(Context context, PurchaseItemModel item, long listId) {
+        ContentValues values = new ContentValues();
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_ITEM_ID, item.getServerId());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID, listId);
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT, item.isBought() ? 1 : 0);
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL, item.isCancel() ? 1 : 0);
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_ID, item.getGoodsId());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_LABEL, item.getGoodsLabel());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_QUANTITY, item.getGoodsQuantity());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_DESCRIPTION, item.getGoodsDescription());
+        values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_TIMESTAMP, item.getTimeStamp());
+        return context.getContentResolver().insert(
+                ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
+                values
+        );
+    }
+
+    public static int deletePurchaseItems(Context context, long listId) {
+        return context.getContentResolver().delete(
+                ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
+                SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID + "=?",
+                new String[]{Long.toString(listId)}
+        );
+    }
+
+    public static int deletePurchaseItem(Context context, long dbId) {
+        return context.getContentResolver().delete(
+                ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
+                SqlDbHelper.COLUMN_ID + "=?",
+                new String[]{Long.toString(dbId)}
         );
     }
 

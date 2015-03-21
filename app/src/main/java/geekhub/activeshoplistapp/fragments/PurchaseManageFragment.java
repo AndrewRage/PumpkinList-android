@@ -2,6 +2,7 @@ package geekhub.activeshoplistapp.fragments;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -10,12 +11,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import java.util.List;
-
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.adapters.PurchaseListAdapter;
 import geekhub.activeshoplistapp.helpers.ContentHelper;
-import geekhub.activeshoplistapp.model.PurchaseListModel;
 
 /**
  * Created by rage on 08.02.15. Create by task: 004
@@ -24,7 +22,6 @@ public class PurchaseManageFragment extends BaseFragment {
     private static final String TAG = PurchaseManageFragment.class.getSimpleName();
 
     private GridView purchaseView;
-    private List<PurchaseListModel> purchaseLists;
     private OnPurchaseListMainFragmentListener purchaseListMainFragmentListener;
 
     @Override
@@ -40,7 +37,12 @@ public class PurchaseManageFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         Cursor cursor = ContentHelper.getPurchaseLists(getActivity());
-        PurchaseListAdapter adapter = new PurchaseListAdapter(getActivity(), cursor, 0, R.layout.item_purchase_view);
+        PurchaseListAdapter adapter;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            adapter = new PurchaseListAdapter(getActivity(), cursor, R.layout.item_purchase_view);
+        } else {
+            adapter = new PurchaseListAdapter(getActivity(), cursor, 0, R.layout.item_purchase_view);
+        }
         purchaseView.setAdapter(adapter);
         purchaseView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

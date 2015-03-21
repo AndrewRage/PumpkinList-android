@@ -1,13 +1,20 @@
 package geekhub.activeshoplistapp.fragments;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +39,7 @@ import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
 import geekhub.activeshoplistapp.model.PlacesModel;
+import geekhub.activeshoplistapp.model.ShoppingContentProvider;
 
 /**
  * Created by rage on 08.02.15. Create by task: 004
@@ -48,7 +56,7 @@ public class PurchaseEditFragment extends BaseFragment {
     private EditText listNameEdit;
     private EditText goodsLabelEdit;
     private View addItemButton;
-    private boolean isEdit;
+    //private boolean isEdit;
     private Spinner shopsSpinner;
     private Spinner placeSpinner;
     private SettingsSpinnerAdapter shopSpinnerAdapter;
@@ -103,21 +111,27 @@ public class PurchaseEditFragment extends BaseFragment {
             long id = getArguments().getLong(ARG_LIST_ID);
             purchaseList = ContentHelper.getPurchaseList(getActivity(), id);
             listNameEdit.setText(purchaseList.getListName());
-            isEdit = true;
+            //isEdit = true;
         } else {
             purchaseList = new PurchaseListModel();
             List<PurchaseItemModel> purchaseItems = new ArrayList<>();
             purchaseList.setPurchasesItems(purchaseItems);
-            isEdit = false;
+            //isEdit = false;
         }
 
-        adapter = new PurchaseItemAdapter(getActivity(), R.layout.item_purchase_edit, purchaseList.getPurchasesItems());;
+        Cursor cursor = ContentHelper.getPurchaseItems(getActivity(), purchaseList.getDbId());
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            adapter = new PurchaseItemAdapter(getActivity(), cursor, R.layout.item_purchase_edit);
+        } else {
+            adapter = new PurchaseItemAdapter(getActivity(), cursor, 0, R.layout.item_purchase_edit);
+        }
         purchaseListView.addHeaderView(header);
         purchaseListView.setAdapter(adapter);
         purchaseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                updateItem(position - 1);
+                //updateItem(position - 1);
             }
         });
 
@@ -178,7 +192,7 @@ public class PurchaseEditFragment extends BaseFragment {
                 } else if (position == 0) {
                     purchaseList.setShopId(0);
                 }
-                if (isEdit) {
+                if (purchaseList.getDbId() != 0) {
                     ContentHelper.updatePurchaseList(getActivity(), purchaseList);
                 }
             }
@@ -233,7 +247,7 @@ public class PurchaseEditFragment extends BaseFragment {
                 } else if (position == 0) {
                     purchaseList.setPlaceId(0);
                 }
-                if (isEdit) {
+                if (purchaseList.getDbId() != 0) {
                     ContentHelper.updatePurchaseList(getActivity(), purchaseList);
                 }
             }
@@ -251,7 +265,29 @@ public class PurchaseEditFragment extends BaseFragment {
         goodsLabelEdit.requestFocus();
         shopsSpinner.setEnabled(true);
         placeSpinner.setEnabled(true);
+
+        getActivity().getContentResolver().registerContentObserver(
+                ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
+                true,
+                contentObserver
+        );
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().getContentResolver().unregisterContentObserver(contentObserver);
+    }
+
+    private ContentObserver contentObserver = new ContentObserver(new Handler()) {
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            Log.d(TAG,"onChange: ");
+            adapter.swapCursor(ContentHelper.getPurchaseItems(getActivity(), purchaseList.getDbId()));
+        }
+    };
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -277,7 +313,7 @@ public class PurchaseEditFragment extends BaseFragment {
 
     @Override
     public boolean onBackPressed() {
-        if (isEdit) {
+        if (purchaseList.getDbId() != 0) {
             if (!TextUtils.equals(listNameEdit.getText().toString(), purchaseList.getListName())) {
                 updateList();
             }
@@ -293,7 +329,7 @@ public class PurchaseEditFragment extends BaseFragment {
     }
 
     private void addItem() {
-        if (!TextUtils.isEmpty(goodsLabelEdit.getText().toString())) {
+        /*if (!TextUtils.isEmpty(goodsLabelEdit.getText().toString())) {
             PurchaseItemModel item = new PurchaseItemModel(
                     0,
                     0,
@@ -313,6 +349,26 @@ public class PurchaseEditFragment extends BaseFragment {
             }
             goodsLabelEdit.setText(null);
             adapter.notifyDataSetChanged();
+        }*/
+        if (!TextUtils.isEmpty(goodsLabelEdit.getText().toString())) {
+            if (purchaseList.getDbId() == 0) {
+                Uri uri = addNewList();
+                purchaseList.setDbId(Long.parseLong(uri.getLastPathSegment()));
+            }
+            PurchaseItemModel item = new PurchaseItemModel(
+                    0,
+                    0,
+                    0,
+                    false,
+                    false,
+                    0,
+                    goodsLabelEdit.getText().toString(),
+                    0,
+                    "",
+                    0
+            );
+            ContentHelper.insertPurchaseItem(getActivity(), item, purchaseList.getDbId());
+            goodsLabelEdit.setText(null);
         }
     }
 
@@ -326,7 +382,7 @@ public class PurchaseEditFragment extends BaseFragment {
 
     private void deleteList() {
         boolean isNeedDelete = false;
-        if (isEdit) {
+        if (purchaseList.getDbId() != 0) {
             isNeedDelete = true;
         } else {
             if (purchaseList.getPurchasesItems().size() > 0
@@ -353,7 +409,7 @@ public class PurchaseEditFragment extends BaseFragment {
                     .setMessage(message)
                     .setPositiveButton(R.string.purchase_edit_alert_delete_yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            if (isEdit) {
+                            if (purchaseList.getDbId() != 0) {
                                 ContentHelper.deletePurchaseList(getActivity(), purchaseList);
                             }
                             getActivity().getSupportFragmentManager().popBackStack();
@@ -370,19 +426,19 @@ public class PurchaseEditFragment extends BaseFragment {
         }
     }
 
-    private void addNewList() {
+    private Uri addNewList() {
         if (TextUtils.isEmpty(listNameEdit.getText())) {
             listNameEdit.setText(R.string.purchase_edit_new_list_default);
         }
         purchaseList.setListName(listNameEdit.getText().toString());
-        ContentHelper.insertPurchaseList(getActivity(), purchaseList);
+        return ContentHelper.insertPurchaseList(getActivity(), purchaseList);
     }
 
     private void updateItem(int position) {
         purchaseList.getPurchasesItems().get(position).setBought(
                 !(purchaseList.getPurchasesItems().get(position).isBought())
         );
-        if (isEdit) {
+        if (purchaseList.getDbId() != 0) {
             ShoppingHelper.getInstance().updatePurchaseItem(
                     purchaseList.getPurchasesItems().get(position)
             );
