@@ -126,6 +126,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             //isEdit = true;
         } else {
             purchaseList = new PurchaseListModel();
+            purchaseList.setTimeCreate(System.currentTimeMillis());
             List<PurchaseItemModel> purchaseItems = new ArrayList<>();
             purchaseList.setPurchasesItems(purchaseItems);
             //isEdit = false;
@@ -557,7 +558,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         return ContentHelper.insertPurchaseList(getActivity(), purchaseList);
     }
 
-    private void updateItem(Cursor cursor) {
+    /*private void updateItem(Cursor cursor) {
         int indexId = cursor.getColumnIndex(SqlDbHelper.COLUMN_ID);
         int indexServerId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_ITEM_ID);
         int indexIsBought = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT);
@@ -581,7 +582,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         );
         int raw = ContentHelper.updatePurchaseItem(getActivity(), item);
         Log.d(TAG, "update: " + raw);
-    }
+    }*/
 
     private void changeBought(final long dbId, final boolean checked) {
         new Thread(new Runnable() {
