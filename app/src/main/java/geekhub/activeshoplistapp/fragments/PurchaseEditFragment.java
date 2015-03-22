@@ -55,6 +55,9 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private static final String ARG_LIST_ID = "PurchaseList_param";
     private static final int REQUEST_SHOP = 10101;
     private static final int REQUEST_PLACES = 10102;
+    private static final int LOADER_ITEM_ID = 0;
+    private static final int LOADER_PLACE_ID = 1;
+    private static final int LOADER_SHOP_ID = 2;
     private PurchaseItemAdapter adapter;
     private ListView purchaseListView;
     private View header;
@@ -151,7 +154,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         });
 
         if (purchaseList.getDbId() != 0) {
-            getLoaderManager().initLoader(0, null, this);
+            getLoaderManager().initLoader(LOADER_ITEM_ID, null, this);
             progressBar.setVisibility(View.VISIBLE);
         }
 
@@ -162,11 +165,13 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             }
         });
 
-        refreshShopsList();
-        initShopSpinner();
+        //shopsList = new ArrayList<>();
+        //initShopSpinner();
+        getLoaderManager().initLoader(LOADER_SHOP_ID, null, this);
 
-        refreshPlacesList();
-        initPlaceSpinner();
+        //placesList = new ArrayList<>();
+        //initPlaceSpinner();
+        getLoaderManager().initLoader(LOADER_PLACE_ID, null, this);
     }
 
     private void showDialog(Cursor cursor) {
@@ -278,7 +283,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         });
         shopsSpinner.setAdapter(shopSpinnerAdapter);
         if (purchaseList.getShopId() != 0) {
-            for (PlacesModel shop : placesList) {
+            for (PlacesModel shop : shopsList) {
                 if (purchaseList.getShopId() > 0) {
                     if (shop.getServerId() == purchaseList.getShopId()) {
                         shopsSpinner.setSelection(shopSpinnerAdapter.getPosition(shop));
@@ -469,7 +474,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                getLoaderManager().initLoader(0, null, PurchaseEditFragment.this);
+                                getLoaderManager().initLoader(LOADER_ITEM_ID, null, PurchaseEditFragment.this);
                             }
                         });
                     }
@@ -594,31 +599,64 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         }).start();
     }
 
-    private void refreshShopsList() {
+    private List<PlacesModel> getPlace(Cursor cursor) {
+        List<PlacesModel> places = new ArrayList<>();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int indexId = cursor.getColumnIndex(SqlDbHelper.COLUMN_ID);
+            int indexServerId = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_PLACES_ID);
+            int indexCategory = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_CATEGORY);
+            int indexName = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_NAME);
+            int indexDescription = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_DESCRIPTION);
+            int indexLatitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LATITUDE);
+            int indexLongitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LONGITUDE);
+            int indexIsDelete = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_IS_DELETE);
+            int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_TIMESTAMP);
+            PlacesModel placesModel = new PlacesModel(
+                    cursor.getLong(indexId),
+                    cursor.getLong(indexServerId),
+                    cursor.getLong(indexCategory),
+                    cursor.getString(indexName),
+                    cursor.getString(indexDescription),
+                    cursor.getDouble(indexLatitude),
+                    cursor.getDouble(indexLongitude),
+                    cursor.getInt(indexIsDelete)>0,
+                    cursor.getLong(indexTimestamp)
+            );
+            places.add(placesModel);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return places;
+    }
+
+    private void refreshShopsList(Cursor cursor) {
         if (shopsList == null) {
             shopsList = new ArrayList<>();
         }
         if (shopsList.size() > 0) {
             shopsList.clear();
         }
-        for (PlacesModel placesModel : ShoppingHelper.getInstance().getPlacesList()) {
-            if (placesModel.getCategory() == AppConstants.PLACES_SHOP) {
-                shopsList.add(placesModel);
-            }
+        shopsList.addAll(getPlace(cursor));
+        if (shopSpinnerAdapter == null) {
+            initShopSpinner();
+        } else {
+            shopSpinnerAdapter.notifyDataSetChanged();
         }
     }
 
-    private void refreshPlacesList() {
+    private void refreshPlacesList(Cursor cursor) {
         if (placesList == null) {
             placesList = new ArrayList<>();
         }
         if (placesList.size() > 0) {
             placesList.clear();
         }
-        for (PlacesModel placesModel : ShoppingHelper.getInstance().getPlacesList()) {
-            if (placesModel.getCategory() == AppConstants.PLACES_USER) {
-                placesList.add(placesModel);
-            }
+        placesList.addAll(getPlace(cursor));
+        if (placeSpinnerAdapter == null) {
+            initPlaceSpinner();
+        } else {
+            placeSpinnerAdapter.notifyDataSetChanged();
         }
     }
 
@@ -626,46 +664,104 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_SHOP) {
-            refreshShopsList();
-            shopSpinnerAdapter.notifyDataSetChanged();
+            getLoaderManager().restartLoader(LOADER_SHOP_ID, null, this);
         }
         if (requestCode == REQUEST_PLACES) {
-            refreshPlacesList();
-            placeSpinnerAdapter.notifyDataSetChanged();
+            getLoaderManager().restartLoader(LOADER_PLACE_ID, null, this);
         }
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String[] projection = {
-                SqlDbHelper.COLUMN_ID,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_ITEM_ID,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_ID,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_LABEL,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_QUANTITY,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_DESCRIPTION,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_TIMESTAMP,
-        };
-        String orderBy = SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL + " ASC, "
-                + SqlDbHelper.COLUMN_ID + " DESC";
-        return new CursorLoader(
-                getActivity(),
-                ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
-                projection,
-                SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID + "=?",
-                new String[]{Long.toString(purchaseList.getDbId())},
-                orderBy
+        switch (id) {
+            case LOADER_ITEM_ID: {
+                String[] projection = {
+                        SqlDbHelper.COLUMN_ID,
+                        SqlDbHelper.PURCHASE_ITEM_COLUMN_ITEM_ID,
+                        SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID,
+                        SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT,
+                        SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL,
+                        SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_ID,
+                        SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_LABEL,
+                        SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_QUANTITY,
+                        SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_DESCRIPTION,
+                        SqlDbHelper.PURCHASE_ITEM_COLUMN_TIMESTAMP,
+                };
+                String orderBy = SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL + " ASC, "
+                        + SqlDbHelper.COLUMN_ID + " DESC";
+                return new CursorLoader(
+                        getActivity(),
+                        ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
+                        projection,
+                        SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID + "=?",
+                        new String[]{Long.toString(purchaseList.getDbId())},
+                        orderBy
                 );
+            }
+            case LOADER_SHOP_ID: {
+                String[] projection = {
+                        SqlDbHelper.COLUMN_ID,
+                        SqlDbHelper.PLACES_COLUMN_PLACES_ID,
+                        SqlDbHelper.PLACES_COLUMN_CATEGORY,
+                        SqlDbHelper.PLACES_COLUMN_NAME,
+                        SqlDbHelper.PLACES_COLUMN_DESCRIPTION,
+                        SqlDbHelper.PLACES_COLUMN_LATITUDE,
+                        SqlDbHelper.PLACES_COLUMN_LONGITUDE,
+                        SqlDbHelper.PLACES_COLUMN_IS_DELETE,
+                        SqlDbHelper.PLACES_COLUMN_TIMESTAMP,
+                };
+                String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
+                return new CursorLoader(
+                        getActivity(),
+                        ShoppingContentProvider.PLACE_CONTENT_URI,
+                        projection,
+                        SqlDbHelper.PLACES_COLUMN_CATEGORY + "=?",
+                        new String[]{Long.toString(AppConstants.PLACES_SHOP)},
+                        orderBy
+                );
+            }
+            case LOADER_PLACE_ID: {
+                String[] projection = {
+                        SqlDbHelper.COLUMN_ID,
+                        SqlDbHelper.PLACES_COLUMN_PLACES_ID,
+                        SqlDbHelper.PLACES_COLUMN_CATEGORY,
+                        SqlDbHelper.PLACES_COLUMN_NAME,
+                        SqlDbHelper.PLACES_COLUMN_DESCRIPTION,
+                        SqlDbHelper.PLACES_COLUMN_LATITUDE,
+                        SqlDbHelper.PLACES_COLUMN_LONGITUDE,
+                        SqlDbHelper.PLACES_COLUMN_IS_DELETE,
+                        SqlDbHelper.PLACES_COLUMN_TIMESTAMP,
+                };
+                String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
+                return new CursorLoader(
+                        getActivity(),
+                        ShoppingContentProvider.PLACE_CONTENT_URI,
+                        projection,
+                        SqlDbHelper.PLACES_COLUMN_CATEGORY + "=?",
+                        new String[]{Long.toString(AppConstants.PLACES_USER)},
+                        orderBy
+                );
+            }
+            default:
+                return null;
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        switch (loader.getId()) {
+            case LOADER_ITEM_ID:
+                adapter.changeCursor(data);
+                progressBar.setVisibility(View.GONE);
+                break;
+            case LOADER_SHOP_ID:
+                refreshShopsList(data);
+                break;
+            case LOADER_PLACE_ID:
+                refreshPlacesList(data);
+                break;
+        }
         //adapter.swapCursor(data);
-        adapter.changeCursor(data);
-        progressBar.setVisibility(View.GONE);
     }
 
     @Override
