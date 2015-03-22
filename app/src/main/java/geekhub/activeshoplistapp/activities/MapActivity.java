@@ -28,13 +28,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.helpers.AppConstants;
-import geekhub.activeshoplistapp.helpers.ShoppingHelper;
+import geekhub.activeshoplistapp.helpers.ContentHelper;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 import geekhub.activeshoplistapp.model.PlacesModel;
-import geekhub.activeshoplistapp.model.ShoppingContentProvider;
+import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
 
 /**
  * Created by rage on 3/3/15.
+ *
+ * Used for show and choose places on map
  */
 public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private static final String TAG = MapActivity.class.getSimpleName();
@@ -98,44 +100,48 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     }
 
     private void readPlaceModel(Cursor cursor) {
-        cursor.moveToFirst();
-        int indexId = cursor.getColumnIndex(SqlDbHelper.COLUMN_ID);
-        int indexServerId = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_PLACES_ID);
-        int indexCategory = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_CATEGORY);
-        int indexName = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_NAME);
-        int indexDescription = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_DESCRIPTION);
-        int indexLatitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LATITUDE);
-        int indexLongitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LONGITUDE);
-        int indexIsDelete = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_IS_DELETE);
-        int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_TIMESTAMP);
-        placesModel = new PlacesModel(
-                cursor.getLong(indexId),
-                cursor.getLong(indexServerId),
-                cursor.getLong(indexCategory),
-                cursor.getString(indexName),
-                cursor.getString(indexDescription),
-                cursor.getDouble(indexLatitude),
-                cursor.getDouble(indexLongitude),
-                cursor.getInt(indexIsDelete)>0,
-                cursor.getLong(indexTimestamp)
-        );
-        cursor.close();
-        isEdit = true;
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            int indexId = cursor.getColumnIndex(SqlDbHelper.COLUMN_ID);
+            int indexServerId = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_PLACES_ID);
+            int indexCategory = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_CATEGORY);
+            int indexName = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_NAME);
+            int indexDescription = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_DESCRIPTION);
+            int indexLatitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LATITUDE);
+            int indexLongitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LONGITUDE);
+            int indexIsDelete = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_IS_DELETE);
+            int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_TIMESTAMP);
+            placesModel = new PlacesModel(
+                    cursor.getLong(indexId),
+                    cursor.getLong(indexServerId),
+                    cursor.getLong(indexCategory),
+                    cursor.getString(indexName),
+                    cursor.getString(indexDescription),
+                    cursor.getDouble(indexLatitude),
+                    cursor.getDouble(indexLongitude),
+                    cursor.getInt(indexIsDelete) > 0,
+                    cursor.getLong(indexTimestamp)
+            );
+            cursor.close();
+            isEdit = true;
 
-        initScreen();
+            initScreen();
 
-        marker = map.addMarker(new MarkerOptions()
-                .position(new LatLng(
-                        placesModel.getGpsLatitude(),
-                        placesModel.getGpsLongitude()
-                ))
-                .draggable(true));
+            marker = map.addMarker(new MarkerOptions()
+                    .position(new LatLng(
+                            placesModel.getGpsLatitude(),
+                            placesModel.getGpsLongitude()
+                    ))
+                    .draggable(true));
 
-        LatLng latLng = new LatLng(placesModel.getGpsLatitude(), placesModel.getGpsLongitude());
-        showMyLocation(latLng);
-        isOnceShowMyLocation = true;
+            LatLng latLng = new LatLng(placesModel.getGpsLatitude(), placesModel.getGpsLongitude());
+            showMyLocation(latLng);
+            isOnceShowMyLocation = true;
 
-        placeNameEdit.setText(placesModel.getShopName());
+            placeNameEdit.setText(placesModel.getShopName());
+        } else {
+            finish();
+        }
     }
 
     @Override
@@ -236,7 +242,12 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                         .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 if (isEdit) {
-                                    ShoppingHelper.getInstance().deletePlace(placesModel);
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            ContentHelper.deletePlace(MapActivity.this, placesModel.getDbId());
+                                        }
+                                    }).start();
                                 }
                                 finish();
                             }
@@ -260,13 +271,22 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     public void onBackPressed() {
         if (!isEdit && marker != null) {
             if (TextUtils.isEmpty(placeNameEdit.getText().toString())) {
-                placesModel.setShopName(getString(R.string.shop_edit_new_shop_default));
+                if (menuItemId == AppConstants.MENU_SHOW_SHOPS) {
+                    placesModel.setShopName(getString(R.string.shop_edit_new_shop_default));
+                } else if (menuItemId == AppConstants.MENU_SHOW_PLACES) {
+                    placesModel.setShopName(getString(R.string.place_edit_new_place_default));
+                }
             } else {
                 placesModel.setShopName(placeNameEdit.getText().toString());
             }
             placesModel.setGpsLatitude(marker.getPosition().latitude);
             placesModel.setGpsLongitude(marker.getPosition().longitude);
-            ShoppingHelper.getInstance().addPlace(placesModel);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ContentHelper.insertPlace(MapActivity.this, placesModel);
+                }
+            }).start();
         }
         if (isEdit) {
             boolean edit = false;
@@ -286,7 +306,12 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                 }
             }
             if (edit) {
-                ShoppingHelper.getInstance().updatePlace(placesModel);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ContentHelper.updatePlace(MapActivity.this, placesModel);
+                    }
+                }).start();
             }
         }
         super.onBackPressed();

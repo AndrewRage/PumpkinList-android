@@ -57,7 +57,7 @@
             android:process=":gps_appointment_service" />
 
         <provider
-            android:name=".model.ShoppingContentProvider"
+            android:name=".helpers.ShoppingContentProvider"
             android:authorities="geekhub.activeshoplistapp.provider"
             android:process=":remote"
             android:enabled="true"

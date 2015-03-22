@@ -25,7 +25,7 @@ import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ContentHelper;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 import geekhub.activeshoplistapp.model.PlacesModel;
-import geekhub.activeshoplistapp.model.ShoppingContentProvider;
+import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
 
 /**
  * Created by rage on 08.02.15. Create by task: 004

@@ -11,7 +11,6 @@ import java.util.List;
 import geekhub.activeshoplistapp.model.PlacesModel;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
-import geekhub.activeshoplistapp.model.ShoppingContentProvider;
 
 /**
  * Created by rage on 3/21/15.
@@ -148,10 +147,11 @@ public class ContentHelper {
     }
 
     public static int deletePurchaseItem(Context context, long dbId) {
+        Uri uri = Uri.parse(ShoppingContentProvider.PLACE_CONTENT_URI + "/" + dbId);
         return context.getContentResolver().delete(
-                ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
-                SqlDbHelper.COLUMN_ID + "=?",
-                new String[]{Long.toString(dbId)}
+                uri,
+                null,
+                null
         );
     }
 
@@ -188,5 +188,49 @@ public class ContentHelper {
         }
         cursor.close();
         return places;
+    }
+
+    public static Uri insertPlace(Context context, PlacesModel placesModel) {
+        ContentValues values = new ContentValues();
+        values.put(SqlDbHelper.PLACES_COLUMN_PLACES_ID, placesModel.getServerId());
+        values.put(SqlDbHelper.PLACES_COLUMN_CATEGORY, placesModel.getCategory());
+        values.put(SqlDbHelper.PLACES_COLUMN_NAME, placesModel.getShopName());
+        values.put(SqlDbHelper.PLACES_COLUMN_DESCRIPTION, placesModel.getShopDescription());
+        values.put(SqlDbHelper.PLACES_COLUMN_LATITUDE, placesModel.getGpsLatitude());
+        values.put(SqlDbHelper.PLACES_COLUMN_LONGITUDE, placesModel.getGpsLongitude());
+        values.put(SqlDbHelper.PLACES_COLUMN_IS_DELETE, placesModel.isDelete() ? 1 : 0);
+        values.put(SqlDbHelper.PLACES_COLUMN_TIMESTAMP, placesModel.getGpsLongitude());
+        return context.getContentResolver().insert(
+                ShoppingContentProvider.PLACE_CONTENT_URI,
+                values
+        );
+    }
+
+    public static int updatePlace(Context context, PlacesModel placesModel) {
+        Uri uri = Uri.parse(ShoppingContentProvider.PLACE_CONTENT_URI + "/" + placesModel.getDbId());
+        ContentValues values = new ContentValues();
+        values.put(SqlDbHelper.PLACES_COLUMN_PLACES_ID, placesModel.getServerId());
+        values.put(SqlDbHelper.PLACES_COLUMN_CATEGORY, placesModel.getCategory());
+        values.put(SqlDbHelper.PLACES_COLUMN_NAME, placesModel.getShopName());
+        values.put(SqlDbHelper.PLACES_COLUMN_DESCRIPTION, placesModel.getShopDescription());
+        values.put(SqlDbHelper.PLACES_COLUMN_LATITUDE, placesModel.getGpsLatitude());
+        values.put(SqlDbHelper.PLACES_COLUMN_LONGITUDE, placesModel.getGpsLongitude());
+        values.put(SqlDbHelper.PLACES_COLUMN_IS_DELETE, placesModel.isDelete() ? 1 : 0);
+        values.put(SqlDbHelper.PLACES_COLUMN_TIMESTAMP, placesModel.getGpsLongitude());
+        return context.getContentResolver().update(
+                uri,
+                values,
+                null,
+                null
+        );
+    }
+
+    public static int deletePlace(Context context, long dbId) {
+        Uri uri = Uri.parse(ShoppingContentProvider.PLACE_CONTENT_URI + "/" + dbId);
+        return context.getContentResolver().delete(
+                uri,
+                null,
+                null
+        );
     }
 }

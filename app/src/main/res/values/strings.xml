@@ -63,7 +63,7 @@
 
     <!--Place edit-->
     <string name="place_edit_name_hint">Place name</string>
-    <string name="place_edit_new_shop_default">Nameless place</string>
+    <string name="place_edit_new_place_default">Nameless place</string>
     <string name="place_edit_this_place_default">this place</string>
     <string name="place_edit_alert_delete_title">Delete this place?</string>
     <string name="place_edit_alert_delete_description">Are you sure you want to delete %s?</string>

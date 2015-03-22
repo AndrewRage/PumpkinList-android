@@ -1,4 +1,4 @@
-package geekhub.activeshoplistapp.model;
+package geekhub.activeshoplistapp.helpers;
 
 import android.content.ContentProvider;
 import android.content.ContentResolver;
@@ -9,8 +9,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
-
-import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 
 public class ShoppingContentProvider extends ContentProvider {
     private static final String TAG = ShoppingContentProvider.class.getSimpleName();
