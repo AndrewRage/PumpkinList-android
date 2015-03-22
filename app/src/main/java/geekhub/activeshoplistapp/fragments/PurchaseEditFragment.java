@@ -40,7 +40,6 @@ import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
 import geekhub.activeshoplistapp.adapters.SettingsSpinnerAdapter;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ContentHelper;
-import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
@@ -58,6 +57,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private static final int LOADER_ITEM_ID = 0;
     private static final int LOADER_PLACE_ID = 1;
     private static final int LOADER_SHOP_ID = 2;
+    private static final int LOADER_LIST = 3;
     private PurchaseItemAdapter adapter;
     private ListView purchaseListView;
     private View header;
@@ -121,19 +121,20 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
         if (getArguments() != null) {
             long id = getArguments().getLong(ARG_LIST_ID);
-            purchaseList = ContentHelper.getPurchaseList(getActivity(), id);
-            listNameEdit.setText(purchaseList.getListName());
-            //isEdit = true;
+            Bundle args = new Bundle();
+            args.putLong(ARG_LIST_ID, id);
+            getLoaderManager().initLoader(LOADER_LIST, args, this);
         } else {
             purchaseList = new PurchaseListModel();
             purchaseList.setTimeCreate(System.currentTimeMillis());
             List<PurchaseItemModel> purchaseItems = new ArrayList<>();
             purchaseList.setPurchasesItems(purchaseItems);
-            //isEdit = false;
+
+            initScreen();
         }
+    }
 
-        //Cursor cursor = ContentHelper.getPurchaseItems(getActivity(), purchaseList.getDbId());
-
+    private void initScreen() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             adapter = new PurchaseItemAdapter(getActivity(), null, R.layout.item_purchase_edit);
         } else {
@@ -630,6 +631,12 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         }
     }
 
+    private void refreshPurchaseList(Cursor cursor) {
+        purchaseList = ContentHelper.getPurchaseList(cursor);
+        listNameEdit.setText(purchaseList.getListName());
+        initScreen();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -712,6 +719,32 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                         orderBy
                 );
             }
+            case LOADER_LIST: {
+                long dbId = args.getLong(ARG_LIST_ID);
+                Uri uri = Uri.parse(ShoppingContentProvider.PURCHASE_LIST_CONTENT_URI + "/" + dbId);
+                String[] projection = {
+                        SqlDbHelper.COLUMN_ID,
+                        SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID,
+                        SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME,
+                        SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID,
+                        SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID,
+                        SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID,
+                        SqlDbHelper.PURCHASE_LIST_COLUMN_DONE,
+                        SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE,
+                        SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM,
+                        SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM,
+                        SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE,
+                        SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP,
+                };
+                return new CursorLoader(
+                        getActivity(),
+                        uri,
+                        projection,
+                        null,
+                        null,
+                        null
+                );
+            }
             default:
                 return null;
         }
@@ -729,6 +762,9 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 break;
             case LOADER_PLACE_ID:
                 refreshPlacesList(data);
+                break;
+            case LOADER_LIST:
+                refreshPurchaseList(data);
                 break;
         }
         //adapter.swapCursor(data);

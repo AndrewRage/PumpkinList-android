@@ -23,7 +23,6 @@ import geekhub.activeshoplistapp.activities.MapActivity;
 import geekhub.activeshoplistapp.adapters.PlaceAdapter;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ContentHelper;
-import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 import geekhub.activeshoplistapp.model.PlacesModel;
 import geekhub.activeshoplistapp.model.ShoppingContentProvider;
@@ -34,8 +33,6 @@ import geekhub.activeshoplistapp.model.ShoppingContentProvider;
 public class PlacesManageFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = PlacesManageFragment.class.getSimpleName();
     private static final String ARG_MENU_ID = "argMenuId";
-    private static final int LOADER_PLACE_ID = 1;
-    private static final int LOADER_SHOP_ID = 2;
     private ListView shopListView;
     private View plusButton;
     private List<PlacesModel> placesList;
@@ -84,8 +81,7 @@ public class PlacesManageFragment extends BaseFragment implements LoaderManager.
                         .putExtra(AppConstants.EXTRA_MENU_ITEM, menuItemId)
                         .putExtra(
                                 AppConstants.EXTRA_SHOP_ID,
-                                ShoppingHelper.getInstance().
-                                        getPlacesList().indexOf(adapter.getItem(position))
+                                adapter.getItem(position).getDbId()
                         );
                 startActivityForResult(intent, AppConstants.SHOP_RESULT_CODE);
             }
