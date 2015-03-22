@@ -600,37 +600,6 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         }).start();
     }
 
-    private List<PlacesModel> getPlace(Cursor cursor) {
-        List<PlacesModel> places = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            int indexId = cursor.getColumnIndex(SqlDbHelper.COLUMN_ID);
-            int indexServerId = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_PLACES_ID);
-            int indexCategory = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_CATEGORY);
-            int indexName = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_NAME);
-            int indexDescription = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_DESCRIPTION);
-            int indexLatitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LATITUDE);
-            int indexLongitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LONGITUDE);
-            int indexIsDelete = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_IS_DELETE);
-            int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_TIMESTAMP);
-            PlacesModel placesModel = new PlacesModel(
-                    cursor.getLong(indexId),
-                    cursor.getLong(indexServerId),
-                    cursor.getLong(indexCategory),
-                    cursor.getString(indexName),
-                    cursor.getString(indexDescription),
-                    cursor.getDouble(indexLatitude),
-                    cursor.getDouble(indexLongitude),
-                    cursor.getInt(indexIsDelete)>0,
-                    cursor.getLong(indexTimestamp)
-            );
-            places.add(placesModel);
-            cursor.moveToNext();
-        }
-        cursor.close();
-        return places;
-    }
-
     private void refreshShopsList(Cursor cursor) {
         if (shopsList == null) {
             shopsList = new ArrayList<>();
@@ -638,7 +607,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         if (shopsList.size() > 0) {
             shopsList.clear();
         }
-        shopsList.addAll(getPlace(cursor));
+        shopsList.addAll(ContentHelper.getPlaceList(cursor));
         if (shopSpinnerAdapter == null) {
             initShopSpinner();
         } else {
@@ -653,7 +622,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         if (placesList.size() > 0) {
             placesList.clear();
         }
-        placesList.addAll(getPlace(cursor));
+        placesList.addAll(ContentHelper.getPlaceList(cursor));
         if (placeSpinnerAdapter == null) {
             initPlaceSpinner();
         } else {

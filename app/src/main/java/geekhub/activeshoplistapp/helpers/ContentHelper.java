@@ -5,6 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import geekhub.activeshoplistapp.model.PlacesModel;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
 import geekhub.activeshoplistapp.model.ShoppingContentProvider;
@@ -175,5 +179,36 @@ public class ContentHelper {
 
     public static long getDbId(Cursor cursor) {
         return cursor.getLong(cursor.getColumnIndexOrThrow(SqlDbHelper.COLUMN_ID));
+    }
+
+    public static List<PlacesModel> getPlaceList(Cursor cursor) {
+        List<PlacesModel> places = new ArrayList<>();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int indexId = cursor.getColumnIndex(SqlDbHelper.COLUMN_ID);
+            int indexServerId = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_PLACES_ID);
+            int indexCategory = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_CATEGORY);
+            int indexName = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_NAME);
+            int indexDescription = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_DESCRIPTION);
+            int indexLatitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LATITUDE);
+            int indexLongitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LONGITUDE);
+            int indexIsDelete = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_IS_DELETE);
+            int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_TIMESTAMP);
+            PlacesModel placesModel = new PlacesModel(
+                    cursor.getLong(indexId),
+                    cursor.getLong(indexServerId),
+                    cursor.getLong(indexCategory),
+                    cursor.getString(indexName),
+                    cursor.getString(indexDescription),
+                    cursor.getDouble(indexLatitude),
+                    cursor.getDouble(indexLongitude),
+                    cursor.getInt(indexIsDelete)>0,
+                    cursor.getLong(indexTimestamp)
+            );
+            places.add(placesModel);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return places;
     }
 }
