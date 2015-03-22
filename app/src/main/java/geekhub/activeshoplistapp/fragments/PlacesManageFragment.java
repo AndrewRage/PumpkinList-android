@@ -101,7 +101,8 @@ public class PlacesManageFragment extends BaseFragment implements LoaderManager.
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //refreshPlaces();
-        adapter.notifyDataSetChanged();
+        //adapter.notifyDataSetChanged();
+        getLoaderManager().restartLoader(menuItemId, null, this);
     }
 
     /*private List<PlacesModel> getShopsList() {
