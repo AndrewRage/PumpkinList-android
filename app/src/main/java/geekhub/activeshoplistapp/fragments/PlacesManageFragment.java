@@ -117,28 +117,10 @@ public class PlacesManageFragment extends BaseFragment implements LoaderManager.
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        getActivity().getContentResolver().registerContentObserver(
-                ShoppingContentProvider.PLACE_CONTENT_URI,
-                true,
-                contentObserver
-        );
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
-        getActivity().getContentResolver().unregisterContentObserver(contentObserver);
+        getLoaderManager().destroyLoader(menuItemId);
     }
-
-    private ContentObserver contentObserver = new ContentObserver(new Handler()) {
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-        }
-    };
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

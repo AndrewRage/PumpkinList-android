@@ -382,26 +382,16 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         goodsLabelEdit.requestFocus();
         shopsSpinner.setEnabled(true);
         placeSpinner.setEnabled(true);
-
-        getActivity().getContentResolver().registerContentObserver(
-                ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
-                true,
-                contentObserver
-        );
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        getActivity().getContentResolver().unregisterContentObserver(contentObserver);
+        getLoaderManager().destroyLoader(LOADER_LIST);
+        getLoaderManager().destroyLoader(LOADER_PLACE_ID);
+        getLoaderManager().destroyLoader(LOADER_SHOP_ID);
+        getLoaderManager().destroyLoader(LOADER_ITEM_ID);
     }
-
-    private ContentObserver contentObserver = new ContentObserver(new Handler()) {
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-        }
-    };
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

@@ -82,30 +82,6 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        getActivity().getContentResolver().registerContentObserver(
-                ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
-                true,
-                contentObserver
-        );
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        getActivity().getContentResolver().unregisterContentObserver(contentObserver);
-    }
-
-    private ContentObserver contentObserver = new ContentObserver(new Handler()) {
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-        }
-    };
-
-    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] projection = {
                 SqlDbHelper.COLUMN_ID,

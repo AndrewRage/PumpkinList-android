@@ -318,28 +318,10 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        getContentResolver().registerContentObserver(
-                ShoppingContentProvider.PLACE_CONTENT_URI,
-                true,
-                contentObserver
-        );
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
-        getContentResolver().unregisterContentObserver(contentObserver);
+        getSupportLoaderManager().destroyLoader(0);
     }
-
-    private ContentObserver contentObserver = new ContentObserver(new Handler()) {
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-        }
-    };
 
     private LoaderManager.LoaderCallbacks<Cursor> loaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
 
