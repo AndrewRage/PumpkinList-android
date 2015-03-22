@@ -3,6 +3,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="dialog_padding">16dp</dimen>
+
     <dimen name="button_padding">3dp</dimen>
     <dimen name="button_shadow_padding">5dp</dimen>
     <dimen name="button_corner_radius">2dp</dimen>
@@ -17,6 +19,8 @@
     <dimen name="purchase_list_item_margin">10dp</dimen>
 
     <dimen name="purchase_item_margin">6dp</dimen>
+    <dimen name="purchase_item_checkbox_size">50dp</dimen>
+    <dimen name="purchase_item_count_horizontal_margin">16dp</dimen>
 
     <dimen name="bottom_toolbar_height">48dp</dimen>
     <dimen name="toolbar_padding_vertical">4dp</dimen>

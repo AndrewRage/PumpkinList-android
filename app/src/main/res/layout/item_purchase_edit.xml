@@ -4,28 +4,86 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/purchase_item_margin"
-    android:paddingBottom="@dimen/purchase_item_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin" >
+    android:paddingLeft="@dimen/activity_horizontal_margin">
 
-    <TextView
-        android:id="@+id/title"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:layout_alignBottom="@+id/check_bought"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/count_container"
+        android:layout_toStartOf="@+id/count_container">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="title"
+            android:textSize="@dimen/abc_text_size_medium_material"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="description"
+            android:textSize="@dimen/abc_text_size_caption_material"
+            android:visibility="gone"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/count_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/purchase_item_count_horizontal_margin"
+        android:layout_marginLeft="@dimen/purchase_item_count_horizontal_margin"
+        android:layout_toLeftOf="@+id/check_bought"
+        android:layout_toStartOf="@+id/check_bought"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="count"
+            android:textSize="@dimen/abc_text_size_small_material"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/count"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="@string/purchase_edit_item_quantity"
+            android:textSize="@dimen/abc_text_size_caption_material"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
 
     <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/check_bought"
-        android:layout_alignParentTop="true"
+        android:layout_width="@dimen/purchase_item_checkbox_size"
+        android:layout_height="@dimen/purchase_item_checkbox_size"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:focusable="false"
-        android:clickable="false" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

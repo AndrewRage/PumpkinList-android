@@ -8,6 +8,9 @@
     <string name="action_delete_shop">Delete shop</string>
     <string name="action_delete_list">Delete shopping list</string>
 
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Cancel</string>
+
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
 
@@ -44,8 +47,11 @@
     <string name="purchase_edit_delete_list">Delete</string>
     <string name="purchase_edit_alert_delete_title">Delete shopping list?</string>
     <string name="purchase_edit_alert_delete_description">Are you sure you want to delete %s?</string>
-    <string name="purchase_edit_alert_delete_yes">OK</string>
-    <string name="purchase_edit_alert_delete_no">Cancel</string>
+    <string name="purchase_edit_item_quantity">quantity</string>
+    <string name="purchase_edit_item_title">Edit goods</string>
+    <string name="purchase_edit_item_check_bought">bought</string>
+    <string name="purchase_edit_item_button_delete">Delete</string>
+    <string name="purchase_edit_item_button_restore">Restore</string>
 
     <!--Shop edit-->
     <string name="shop_edit_name_hint">Shop name</string>

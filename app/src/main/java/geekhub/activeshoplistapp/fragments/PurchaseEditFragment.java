@@ -1,6 +1,7 @@
 package geekhub.activeshoplistapp.fragments;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -133,12 +135,18 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         } else {
             adapter = new PurchaseItemAdapter(getActivity(), null, 0, R.layout.item_purchase_edit);
         }
+        adapter.setOnItemInteractionListener(new PurchaseItemAdapter.OnItemInteractionListener() {
+            @Override
+            public void onCheckBoxClick(long dbId, boolean checked) {
+                changeBought(dbId, checked);
+            }
+        });
         purchaseListView.addHeaderView(header);
         purchaseListView.setAdapter(adapter);
         purchaseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                changeBought((Cursor) purchaseListView.getItemAtPosition(position));
+                showDialog((Cursor) purchaseListView.getItemAtPosition(position));
             }
         });
 
@@ -159,6 +167,97 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
         refreshPlacesList();
         initPlaceSpinner();
+    }
+
+    private void showDialog(Cursor cursor) {
+        int indexId = cursor.getColumnIndex(SqlDbHelper.COLUMN_ID);
+        int indexServerId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_ITEM_ID);
+        int indexIsBought = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT);
+        int indexIsCancel = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL);
+        int indexGoodsId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_ID);
+        int indexLabel = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_LABEL);
+        int indexQuantity = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_QUANTITY);
+        int indexDescription = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_DESCRIPTION);
+        int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_TIMESTAMP);
+        final PurchaseItemModel item = new PurchaseItemModel(
+                cursor.getLong(indexId),
+                cursor.getLong(indexServerId),
+                purchaseList.getDbId(),
+                cursor.getInt(indexIsBought)>0,
+                cursor.getInt(indexIsCancel)>0,
+                cursor.getInt(indexGoodsId),
+                cursor.getString(indexLabel),
+                cursor.getFloat(indexQuantity),
+                cursor.getString(indexDescription),
+                cursor.getLong(indexTimestamp)
+        );
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        builder.setTitle(R.string.purchase_edit_item_title);
+        View view = inflater.inflate(R.layout.dialog_purchase_item, null);
+        final EditText name = (EditText) view.findViewById(R.id.edit_item_name);
+        final CheckBox bought = (CheckBox) view.findViewById(R.id.check_bought);
+        builder.setView(view);
+        if (!item.isCancel()) {
+            builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (!TextUtils.isEmpty(name.getText().toString())) {
+                        item.setGoodsLabel(name.getText().toString());
+                    }
+                    item.setBought(bought.isChecked());
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ContentHelper.updatePurchaseItem(getActivity(), item);
+                        }
+                    }).start();
+                }
+            });
+        }
+        builder.setNegativeButton(R.string.button_cancel, null);
+        String deleteTitle;
+        if (item.isCancel()) {
+            deleteTitle = getString(R.string.purchase_edit_item_button_restore);
+        } else {
+            deleteTitle = getString(R.string.purchase_edit_item_button_delete);
+        }
+        builder.setNeutralButton(deleteTitle, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (item.getServerId() == 0) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ContentHelper.deletePurchaseItem(getActivity(), item.getDbId());
+                        }
+                    }).start();
+                } else {
+                    if (!TextUtils.isEmpty(name.getText().toString())) {
+                        item.setGoodsLabel(name.getText().toString());
+                    }
+                    item.setBought(bought.isChecked());
+
+                    item.setCancel(!item.isCancel());
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ContentHelper.updatePurchaseItem(getActivity(), item);
+                        }
+                    }).start();
+                }
+            }
+        });
+        Dialog dialog = builder.create();
+
+        name.setText(item.getGoodsLabel());
+        name.setEnabled(!item.isCancel());
+        bought.setChecked(item.isBought());
+        bought.setEnabled(!item.isCancel());
+
+        dialog.show();
     }
 
     private void initShopSpinner() {
@@ -421,7 +520,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             new AlertDialog.Builder(getActivity())
                     .setTitle(R.string.purchase_edit_alert_delete_title)
                     .setMessage(message)
-                    .setPositiveButton(R.string.purchase_edit_alert_delete_yes, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             if (purchaseList.getDbId() != 0) {
                                 new Thread(new Runnable() {
@@ -434,7 +533,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                             getActivity().getSupportFragmentManager().popBackStack();
                         }
                     })
-                    .setNegativeButton(R.string.purchase_edit_alert_delete_no, new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 
                         }
@@ -479,15 +578,12 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         Log.d(TAG, "update: " + raw);
     }
 
-    private void changeBought(final Cursor cursor) {
+    private void changeBought(final long dbId, final boolean checked) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                long dbId = ContentHelper.getDbId(cursor);
-                int indexBought = cursor.getColumnIndex(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT);
-                boolean bought = cursor.getInt(indexBought) > 0;
                 ContentValues values = new ContentValues();
-                values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT, !bought ? 1 : 0);
+                values.put(SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_BOUGHT, checked ? 1 : 0);
                 getActivity().getContentResolver().update(
                         ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
                         values,
@@ -553,7 +649,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 SqlDbHelper.PURCHASE_ITEM_COLUMN_GOODS_DESCRIPTION,
                 SqlDbHelper.PURCHASE_ITEM_COLUMN_TIMESTAMP,
         };
-        String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
+        String orderBy = SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL + " ASC, "
+                + SqlDbHelper.COLUMN_ID + " DESC";
         return new CursorLoader(
                 getActivity(),
                 ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
