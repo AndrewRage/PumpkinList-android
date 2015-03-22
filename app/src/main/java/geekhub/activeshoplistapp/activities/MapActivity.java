@@ -130,6 +130,11 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                         placesModel.getGpsLongitude()
                 ))
                 .draggable(true));
+
+        LatLng latLng = new LatLng(placesModel.getGpsLatitude(), placesModel.getGpsLongitude());
+        showMyLocation(latLng);
+        isOnceShowMyLocation = true;
+
         placeNameEdit.setText(placesModel.getShopName());
     }
 
@@ -138,13 +143,8 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
-                if (!isOnceShowMyLocation) {
-                    if (!isEdit) {
-                        showMyLocation(location);
-                    } else {
-                        LatLng latLng = new LatLng(placesModel.getGpsLatitude(), placesModel.getGpsLongitude());
-                        showMyLocation(latLng);
-                    }
+                if (!isEdit && !isOnceShowMyLocation) {
+                    showMyLocation(location);
                     isOnceShowMyLocation = true;
                 }
             }
