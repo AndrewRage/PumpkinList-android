@@ -14,6 +14,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -48,6 +49,8 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private boolean isEdit = false;
     private boolean isOnceShowMyLocation = false;
     private Marker marker;
+    private GoogleMap.OnMarkerDragListener markerDragListener;
+    private boolean needSave = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,23 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         } else if (menuItemId == AppConstants.MENU_SHOW_PLACES) {
             placeNameEdit.setHint(R.string.place_edit_name_hint);
         }
+
+        markerDragListener = new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                Log.d(TAG, "onMarkerDragEnd");
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+                Log.d(TAG, "onMarkerDragEnd");
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                Log.d(TAG, "onMarkerDragEnd");
+            }
+        };
     }
 
     private void initScreen() {
@@ -97,6 +117,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         map = mapFragment.getMap();
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
+        map.setOnMarkerDragListener(markerDragListener);
     }
 
     private void readPlaceModel(Cursor cursor) {
@@ -132,7 +153,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                             placesModel.getGpsLatitude(),
                             placesModel.getGpsLongitude()
                     ))
-                    .draggable(true));
+                    .draggable(false)); //TODO draggable
 
             LatLng latLng = new LatLng(placesModel.getGpsLatitude(), placesModel.getGpsLongitude());
             showMyLocation(latLng);
@@ -161,7 +182,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                 if (marker == null) {
                     marker = googleMap.addMarker(new MarkerOptions()
                             .position(latLng)
-                            .draggable(true));
+                            .draggable(false)); //TODO draggable
                 } else {
                     marker.setPosition(latLng);
                 }
@@ -289,23 +310,22 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
             }).start();
         }
         if (isEdit) {
-            boolean edit = false;
             if (placesModel.getGpsLatitude() != marker.getPosition().latitude
-                    && placesModel.getGpsLongitude() != marker.getPosition().longitude) {
-                edit = true;
+                    || placesModel.getGpsLongitude() != marker.getPosition().longitude) {
+                needSave = true;
                 placesModel.setGpsLatitude(marker.getPosition().latitude);
                 placesModel.setGpsLongitude(marker.getPosition().longitude);
             }
             if (!TextUtils.equals(placeNameEdit.getText().toString(), placesModel.getShopName())
                     || TextUtils.isEmpty(placeNameEdit.getText().toString())) {
-                edit = true;
+                needSave = true;
                 if (TextUtils.isEmpty(placeNameEdit.getText().toString())) {
                     placesModel.setShopName(getString(R.string.shop_edit_new_shop_default));
                 } else {
                     placesModel.setShopName(placeNameEdit.getText().toString());
                 }
             }
-            if (edit) {
+            if (needSave) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
