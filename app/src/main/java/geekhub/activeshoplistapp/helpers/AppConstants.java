@@ -24,7 +24,7 @@ public final class AppConstants {
     public static final int LOGIN_BUTTON = 1;
     public static final int LOGIN_BUTTON_CONTINUE = 0;
 
-    public static final String EXTRA_SHOP_ID = "extraShopId";
+    public static final String EXTRA_PLACE_ID = "extraShopId";
     public static final int SHOP_RESULT_CODE = 2001;
 
     public static final int PLACES_SHOP = 1;

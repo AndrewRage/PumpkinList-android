@@ -3,8 +3,15 @@ package geekhub.activeshoplistapp.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.database.Cursor;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -22,13 +29,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
+import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 import geekhub.activeshoplistapp.model.PlacesModel;
+import geekhub.activeshoplistapp.model.ShoppingContentProvider;
 
 /**
  * Created by rage on 3/3/15.
  */
 public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private static final String TAG = MapActivity.class.getSimpleName();
+    private static final String ID_ARG = "arg_id";
     private int menuItemId = -1;
     private PlacesModel placesModel;
     private GoogleMap map;
@@ -46,33 +56,19 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        map = mapFragment.getMap();
-        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        map.setMyLocationEnabled(true);
-
         placeNameEdit = (EditText) findViewById(R.id.title);
         placeNameEdit.clearFocus();
 
         Intent args = getIntent();
-        int id = -1;
+        long id = -1;
         if (args != null) {
             menuItemId = args.getExtras().getInt(AppConstants.EXTRA_MENU_ITEM);
-            id = args.getIntExtra(AppConstants.EXTRA_SHOP_ID, -1);
+            id = args.getExtras().getLong(AppConstants.EXTRA_PLACE_ID, -1);
         }
         if (id >= 0) {
-            placesModel = ShoppingHelper.getInstance().getPlacesList().get(id);
-            isEdit = true;
-            marker = map.addMarker(new MarkerOptions()
-                    .position(new LatLng(
-                            placesModel.getGpsLatitude(),
-                            placesModel.getGpsLongitude()
-                    ))
-                    .draggable(true));
-            placeNameEdit.setText(placesModel.getShopName());
+            Bundle bundle = new Bundle();
+            bundle.putLong(ID_ARG, id);
+            getSupportLoaderManager().initLoader(0, bundle, loaderCallbacks);
         } else {
             placesModel = new PlacesModel();
             if (menuItemId == AppConstants.MENU_SHOW_SHOPS) {
@@ -82,7 +78,54 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
             } else {
                 finish();
             }
+            initScreen();
         }
+    }
+
+    private void initScreen() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        map = mapFragment.getMap();
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        map.setMyLocationEnabled(true);
+    }
+
+    private void readPlaceModel(Cursor cursor) {
+        cursor.moveToFirst();
+        int indexId = cursor.getColumnIndex(SqlDbHelper.COLUMN_ID);
+        int indexServerId = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_PLACES_ID);
+        int indexCategory = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_CATEGORY);
+        int indexName = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_NAME);
+        int indexDescription = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_DESCRIPTION);
+        int indexLatitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LATITUDE);
+        int indexLongitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LONGITUDE);
+        int indexIsDelete = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_IS_DELETE);
+        int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_TIMESTAMP);
+        placesModel = new PlacesModel(
+                cursor.getLong(indexId),
+                cursor.getLong(indexServerId),
+                cursor.getLong(indexCategory),
+                cursor.getString(indexName),
+                cursor.getString(indexDescription),
+                cursor.getDouble(indexLatitude),
+                cursor.getDouble(indexLongitude),
+                cursor.getInt(indexIsDelete)>0,
+                cursor.getLong(indexTimestamp)
+        );
+        cursor.close();
+        isEdit = true;
+
+        initScreen();
+        
+        marker = map.addMarker(new MarkerOptions()
+                .position(new LatLng(
+                        placesModel.getGpsLatitude(),
+                        placesModel.getGpsLongitude()
+                ))
+                .draggable(true));
+        placeNameEdit.setText(placesModel.getShopName());
     }
 
     @Override
@@ -223,4 +266,67 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         }
         super.onBackPressed();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getContentResolver().registerContentObserver(
+                ShoppingContentProvider.PLACE_CONTENT_URI,
+                true,
+                contentObserver
+        );
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getContentResolver().unregisterContentObserver(contentObserver);
+    }
+
+    private ContentObserver contentObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+        }
+    };
+
+    private LoaderManager.LoaderCallbacks<Cursor> loaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            long dbId = args.getLong(ID_ARG);
+            Uri uri = Uri.parse(ShoppingContentProvider.PLACE_CONTENT_URI + "/" + dbId);
+            String[] projection = {
+                    SqlDbHelper.COLUMN_ID,
+                    SqlDbHelper.PLACES_COLUMN_PLACES_ID,
+                    SqlDbHelper.PLACES_COLUMN_CATEGORY,
+                    SqlDbHelper.PLACES_COLUMN_NAME,
+                    SqlDbHelper.PLACES_COLUMN_DESCRIPTION,
+                    SqlDbHelper.PLACES_COLUMN_LATITUDE,
+                    SqlDbHelper.PLACES_COLUMN_LONGITUDE,
+                    SqlDbHelper.PLACES_COLUMN_IS_DELETE,
+                    SqlDbHelper.PLACES_COLUMN_TIMESTAMP,
+            };
+            return new CursorLoader(
+                    MapActivity.this,
+                    uri,
+                    projection,
+                    null,
+                    null,
+                    null
+            );
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            readPlaceModel(data);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+
+        }
+    };
+
 }

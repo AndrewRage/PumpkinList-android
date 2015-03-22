@@ -80,7 +80,7 @@ public class PlacesManageFragment extends BaseFragment implements LoaderManager.
                 Intent intent = new Intent(getActivity(), MapActivity.class)
                         .putExtra(AppConstants.EXTRA_MENU_ITEM, menuItemId)
                         .putExtra(
-                                AppConstants.EXTRA_SHOP_ID,
+                                AppConstants.EXTRA_PLACE_ID,
                                 adapter.getItem(position).getDbId()
                         );
                 startActivityForResult(intent, AppConstants.SHOP_RESULT_CODE);
