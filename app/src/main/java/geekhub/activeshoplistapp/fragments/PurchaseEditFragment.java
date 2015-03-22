@@ -18,7 +18,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -272,7 +271,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 getActivity(),
                 R.layout.item_settings_spinner,
                 shopsList,
-                R.string.shop_edit_shop_spinner_default_entry
+                R.string.shop_edit_spinner_default_entry
         );
         shopSpinnerAdapter.setSettingsClickListener(new View.OnClickListener() {
             @Override
@@ -327,7 +326,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 getActivity(),
                 R.layout.item_settings_spinner,
                 placesList,
-                R.string.shop_edit_place_spinner_default_entry
+                R.string.place_edit_spinner_default_entry
         );
         placeSpinnerAdapter.setSettingsClickListener(new View.OnClickListener() {
             @Override

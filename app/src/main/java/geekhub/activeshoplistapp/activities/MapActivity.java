@@ -80,6 +80,11 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
             }
             initScreen();
         }
+        if (menuItemId == AppConstants.MENU_SHOW_SHOPS) {
+            placeNameEdit.setHint(R.string.shop_edit_name_hint);
+        } else if (menuItemId == AppConstants.MENU_SHOW_PLACES) {
+            placeNameEdit.setHint(R.string.place_edit_name_hint);
+        }
     }
 
     private void initScreen() {
@@ -118,7 +123,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         isEdit = true;
 
         initScreen();
-        
+
         marker = map.addMarker(new MarkerOptions()
                 .position(new LatLng(
                         placesModel.getGpsLatitude(),
@@ -192,23 +197,43 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                 isNeedDelete = true;
             }
             if (isNeedDelete) {
-                String shopName = placeNameEdit.getText().toString();
-                String message;
-                if (TextUtils.isEmpty(shopName)) {
-                    message = String.format(
-                            getString(R.string.shop_edit_alert_delete_description),
-                            getString(R.string.shop_edit_this_shop_default)
-                    );
+                String placeName = placeNameEdit.getText().toString();
+                String message = "";
+                if (TextUtils.isEmpty(placeName)) {
+                    if (menuItemId == AppConstants.MENU_SHOW_SHOPS) {
+                        message = String.format(
+                                getString(R.string.shop_edit_alert_delete_description),
+                                getString(R.string.shop_edit_this_shop_default)
+                        );
+                    } else if (menuItemId == AppConstants.MENU_SHOW_PLACES) {
+                        message = String.format(
+                                getString(R.string.place_edit_alert_delete_description),
+                                getString(R.string.place_edit_this_place_default)
+                        );
+                    }
                 } else {
-                    message = String.format(
-                            getString(R.string.shop_edit_alert_delete_description),
-                            shopName
-                    );
+                    if (menuItemId == AppConstants.MENU_SHOW_SHOPS) {
+                        message = String.format(
+                                getString(R.string.shop_edit_alert_delete_description),
+                                placeName
+                        );
+                    } else if (menuItemId == AppConstants.MENU_SHOW_PLACES) {
+                        message = String.format(
+                                getString(R.string.place_edit_alert_delete_description),
+                                placeName
+                        );
+                    }
+                }
+                String title = "";
+                if (menuItemId == AppConstants.MENU_SHOW_SHOPS) {
+                    title = getString(R.string.shop_edit_alert_delete_title);
+                } else if (menuItemId == AppConstants.MENU_SHOW_PLACES) {
+                    title = getString(R.string.place_edit_alert_delete_title);
                 }
                 new AlertDialog.Builder(this)
-                        .setTitle(R.string.shop_edit_alert_delete_title)
+                        .setTitle(title)
                         .setMessage(message)
-                        .setPositiveButton(R.string.shop_edit_alert_delete_yes, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 if (isEdit) {
                                     ShoppingHelper.getInstance().deletePlace(placesModel);
@@ -216,7 +241,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                                 finish();
                             }
                         })
-                        .setNegativeButton(R.string.shop_edit_alert_delete_no, new DialogInterface.OnClickListener() {
+                        .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
                             }

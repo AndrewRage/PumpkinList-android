@@ -57,13 +57,16 @@
     <string name="shop_edit_name_hint">Shop name</string>
     <string name="shop_edit_new_shop_default">Nameless shop</string>
     <string name="shop_edit_this_shop_default">this shop</string>
-    <string name="shop_edit_alert_delete_title">Delete shopping shop?</string>
+    <string name="shop_edit_alert_delete_title">Delete shopping place?</string>
     <string name="shop_edit_alert_delete_description">Are you sure you want to delete %s?</string>
-    <string name="shop_edit_alert_delete_yes">OK</string>
-    <string name="shop_edit_alert_delete_no">Cancel</string>
-    <string name="shop_edit_shop_spinner_default_entry">Select shop</string>
-    <string name="shop_edit_place_spinner_default_entry">Select places</string>
+    <string name="shop_edit_spinner_default_entry">Select shop</string>
 
-    <string name="spinner_setting_description">Edit shops</string>
+    <!--Place edit-->
+    <string name="place_edit_name_hint">Place name</string>
+    <string name="place_edit_new_shop_default">Nameless place</string>
+    <string name="place_edit_this_place_default">this place</string>
+    <string name="place_edit_alert_delete_title">Delete this place?</string>
+    <string name="place_edit_alert_delete_description">Are you sure you want to delete %s?</string>
+    <string name="place_edit_spinner_default_entry">Select places</string>
 
 </resources>

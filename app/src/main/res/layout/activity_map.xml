@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
-            android:hint="@string/shop_edit_name_hint"
+            android:singleLine="true"
             style="@style/ToolBarTitleEditText"/>
 
     </android.support.v7.widget.Toolbar>
