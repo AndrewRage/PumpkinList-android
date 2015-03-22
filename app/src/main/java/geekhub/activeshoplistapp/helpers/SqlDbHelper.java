@@ -13,7 +13,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     private final static int DB_VERSION = 1;
     private final static String DB_NAME = "aslistapp.db";
 
-    private static final String INT_PRIMARY_KAY = " INTEGER PRIMARY KEY";
+    private static final String INT_PRIMARY_KAY = " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL";
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
     private static final String REAL_TYPE = " REAL";
