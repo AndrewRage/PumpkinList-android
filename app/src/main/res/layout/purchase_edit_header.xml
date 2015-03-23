@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#09000000">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +18,8 @@
             android:hint="@string/purchase_edit_new_goods_hint"
             android:id="@+id/edit_goods_label"
             android:singleLine="true"
-            android:layout_weight="6" />
+            android:layout_weight="6"
+            android:imeOptions="actionDone" />
 
         <Button
             android:layout_width="wrap_content"

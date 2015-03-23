@@ -20,6 +20,8 @@
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
             android:hint="@string/purchase_edit_new_list_hint"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
             style="@style/ToolBarTitleEditText"/>
 
     </android.support.v7.widget.Toolbar>

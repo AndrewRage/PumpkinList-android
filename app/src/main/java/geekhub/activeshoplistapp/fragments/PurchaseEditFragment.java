@@ -18,17 +18,20 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,6 +166,18 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             @Override
             public void onClick(View v) {
                 addItem();
+            }
+        });
+
+        goodsLabelEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    addItem();
+                    handled = true;
+                }
+                return handled;
             }
         });
 
@@ -474,6 +489,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
             goodsLabelEdit.setText(null);
         }
+        goodsLabelEdit.requestFocus();
     }
 
     private void updateList() {
