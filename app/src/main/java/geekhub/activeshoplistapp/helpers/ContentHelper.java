@@ -147,7 +147,7 @@ public class ContentHelper {
     }
 
     public static int deletePurchaseItem(Context context, long dbId) {
-        Uri uri = Uri.parse(ShoppingContentProvider.PLACE_CONTENT_URI + "/" + dbId);
+        Uri uri = Uri.parse(ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI + "/" + dbId);
         return context.getContentResolver().delete(
                 uri,
                 null,
