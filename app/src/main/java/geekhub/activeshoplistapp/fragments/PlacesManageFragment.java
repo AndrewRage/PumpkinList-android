@@ -117,8 +117,8 @@ public class PlacesManageFragment extends BaseFragment implements LoaderManager.
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onDestroy() {
+        super.onDestroy();
         getLoaderManager().destroyLoader(menuItemId);
     }
 

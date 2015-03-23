@@ -385,8 +385,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onDestroy() {
+        super.onDestroy();
         getLoaderManager().destroyLoader(LOADER_LIST);
         getLoaderManager().destroyLoader(LOADER_PLACE_ID);
         getLoaderManager().destroyLoader(LOADER_SHOP_ID);

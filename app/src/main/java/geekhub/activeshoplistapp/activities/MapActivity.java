@@ -338,8 +338,8 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         getSupportLoaderManager().destroyLoader(0);
     }
 
