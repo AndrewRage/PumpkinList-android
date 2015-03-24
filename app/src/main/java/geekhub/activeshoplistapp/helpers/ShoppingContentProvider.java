@@ -22,8 +22,13 @@ public class ShoppingContentProvider extends ContentProvider {
     public static final String PATH_FRIEND = "friend";
     public static final String PATH_PLACE = "place";
 
+    public static final String PATH_COUNT = "count";
+
+    public static final String PATH_WITH_PLACE = "with_place";
+
     public static final Uri GOODS_CONTENT_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_GOODS);
     public static final Uri PURCHASE_LIST_CONTENT_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_PURCHASE_LIST);
+    public static final Uri PURCHASE_LIST_CONTENT_COUNT_WITH_PLACE_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_PURCHASE_LIST + "/" + PATH_COUNT + "/" + PATH_WITH_PLACE);
     public static final Uri PURCHASE_ITEM_CONTENT_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_PURCHASE_ITEM);
     public static final Uri FRIEND_CONTENT_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_FRIEND);
     public static final Uri PLACE_CONTENT_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_PLACE);
@@ -32,6 +37,7 @@ public class ShoppingContentProvider extends ContentProvider {
     static final int URI_GOODS_ID = 101;
     static final int URI_PURCHASE_LIST = 200;
     static final int URI_PURCHASE_LIST_ID = 201;
+    static final int URI_PURCHASE_LIST_COUNT = 202;
     static final int URI_PURCHASE_ITEM = 300;
     static final int URI_PURCHASE_ITEM_ID = 301;
     static final int URI_PLACE = 400;
@@ -46,6 +52,8 @@ public class ShoppingContentProvider extends ContentProvider {
     public static final String PURCHASE_LIST_CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/"
             + CONTENT_AUTHORITY + "/" + PATH_PURCHASE_LIST;
     public static final String PURCHASE_LIST_CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"
+            + CONTENT_AUTHORITY + "/" + PATH_PURCHASE_LIST;
+    public static final String PURCHASE_LIST_CONTENT_COUNT_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"
             + CONTENT_AUTHORITY + "/" + PATH_PURCHASE_LIST;
     public static final String PURCHASE_ITEM_CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/"
             + CONTENT_AUTHORITY + "/" + PATH_PURCHASE_ITEM;
@@ -85,6 +93,8 @@ public class ShoppingContentProvider extends ContentProvider {
                 return PURCHASE_LIST_CONTENT_TYPE;
             case URI_PURCHASE_LIST_ID:
                 return PURCHASE_LIST_CONTENT_ITEM_TYPE;
+            case URI_PURCHASE_LIST_COUNT:
+                return PURCHASE_LIST_CONTENT_COUNT_TYPE;
             case URI_PURCHASE_ITEM:
                 return PURCHASE_ITEM_CONTENT_TYPE;
             case URI_PURCHASE_ITEM_ID:
@@ -153,6 +163,17 @@ public class ShoppingContentProvider extends ContentProvider {
                         null,
                         null,
                         sortOrder
+                );
+                break;
+            case URI_PURCHASE_LIST_COUNT:
+                args = new String[]{"0", "0"};
+                String SQL_QUERY = "SELECT COUNT(*) FROM"
+                        + SqlDbHelper.TABLE_PURCHASE_LIST + " WHERE "
+                        + SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID + "!=? AND "
+                        + SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID + "!=?";
+                cursor = dbHelper.getReadableDatabase().rawQuery(
+                        SQL_QUERY,
+                        args
                 );
                 break;
             case URI_PURCHASE_ITEM:
@@ -435,6 +456,7 @@ public class ShoppingContentProvider extends ContentProvider {
 
         matcher.addURI(CONTENT_AUTHORITY, PATH_PURCHASE_LIST, URI_PURCHASE_LIST);
         matcher.addURI(CONTENT_AUTHORITY, PATH_PURCHASE_LIST + "/#", URI_PURCHASE_LIST_ID);
+        matcher.addURI(CONTENT_AUTHORITY, PATH_PURCHASE_LIST + "/" + PATH_COUNT + "/" + PATH_WITH_PLACE, URI_PURCHASE_LIST_COUNT);
 
         matcher.addURI(CONTENT_AUTHORITY, PATH_PURCHASE_ITEM, URI_PURCHASE_ITEM);
         matcher.addURI(CONTENT_AUTHORITY, PATH_PURCHASE_ITEM + "/#", URI_PURCHASE_ITEM_ID);
