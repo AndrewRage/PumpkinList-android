@@ -24,7 +24,9 @@ public class ContentHelper {
         int indexName = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME);
         int indexUser = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID);
         int indexShop = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID);
+        int indexIsUserShop = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_SHOP);
         int indexPlace = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID);
+        int indexIsUserPlace = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_PLACE);
         int indexDone = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_DONE);
         int indexMaxDistance = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE);
         int indexIsAlarm = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM);
@@ -37,7 +39,9 @@ public class ContentHelper {
                 cursor.getString(indexName),
                 cursor.getInt(indexUser),
                 cursor.getInt(indexShop),
+                cursor.getInt(indexIsUserShop)>0,
                 cursor.getInt(indexPlace),
+                cursor.getInt(indexIsUserPlace)>0,
                 cursor.getInt(indexDone)>0,
                 cursor.getFloat(indexMaxDistance),
                 cursor.getInt(indexIsAlarm)>0,
@@ -56,7 +60,9 @@ public class ContentHelper {
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME, list.getListName());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID, list.getUserId());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID, list.getShopId());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_SHOP, list.isUserShop() ? 1 : 0);
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID, list.getPlaceId());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_PLACE, list.isUserPlace() ? 1 : 0);
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_DONE, list.isDone() ? 1 : 0);
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE, list.getMaxDistance());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM, list.isAlarm() ? 1 : 0);
@@ -76,7 +82,9 @@ public class ContentHelper {
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME, list.getListName());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID, list.getUserId());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID, list.getShopId());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_SHOP, list.isUserShop() ? 1 : 0);
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID, list.getPlaceId());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_PLACE, list.isUserPlace() ? 1 : 0);
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_DONE, list.isDone() ? 1 : 0);
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE, list.getMaxDistance());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM, list.isAlarm() ? 1 : 0);

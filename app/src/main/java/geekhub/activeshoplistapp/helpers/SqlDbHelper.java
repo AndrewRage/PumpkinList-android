@@ -81,7 +81,9 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String PURCHASE_LIST_COLUMN_LIST_NAME = "list_name";
     public final static String PURCHASE_LIST_COLUMN_USER_ID = "user_id";
     public final static String PURCHASE_LIST_COLUMN_SHOP_ID = "shop_id";
+    public final static String PURCHASE_LIST_COLUMN_IS_USER_SHOP = "is_user_shop";
     public final static String PURCHASE_LIST_COLUMN_PLACE_ID = "place_id";
+    public final static String PURCHASE_LIST_COLUMN_IS_USER_PLACE = "is_user_place";
     public final static String PURCHASE_LIST_COLUMN_DONE = "is_done";
     public final static String PURCHASE_LIST_COLUMN_MAX_DISTANCE = "max_distance";
     public final static String PURCHASE_LIST_COLUMN_IS_ALARM = "is_alarm";
@@ -95,7 +97,9 @@ public class SqlDbHelper extends SQLiteOpenHelper {
             PURCHASE_LIST_COLUMN_LIST_NAME + TEXT_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_USER_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_SHOP_ID + INTEGER_TYPE + COMMA_SEP +
+            PURCHASE_LIST_COLUMN_IS_USER_SHOP + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_PLACE_ID + INTEGER_TYPE + COMMA_SEP +
+            PURCHASE_LIST_COLUMN_IS_USER_PLACE + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_DONE + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_MAX_DISTANCE + REAL_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_IS_ALARM + INTEGER_TYPE + COMMA_SEP +

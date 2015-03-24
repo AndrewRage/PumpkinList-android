@@ -122,6 +122,7 @@ public class DataBaseHelper {
         return count;
     }
 
+/*
     public List<PurchaseListModel> getPurchaseLists() {
         List<PurchaseListModel> list = new ArrayList<>();
         String[] projection = {
@@ -181,7 +182,7 @@ public class DataBaseHelper {
             cursor.moveToNext();
         }
         return list;
-    }
+    }*/
 
     public long addPurchaseItem(PurchaseItemModel item, long listId) {
         ContentValues values = new ContentValues();

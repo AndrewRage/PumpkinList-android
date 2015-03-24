@@ -13,7 +13,9 @@ public class PurchaseListModel {
     private String listName;
     private int userId;
     private long shopId;
+    private boolean isUserShop;
     private long placeId;
+    private boolean isUserPlace;
     private boolean isDone;
     private float maxDistance;
     private boolean isAlarm;
@@ -34,7 +36,9 @@ public class PurchaseListModel {
                              String listName,
                              int userId,
                              long shopId,
+                             boolean isUserShop,
                              long placeId,
+                             boolean isUserPlace,
                              boolean isDone,
                              float maxDistance,
                              boolean isAlarm,
@@ -47,7 +51,9 @@ public class PurchaseListModel {
         this.listName = listName;
         this.userId = userId;
         this.shopId = shopId;
+        this.isUserShop = isUserShop;
         this.placeId = placeId;
+        this.isUserPlace = isUserPlace;
         this.isDone = isDone;
         this.maxDistance = maxDistance;
         this.isAlarm = isAlarm;
@@ -97,12 +103,28 @@ public class PurchaseListModel {
         this.shopId = shopId;
     }
 
+    public boolean isUserShop() {
+        return isUserShop;
+    }
+
+    public void setIsUserShop(boolean isUserShop) {
+        this.isUserShop = isUserShop;
+    }
+
     public long getPlaceId() {
         return placeId;
     }
 
     public void setPlaceId(long placeId) {
         this.placeId = placeId;
+    }
+
+    public boolean isUserPlace() {
+        return isUserPlace;
+    }
+
+    public void setIsUserPlace(boolean isUserPlace) {
+        this.isUserPlace = isUserPlace;
     }
 
     public boolean isDone() {

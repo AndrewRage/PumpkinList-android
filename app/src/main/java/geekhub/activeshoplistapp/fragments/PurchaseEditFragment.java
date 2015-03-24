@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -300,12 +299,12 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         shopsSpinner.setAdapter(shopSpinnerAdapter);
         if (purchaseList.getShopId() != 0) {
             for (PlacesModel shop : shopsList) {
-                if (purchaseList.getShopId() > 0) {
+                if (!purchaseList.isUserShop()) {
                     if (shop.getServerId() == purchaseList.getShopId()) {
                         shopsSpinner.setSelection(shopSpinnerAdapter.getPosition(shop));
                     }
-                } else if (purchaseList.getShopId() < 0) {
-                    if ((shop.getDbId() * (-1) ) == purchaseList.getShopId()) {
+                } else {
+                    if (shop.getDbId() == purchaseList.getShopId()) {
                         shopsSpinner.setSelection(shopSpinnerAdapter.getPosition(shop));
                     }
                 }
@@ -317,9 +316,11 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position > 0) {
                     if (shopSpinnerAdapter.getItem(position).getServerId() == 0) {
-                        purchaseList.setShopId(shopSpinnerAdapter.getItem(position).getDbId() * (-1));
+                        purchaseList.setShopId(shopSpinnerAdapter.getItem(position).getDbId());
+                        purchaseList.setIsUserShop(true);
                     } else {
                         purchaseList.setShopId(shopSpinnerAdapter.getItem(position).getServerId());
+                        purchaseList.setIsUserShop(false);
                     }
                 } else if (position == 0) {
                     purchaseList.setShopId(0);
@@ -355,12 +356,12 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         placeSpinner.setAdapter(placeSpinnerAdapter);
         if (purchaseList.getPlaceId() != 0) {
             for (PlacesModel place : placesList) {
-                if (purchaseList.getPlaceId() > 0) {
+                if (!purchaseList.isUserPlace()) {
                     if (place.getServerId() == purchaseList.getPlaceId()) {
                         placeSpinner.setSelection(placeSpinnerAdapter.getPosition(place));
                     }
-                } else if (purchaseList.getPlaceId() < 0) {
-                    if ((place.getDbId() * (-1) ) == purchaseList.getPlaceId()) {
+                } else {
+                    if (place.getDbId() == purchaseList.getPlaceId()) {
                         placeSpinner.setSelection(placeSpinnerAdapter.getPosition(place));
                     }
                 }
@@ -372,12 +373,15 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position > 0) {
                     if (placeSpinnerAdapter.getItem(position).getServerId() == 0) {
-                        purchaseList.setPlaceId(placeSpinnerAdapter.getItem(position).getDbId() * (-1));
+                        purchaseList.setPlaceId(placeSpinnerAdapter.getItem(position).getDbId());
+                        purchaseList.setIsUserPlace(true);
                     } else {
                         purchaseList.setPlaceId(placeSpinnerAdapter.getItem(position).getServerId());
+                        purchaseList.setIsUserPlace(false);
                     }
                 } else if (position == 0) {
                     purchaseList.setPlaceId(0);
+                    purchaseList.setIsUserPlace(false);
                 }
                 if (purchaseList.getDbId() != 0) {
                     ContentHelper.updatePurchaseList(getActivity(), purchaseList);
@@ -733,7 +737,9 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                         SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME,
                         SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID,
                         SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID,
+                        SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_SHOP,
                         SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID,
+                        SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_PLACE,
                         SqlDbHelper.PURCHASE_LIST_COLUMN_DONE,
                         SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE,
                         SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM,

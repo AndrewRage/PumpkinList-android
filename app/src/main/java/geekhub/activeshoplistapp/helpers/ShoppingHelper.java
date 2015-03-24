@@ -112,7 +112,7 @@ public class ShoppingHelper {
     public List<PurchaseListModel> getPurchaseLists() {
         if (purchaseLists == null) {
             dataBaseHelper.open();
-            purchaseLists = dataBaseHelper.getPurchaseLists();
+            //purchaseLists = dataBaseHelper.getPurchaseLists();
             for (PurchaseListModel list: purchaseLists) {
                 list.setPurchasesItems(dataBaseHelper.getPurchaseItems(list.getDbId()));
             }
