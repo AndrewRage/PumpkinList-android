@@ -1,15 +1,12 @@
 package geekhub.activeshoplistapp;
 
 import android.app.Application;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+import android.os.Handler;
 import android.util.Log;
 
-import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
@@ -22,51 +19,48 @@ import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 public class AppClass extends Application {
 
     private static final String TAG = AppClass.class.getSimpleName();
+    private Handler handler;
 
     @Override
     public void onCreate() {
         super.onCreate();
         SharedPrefHelper.getInstance(getApplicationContext());
         SqlDbHelper.getInstance(getApplicationContext());
+
+        readCount();
+
+        handler = new Handler();
+
+        getContentResolver().registerContentObserver(
+                ShoppingContentProvider.PURCHASE_LIST_CONTENT_COUNT_WITH_PLACE_URI,
+                true,
+                contentObserver
+        );
+
     }
 
-    private LoaderManager.LoaderCallbacks<Cursor> loaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
-
+    private ContentObserver contentObserver = new ContentObserver(handler) {
         @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            String[] projection = {
-                    SqlDbHelper.COLUMN_ID,
-                    SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID,
-                    SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME,
-                    SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID,
-                    SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID,
-                    SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID,
-                    SqlDbHelper.PURCHASE_LIST_COLUMN_DONE,
-                    SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE,
-                    SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM,
-                    SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM,
-                    SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE,
-                    SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP,
-            };
-            String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
-            return new CursorLoader(
-                    getApplicationContext(),
-                    ShoppingContentProvider.PURCHASE_LIST_CONTENT_URI,
-                    projection,
-                    null,
-                    null,
-                    orderBy
-            );
-        }
-
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            
-        }
-
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
-
+        public void onChange(boolean selfChange, Uri uri) {
+            super.onChange(selfChange, uri);
+            Log.d(TAG, "onChange: " + uri.toString());
+            readCount();
         }
     };
+
+    private void readCount() {
+        Cursor cursor = getContentResolver().query(
+                ShoppingContentProvider.PURCHASE_LIST_CONTENT_COUNT_WITH_PLACE_URI,
+                null,
+                null,
+                null,
+                null
+        );
+
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        cursor.close();
+        Log.d(TAG, "COUNT: " + count);
+    }
+
 }

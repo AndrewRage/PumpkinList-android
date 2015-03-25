@@ -167,9 +167,9 @@ public class ShoppingContentProvider extends ContentProvider {
                 break;
             case URI_PURCHASE_LIST_COUNT:
                 args = new String[]{"0", "0"};
-                String SQL_QUERY = "SELECT COUNT(*) FROM"
+                String SQL_QUERY = "SELECT COUNT(*) FROM "
                         + SqlDbHelper.TABLE_PURCHASE_LIST + " WHERE "
-                        + SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID + "!=? AND "
+                        + SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID + "!=? OR "
                         + SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID + "!=?";
                 cursor = dbHelper.getReadableDatabase().rawQuery(
                         SQL_QUERY,
@@ -372,6 +372,7 @@ public class ShoppingContentProvider extends ContentProvider {
         );
         if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
+            getContext().getContentResolver().notifyChange(PURCHASE_LIST_CONTENT_COUNT_WITH_PLACE_URI, null);
         }
         return rowsUpdated;
     }
