@@ -1,6 +1,7 @@
 package geekhub.activeshoplistapp;
 
 import android.app.Application;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.util.Log;
 import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
+import geekhub.activeshoplistapp.services.GpsAppointmentService;
 
 /**
  * Created by rage on 06.02.15.
@@ -20,6 +22,7 @@ public class AppClass extends Application {
 
     private static final String TAG = AppClass.class.getSimpleName();
     private Handler handler;
+    private int count = 0;
 
     @Override
     public void onCreate() {
@@ -61,6 +64,23 @@ public class AppClass extends Application {
         int count = cursor.getInt(0);
         cursor.close();
         Log.d(TAG, "COUNT: " + count);
+
+        if (this.count == 0 && count > 0) {
+            startGpsService(true);
+        } else if (this.count > 0 && count ==0 ) {
+            startGpsService(false);
+        }
+        this.count = count;
+    }
+
+    private void startGpsService(boolean start) {
+        Log.d(TAG, "GpsAppointment - start: " + start);
+        Intent intent = new Intent(getApplicationContext(), GpsAppointmentService.class);
+        if (start) {
+            getApplicationContext().startService(intent);
+        } else {
+            getApplicationContext().stopService(intent);
+        }
     }
 
 }
