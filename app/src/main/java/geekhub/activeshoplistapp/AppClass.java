@@ -67,9 +67,9 @@ public class AppClass extends Application {
 
         if (this.count == 0 && count > 0) {
             startGpsService(true);
-        } else if (this.count > 0 && count ==0 ) {
+        } /*else if (this.count > 0 && count ==0 ) {
             startGpsService(false);
-        }
+        }*/
         this.count = count;
     }
 

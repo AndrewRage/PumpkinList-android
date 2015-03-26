@@ -3,6 +3,7 @@ package geekhub.activeshoplistapp.services;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -21,10 +22,13 @@ import java.util.List;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.helpers.AppConstants;
+import geekhub.activeshoplistapp.helpers.ContentHelper;
 import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
 import geekhub.activeshoplistapp.helpers.ShoppingHelper;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
+import geekhub.activeshoplistapp.model.PlacesModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
+import geekhub.activeshoplistapp.utils.Coordinate;
 
 /**
  * Created by rage on 3/14/15.
@@ -58,6 +62,7 @@ public class GpsAppointmentService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "onStartCommand");
         if (locationManager == null) {
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             locationManager.requestLocationUpdates(
@@ -90,76 +95,165 @@ public class GpsAppointmentService extends Service {
     };
 
     private void readPurchaseList() {
-        String[] projection = {
-                SqlDbHelper.COLUMN_ID,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_SHOP,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_PLACE,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_DONE,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP,
-        };
-        String[] args = new String[]{"0", "0"};
-        String selection = SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID + "!=? OR "
-                + SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID + "!=?";
-        Cursor cursor = getContentResolver().query(
-                ShoppingContentProvider.PURCHASE_LIST_CONTENT_URI,
-                projection,
-                selection,
-                args,
-                null
-        );
-
-        purchaseLists.clear();
-
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            int indexId = cursor.getColumnIndex(SqlDbHelper.COLUMN_ID);
-            int indexServerId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID);
-            int indexName = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME);
-            int indexUser = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID);
-            int indexShop = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID);
-            int indexIsUserShop = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_SHOP);
-            int indexPlace = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID);
-            int indexIsUserPlace = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_PLACE);
-            int indexDone = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_DONE);
-            int indexMaxDistance = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE);
-            int indexIsAlarm = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM);
-            int indexAlarm = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM);
-            int indexCreate = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE);
-            int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP);
-            PurchaseListModel listModel = new PurchaseListModel(
-                    cursor.getLong(indexId),
-                    cursor.getLong(indexServerId),
-                    cursor.getString(indexName),
-                    cursor.getInt(indexUser),
-                    cursor.getInt(indexShop),
-                    cursor.getInt(indexIsUserShop)>0,
-                    cursor.getInt(indexPlace),
-                    cursor.getInt(indexIsUserPlace)>0,
-                    cursor.getInt(indexDone)>0,
-                    cursor.getFloat(indexMaxDistance),
-                    cursor.getInt(indexIsAlarm)>0,
-                    cursor.getLong(indexAlarm),
-                    cursor.getLong(indexCreate),
-                    cursor.getLong(indexTimestamp),
+        {
+            String[] projection = {
+                    SqlDbHelper.COLUMN_ID,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_SHOP,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_PLACE,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_DONE,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP,
+            };
+            String[] args = new String[]{"0", "0"};
+            String selection = SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID + "!=? OR "
+                    + SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID + "!=?";
+            Cursor cursor = getContentResolver().query(
+                    ShoppingContentProvider.PURCHASE_LIST_CONTENT_URI,
+                    projection,
+                    selection,
+                    args,
                     null
             );
-            purchaseLists.add(listModel);
-            cursor.moveToNext();
+
+            purchaseLists.clear();
+
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                int indexId = cursor.getColumnIndex(SqlDbHelper.COLUMN_ID);
+                int indexServerId = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_ID);
+                int indexName = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_LIST_NAME);
+                int indexUser = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_USER_ID);
+                int indexShop = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID);
+                int indexIsUserShop = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_SHOP);
+                int indexPlace = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID);
+                int indexIsUserPlace = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_PLACE);
+                int indexDone = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_DONE);
+                int indexMaxDistance = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE);
+                int indexIsAlarm = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM);
+                int indexAlarm = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM);
+                int indexCreate = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE);
+                int indexTimestamp = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP);
+                PurchaseListModel listModel = new PurchaseListModel(
+                        cursor.getLong(indexId),
+                        cursor.getLong(indexServerId),
+                        cursor.getString(indexName),
+                        cursor.getInt(indexUser),
+                        cursor.getInt(indexShop),
+                        cursor.getInt(indexIsUserShop) > 0,
+                        cursor.getInt(indexPlace),
+                        cursor.getInt(indexIsUserPlace) > 0,
+                        cursor.getInt(indexDone) > 0,
+                        cursor.getFloat(indexMaxDistance),
+                        cursor.getInt(indexIsAlarm) > 0,
+                        cursor.getLong(indexAlarm),
+                        cursor.getLong(indexCreate),
+                        cursor.getLong(indexTimestamp),
+                        null
+                );
+                purchaseLists.add(listModel);
+                cursor.moveToNext();
+            }
+            cursor.close();
         }
-        cursor.close();
 
         Log.d(TAG, "purchaseList.size = " + purchaseLists.size());
 
+        for (int i = 0; i < purchaseLists.size(); i++) {
+            Location point = null;
+            Location shop = null;
+            Location place = null;
+
+            if (purchaseLists.get(i).getShopId() != 0) {
+                String[] projection = {
+                        SqlDbHelper.COLUMN_ID,
+                        SqlDbHelper.PLACES_COLUMN_PLACES_ID,
+                        SqlDbHelper.PLACES_COLUMN_LATITUDE,
+                        SqlDbHelper.PLACES_COLUMN_LONGITUDE,
+                };
+                StringBuilder selectionBuilder = new StringBuilder();
+                if (purchaseLists.get(i).isUserShop()) {
+                    selectionBuilder.append(SqlDbHelper.COLUMN_ID);
+                } else {
+                    selectionBuilder.append(SqlDbHelper.PLACES_COLUMN_PLACES_ID);
+                }
+                selectionBuilder.append("=?");
+                String selection = selectionBuilder.toString();
+                String[] args = new String[]{Long.toString(purchaseLists.get(i).getShopId())};
+                Cursor cursor = getContentResolver().query(
+                        ShoppingContentProvider.PLACE_CONTENT_URI,
+                        projection,
+                        selection,
+                        args,
+                        null
+                );
+                cursor.moveToFirst();
+                int indexLatitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LATITUDE);
+                int indexLongitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LONGITUDE);
+                shop = new Location(AppConstants.LOCATION);
+                shop.setLatitude(cursor.getDouble(indexLatitude));
+                shop.setLongitude(cursor.getDouble(indexLongitude));
+                cursor.close();
+            }
+
+            if (purchaseLists.get(i).getPlaceId() != 0) {
+                String[] projection = {
+                        SqlDbHelper.COLUMN_ID,
+                        SqlDbHelper.PLACES_COLUMN_PLACES_ID,
+                        SqlDbHelper.PLACES_COLUMN_LATITUDE,
+                        SqlDbHelper.PLACES_COLUMN_LONGITUDE,
+                };
+                StringBuilder selectionBuilder = new StringBuilder();
+                if (purchaseLists.get(i).isUserPlace()) {
+                    selectionBuilder.append(SqlDbHelper.COLUMN_ID);
+                } else {
+                    selectionBuilder.append(SqlDbHelper.PLACES_COLUMN_PLACES_ID);
+                }
+                selectionBuilder.append("=?");
+                String selection = selectionBuilder.toString();
+                String[] args = new String[]{Long.toString(purchaseLists.get(i).getPlaceId())};
+                Cursor cursor = getContentResolver().query(
+                        ShoppingContentProvider.PLACE_CONTENT_URI,
+                        projection,
+                        selection,
+                        args,
+                        null
+                );
+                cursor.moveToFirst();
+                int indexLatitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LATITUDE);
+                int indexLongitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LONGITUDE);
+                place = new Location(AppConstants.LOCATION);
+                place.setLatitude(cursor.getDouble(indexLatitude));
+                place.setLongitude(cursor.getDouble(indexLongitude));
+                cursor.close();
+            }
+
+            if (shop != null && place != null) {
+                point = Coordinate.middlePoint(shop, place);
+                purchaseLists.get(i).setRadius(point.distanceTo(place));
+            } else if (shop != null){
+                point = shop;
+            } else if (place != null){
+                point = place;
+            }
+
+            purchaseLists.get(i).setPoint(point);
+        }
+
         if (purchaseLists.size() == 0) {
+            locationManager.removeUpdates(gpsListener);
+            locationManager.removeUpdates(networkListener);
+            locationManager.removeUpdates(passiveListener);
+            locationManager = null;
+            handler = null;
+            purchaseLists = null;
             stopSelf();
             Log.d(TAG, "serviceStop");
         }
@@ -168,6 +262,7 @@ public class GpsAppointmentService extends Service {
     private LocationListener passiveListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
+            Log.d(TAG, "passiveListener");
             locationAction(location);
         }
 
@@ -190,7 +285,7 @@ public class GpsAppointmentService extends Service {
     private LocationListener networkListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-
+            Log.d(TAG, "networkListener");
         }
 
         @Override
@@ -212,7 +307,7 @@ public class GpsAppointmentService extends Service {
     private LocationListener gpsListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-
+            Log.d(TAG, "gpsListener");
         }
 
         @Override
@@ -254,6 +349,39 @@ public class GpsAppointmentService extends Service {
                 }
             }
         }*/
+
+        List<PurchaseListModel> lists = new ArrayList<>(purchaseLists);
+
+        for (PurchaseListModel list : lists) {
+            float distance = location.distanceTo(list.getPoint());
+            if (list.getMaxDistance() < distance && distance > MIN_RADIUS) {
+                list.setMaxDistance(distance);
+                updatePurchaseList(list);
+            } else if (list.getMaxDistance() / 2 > distance) {
+                showNotification("/2 distance: " + list.getListName());
+                list.setMaxDistance(0);
+                list.setIsAlarm(false);
+                updatePurchaseList(list);
+            }
+            if (!list.isAlarm() && distance < list.getRadius() + APPOINTMENT_RADIUS) {
+                showNotification("Appointment distance: " + list.getListName());
+                list.setIsAlarm(true);
+                updatePurchaseList(list);
+            }
+        }
+    }
+
+    private int updatePurchaseList(PurchaseListModel list) {
+        Uri uri = Uri.parse(ShoppingContentProvider.PURCHASE_LIST_CONTENT_APPOINTMENT_URI + "/" + list.getDbId());
+        ContentValues values = new ContentValues();
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE, list.getMaxDistance());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM, list.isAlarm() ? 1 : 0);
+        return getContentResolver().update(
+                uri,
+                values,
+                null,
+                null
+        );
     }
 
     private void showNotification(String text) {

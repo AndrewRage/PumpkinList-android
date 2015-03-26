@@ -18,6 +18,7 @@ public class ShoppingContentProvider extends ContentProvider {
 
     public static final String PATH_GOODS = "goods";
     public static final String PATH_PURCHASE_LIST = "purchase_list";
+    public static final String PATH_PURCHASE_LIST_APPOINTMENT = "purchase_list_appointment";
     public static final String PATH_PURCHASE_ITEM = "purchase_item";
     public static final String PATH_FRIEND = "friend";
     public static final String PATH_PLACE = "place";
@@ -28,6 +29,7 @@ public class ShoppingContentProvider extends ContentProvider {
 
     public static final Uri GOODS_CONTENT_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_GOODS);
     public static final Uri PURCHASE_LIST_CONTENT_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_PURCHASE_LIST);
+    public static final Uri PURCHASE_LIST_CONTENT_APPOINTMENT_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_PURCHASE_LIST_APPOINTMENT);
     public static final Uri PURCHASE_LIST_CONTENT_COUNT_WITH_PLACE_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_PURCHASE_LIST + "/" + PATH_COUNT + "/" + PATH_WITH_PLACE);
     public static final Uri PURCHASE_ITEM_CONTENT_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_PURCHASE_ITEM);
     public static final Uri FRIEND_CONTENT_URI = Uri.parse(BASE_CONTENT_URI + "/" + PATH_FRIEND);
@@ -456,6 +458,7 @@ public class ShoppingContentProvider extends ContentProvider {
 
         matcher.addURI(CONTENT_AUTHORITY, PATH_PURCHASE_LIST, URI_PURCHASE_LIST);
         matcher.addURI(CONTENT_AUTHORITY, PATH_PURCHASE_LIST + "/#", URI_PURCHASE_LIST_ID);
+        matcher.addURI(CONTENT_AUTHORITY, PATH_PURCHASE_LIST_APPOINTMENT + "/#", URI_PURCHASE_LIST_ID);
         matcher.addURI(CONTENT_AUTHORITY, PATH_PURCHASE_LIST + "/" + PATH_COUNT + "/" + PATH_WITH_PLACE, URI_PURCHASE_LIST_COUNT);
 
         matcher.addURI(CONTENT_AUTHORITY, PATH_PURCHASE_ITEM, URI_PURCHASE_ITEM);
