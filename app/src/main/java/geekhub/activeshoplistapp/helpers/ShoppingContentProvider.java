@@ -372,7 +372,6 @@ public class ShoppingContentProvider extends ContentProvider {
         );
         if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
-            getContext().getContentResolver().notifyChange(PURCHASE_LIST_CONTENT_COUNT_WITH_PLACE_URI, null);
         }
         return rowsUpdated;
     }

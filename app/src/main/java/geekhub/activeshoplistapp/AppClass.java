@@ -32,7 +32,7 @@ public class AppClass extends Application {
         handler = new Handler();
 
         getContentResolver().registerContentObserver(
-                ShoppingContentProvider.PURCHASE_LIST_CONTENT_COUNT_WITH_PLACE_URI,
+                ShoppingContentProvider.PURCHASE_LIST_CONTENT_URI,
                 true,
                 contentObserver
         );

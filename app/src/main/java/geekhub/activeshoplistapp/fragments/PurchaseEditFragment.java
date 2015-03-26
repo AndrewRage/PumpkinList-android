@@ -313,19 +313,32 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position > 0) {
-                    if (shopSpinnerAdapter.getItem(position).getServerId() == 0) {
+                boolean needUpdate = false;
+                if (position != 0) {
+                    if (shopSpinnerAdapter.getItem(position).getServerId() == 0
+                            && (purchaseList.getShopId() != shopSpinnerAdapter.getItem(position).getDbId()
+                            || !purchaseList.isUserShop())) {
                         purchaseList.setShopId(shopSpinnerAdapter.getItem(position).getDbId());
                         purchaseList.setIsUserShop(true);
-                    } else {
+                        needUpdate = true;
+                    } else if (shopSpinnerAdapter.getItem(position).getServerId() != 0
+                            && (purchaseList.getShopId() != shopSpinnerAdapter.getItem(position).getServerId()
+                            || purchaseList.isUserShop())) {
                         purchaseList.setShopId(shopSpinnerAdapter.getItem(position).getServerId());
                         purchaseList.setIsUserShop(false);
+                        needUpdate = true;
                     }
-                } else if (position == 0) {
+                } else if (purchaseList.getShopId() != 0) {
                     purchaseList.setShopId(0);
+                    needUpdate = true;
                 }
-                if (purchaseList.getDbId() != 0) {
-                    ContentHelper.updatePurchaseList(getActivity(), purchaseList);
+                if (needUpdate && purchaseList.getDbId() != 0) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ContentHelper.updatePurchaseList(getActivity(), purchaseList);
+                        }
+                    }).start();
                 }
             }
 
@@ -370,20 +383,33 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position > 0) {
-                    if (placeSpinnerAdapter.getItem(position).getServerId() == 0) {
+                boolean needUpdate = false;
+                if (position != 0) {
+                    if (placeSpinnerAdapter.getItem(position).getServerId() == 0
+                            && (purchaseList.getPlaceId() != placeSpinnerAdapter.getItem(position).getDbId()
+                            || !purchaseList.isUserPlace())) {
                         purchaseList.setPlaceId(placeSpinnerAdapter.getItem(position).getDbId());
                         purchaseList.setIsUserPlace(true);
-                    } else {
+                        needUpdate = true;
+                    } else if (placeSpinnerAdapter.getItem(position).getServerId() != 0
+                            && (purchaseList.getPlaceId() != placeSpinnerAdapter.getItem(position).getServerId()
+                            || purchaseList.isUserPlace())) {
                         purchaseList.setPlaceId(placeSpinnerAdapter.getItem(position).getServerId());
                         purchaseList.setIsUserPlace(false);
+                        needUpdate = true;
                     }
-                } else if (position == 0) {
+                } else if (purchaseList.getPlaceId() != 0) {
                     purchaseList.setPlaceId(0);
                     purchaseList.setIsUserPlace(false);
+                    needUpdate = true;
                 }
-                if (purchaseList.getDbId() != 0) {
-                    ContentHelper.updatePurchaseList(getActivity(), purchaseList);
+                if (needUpdate && purchaseList.getDbId() != 0) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ContentHelper.updatePurchaseList(getActivity(), purchaseList);
+                        }
+                    }).start();
                 }
             }
 
