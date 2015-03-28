@@ -339,15 +339,6 @@ public class GpsAppointmentService extends Service {
         //Log.d(TAG, "checkLocation: " + location.getProvider() + ", time: " + location.getTime());
         if (!isGps | (isGps && location.getProvider().equals(LocationManager.GPS_PROVIDER))) {
             if (locationList.size() < LOCATION_CHECK_SIZE) {
-            /*if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                if (location.getProvider().equals(LocationManager.GPS_PROVIDER)) {
-                    locationList.add(location);
-                    //locationAction(location);
-                }
-            } else {
-                locationList.add(location);
-            }*/
-
                 locationList.add(location);
             } else {
                 //float distanceAvr = 0;
@@ -368,13 +359,7 @@ public class GpsAppointmentService extends Service {
                 //distanceAvr /= locationList.size();
                 speedAvr /= ((locationList.get(locationList.size() - 1).getTime() - locationList.get(0).getTime()) / 1000);
 
-                float speedCheck;
-                /*if (speedAvr == 0) {
-                    speedCheck = 10;
-                } else {
-                    speedCheck = speedAvr * 1.5f;
-                }*/
-                speedCheck = (float) ((Math.atan(speedAvr * 0.04)) * 50) + 3;
+                float speedCheck = (float) ((Math.atan(speedAvr * 0.04)) * 50) + 3;
 
                 Log.d(TAG, "---------------------------------");
                 //Log.d(TAG, "distanceLast: " + distanceLast + " distanceAvr: " + distanceAvr);
@@ -471,9 +456,13 @@ public class GpsAppointmentService extends Service {
                 startGps();
             }
         } else if (isGps){
-            int time = (int)(location.getTime() - latencyLocation.getTime() / 1000);
-            if (locationList.size() == LOCATION_CHECK_SIZE
-                    && time > 30) {
+            if (latencyLocation != null) {
+                int time = (int) (location.getTime() - latencyLocation.getTime() / 1000);
+                if (locationList.size() == LOCATION_CHECK_SIZE
+                        && time > 30) {
+                    stopGps();
+                }
+            } else {
                 stopGps();
             }
         }
@@ -514,7 +503,9 @@ public class GpsAppointmentService extends Service {
 
     private void startGps() {
         Log.d(TAG, "startGps");
-        locationManager.removeUpdates(networkListener);
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            locationManager.removeUpdates(networkListener);
+        }
         locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER, UPDATE_TIME_GPS, UPDATE_PLACE_GPS, gpsListener);
         isGps = true;
