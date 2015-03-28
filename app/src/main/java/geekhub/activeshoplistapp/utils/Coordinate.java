@@ -1,6 +1,7 @@
 package geekhub.activeshoplistapp.utils;
 
 import android.location.Location;
+import android.util.FloatMath;
 
 import geekhub.activeshoplistapp.helpers.AppConstants;
 
@@ -33,5 +34,24 @@ public class Coordinate {
         location.setLatitude(Math.toDegrees(lat3));
         location.setLongitude(Math.toDegrees(lon3));
         return location;
+    }
+
+    public static float distance(Location location1, Location location2){
+        double lat1 = location1.getLatitude();
+        double lon1 = location1.getLongitude();
+        double lat2 = location2.getLatitude();
+        double lon2 = location2.getLongitude();
+        return distance(lat1, lon1, lat2, lon2);
+    }
+
+    public static float distance(double fromLat, double fromLong, double toLat, double toLong) {
+        double d2r = Math.PI / 180;
+        double dLong = (toLong - fromLong) * d2r;
+        double dLat = (toLat - fromLat) * d2r;
+        double a = Math.pow(Math.sin(dLat / 2.0), 2) + Math.cos(fromLat * d2r)
+                * Math.cos(toLat * d2r) * Math.pow(Math.sin(dLong / 2.0), 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double d = 6367000 * c;
+        return Math.round(d);
     }
 }
