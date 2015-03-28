@@ -28,7 +28,6 @@ public class ContentHelper {
         int indexPlace = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID);
         int indexIsUserPlace = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_PLACE);
         int indexDone = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_DONE);
-        int indexMaxDistance = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE);
         int indexIsAlarm = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM);
         int indexAlarm = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM);
         int indexCreate = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE);
@@ -43,7 +42,6 @@ public class ContentHelper {
                 cursor.getInt(indexPlace),
                 cursor.getInt(indexIsUserPlace)>0,
                 cursor.getInt(indexDone)>0,
-                cursor.getFloat(indexMaxDistance),
                 cursor.getInt(indexIsAlarm)>0,
                 cursor.getLong(indexAlarm),
                 cursor.getLong(indexCreate),
@@ -64,7 +62,9 @@ public class ContentHelper {
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID, list.getPlaceId());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_PLACE, list.isUserPlace() ? 1 : 0);
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_DONE, list.isDone() ? 1 : 0);
-        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE, list.getMaxDistance());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_SHOP_DISTANCE, list.getMaxShopDistance());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_PLACE_DISTANCE, list.getMaxPlaceDistance());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_POINT_DISTANCE, list.getMaxPointDistance());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM, list.isAlarm() ? 1 : 0);
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM, list.getTimeAlarm());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE, list.getTimeCreate());
@@ -86,7 +86,9 @@ public class ContentHelper {
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID, list.getPlaceId());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_PLACE, list.isUserPlace() ? 1 : 0);
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_DONE, list.isDone() ? 1 : 0);
-        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE, list.getMaxDistance());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_SHOP_DISTANCE, list.getMaxShopDistance());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_PLACE_DISTANCE, list.getMaxPlaceDistance());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_POINT_DISTANCE, list.getMaxPointDistance());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM, list.isAlarm() ? 1 : 0);
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM, list.getTimeAlarm());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE, list.getTimeCreate());

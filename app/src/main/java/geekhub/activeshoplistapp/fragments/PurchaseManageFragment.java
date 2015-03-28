@@ -91,7 +91,6 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
                 SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_DONE,
-                SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM,
                 SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE,

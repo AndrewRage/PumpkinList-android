@@ -14,6 +14,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     private final static String DB_NAME = "aslistapp.db";
 
     private static final String INT_PRIMARY_KAY = " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL";
+    private static final String NOT_NULL = "  NOT NULL";
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
     private static final String REAL_TYPE = " REAL";
@@ -65,8 +66,8 @@ public class SqlDbHelper extends SQLiteOpenHelper {
             COLUMN_ID + INT_PRIMARY_KAY + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_ITEM_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_LIST_ID + INTEGER_TYPE + COMMA_SEP +
-            PURCHASE_ITEM_COLUMN_IS_BOUGHT + INTEGER_TYPE + COMMA_SEP +
-            PURCHASE_ITEM_COLUMN_IS_CANCEL + INTEGER_TYPE + COMMA_SEP +
+            PURCHASE_ITEM_COLUMN_IS_BOUGHT + INTEGER_TYPE + NOT_NULL + COMMA_SEP +
+            PURCHASE_ITEM_COLUMN_IS_CANCEL + INTEGER_TYPE + NOT_NULL + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_GOODS_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_GOODS_LABEL + TEXT_TYPE + COMMA_SEP +
             PURCHASE_ITEM_COLUMN_GOODS_QUANTITY + REAL_TYPE + COMMA_SEP +
@@ -85,7 +86,9 @@ public class SqlDbHelper extends SQLiteOpenHelper {
     public final static String PURCHASE_LIST_COLUMN_PLACE_ID = "place_id";
     public final static String PURCHASE_LIST_COLUMN_IS_USER_PLACE = "is_user_place";
     public final static String PURCHASE_LIST_COLUMN_DONE = "is_done";
-    public final static String PURCHASE_LIST_COLUMN_MAX_DISTANCE = "max_distance";
+    public final static String PURCHASE_LIST_COLUMN_MAX_SHOP_DISTANCE = "max_shop_distance";
+    public final static String PURCHASE_LIST_COLUMN_MAX_PLACE_DISTANCE = "max_place_distance";
+    public final static String PURCHASE_LIST_COLUMN_MAX_POINT_DISTANCE = "max_point_distance";
     public final static String PURCHASE_LIST_COLUMN_IS_ALARM = "is_alarm";
     public final static String PURCHASE_LIST_COLUMN_TIME_ALARM = "time_alarm";
     public final static String PURCHASE_LIST_COLUMN_TIME_CREATE = "time_create";
@@ -97,12 +100,14 @@ public class SqlDbHelper extends SQLiteOpenHelper {
             PURCHASE_LIST_COLUMN_LIST_NAME + TEXT_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_USER_ID + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_SHOP_ID + INTEGER_TYPE + COMMA_SEP +
-            PURCHASE_LIST_COLUMN_IS_USER_SHOP + INTEGER_TYPE + COMMA_SEP +
+            PURCHASE_LIST_COLUMN_IS_USER_SHOP + INTEGER_TYPE + NOT_NULL + COMMA_SEP +
             PURCHASE_LIST_COLUMN_PLACE_ID + INTEGER_TYPE + COMMA_SEP +
-            PURCHASE_LIST_COLUMN_IS_USER_PLACE + INTEGER_TYPE + COMMA_SEP +
+            PURCHASE_LIST_COLUMN_IS_USER_PLACE + INTEGER_TYPE + NOT_NULL + COMMA_SEP +
             PURCHASE_LIST_COLUMN_DONE + INTEGER_TYPE + COMMA_SEP +
-            PURCHASE_LIST_COLUMN_MAX_DISTANCE + REAL_TYPE + COMMA_SEP +
-            PURCHASE_LIST_COLUMN_IS_ALARM + INTEGER_TYPE + COMMA_SEP +
+            PURCHASE_LIST_COLUMN_MAX_SHOP_DISTANCE + REAL_TYPE + COMMA_SEP +
+            PURCHASE_LIST_COLUMN_MAX_PLACE_DISTANCE + REAL_TYPE + COMMA_SEP +
+            PURCHASE_LIST_COLUMN_MAX_POINT_DISTANCE + REAL_TYPE + COMMA_SEP +
+            PURCHASE_LIST_COLUMN_IS_ALARM + INTEGER_TYPE + NOT_NULL + COMMA_SEP +
             PURCHASE_LIST_COLUMN_TIME_ALARM + TEXT_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_TIME_CREATE + INTEGER_TYPE + COMMA_SEP +
             PURCHASE_LIST_COLUMN_TIMESTAMP + INTEGER_TYPE +
@@ -131,7 +136,7 @@ public class SqlDbHelper extends SQLiteOpenHelper {
             PLACES_COLUMN_NAME + TEXT_TYPE + COMMA_SEP +
             PLACES_COLUMN_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
             PLACES_COLUMN_LATITUDE + REAL_TYPE + COMMA_SEP + PLACES_COLUMN_LONGITUDE + REAL_TYPE + COMMA_SEP +
-            PLACES_COLUMN_IS_DELETE + INTEGER_TYPE + COMMA_SEP +
+            PLACES_COLUMN_IS_DELETE + INTEGER_TYPE + NOT_NULL + COMMA_SEP +
             PLACES_COLUMN_TIMESTAMP + INTEGER_TYPE +
             " );";
     public final static String SQL_DELETE_PLACES =

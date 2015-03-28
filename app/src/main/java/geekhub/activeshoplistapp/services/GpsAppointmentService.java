@@ -114,7 +114,9 @@ public class GpsAppointmentService extends Service {
                     SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID,
                     SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_PLACE,
                     SqlDbHelper.PURCHASE_LIST_COLUMN_DONE,
-                    SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_SHOP_DISTANCE,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_PLACE_DISTANCE,
+                    SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_POINT_DISTANCE,
                     SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM,
                     SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM,
                     SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE,
@@ -144,7 +146,9 @@ public class GpsAppointmentService extends Service {
                 int indexPlace = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID);
                 int indexIsUserPlace = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_PLACE);
                 int indexDone = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_DONE);
-                int indexMaxDistance = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE);
+                int indexMaxShopDistance = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_SHOP_DISTANCE);
+                int indexMaxPlaceDistance = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_PLACE_DISTANCE);
+                int indexMaxPointDistance = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_POINT_DISTANCE);
                 int indexIsAlarm = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM);
                 int indexAlarm = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM);
                 int indexCreate = cursor.getColumnIndex(SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE);
@@ -159,13 +163,15 @@ public class GpsAppointmentService extends Service {
                         cursor.getInt(indexPlace),
                         cursor.getInt(indexIsUserPlace) > 0,
                         cursor.getInt(indexDone) > 0,
-                        cursor.getFloat(indexMaxDistance),
                         cursor.getInt(indexIsAlarm) > 0,
                         cursor.getLong(indexAlarm),
                         cursor.getLong(indexCreate),
                         cursor.getLong(indexTimestamp),
                         null
                 );
+                listModel.setMaxShopDistance(cursor.getFloat(indexMaxShopDistance));
+                listModel.setMaxPlaceDistance(cursor.getFloat(indexMaxPlaceDistance));
+                listModel.setMaxPointDistance(cursor.getFloat(indexMaxPointDistance));
                 purchaseLists.add(listModel);
                 cursor.moveToNext();
             }
@@ -245,14 +251,14 @@ public class GpsAppointmentService extends Service {
 
             if (shop != null && place != null) {
                 point = Coordinate.middlePoint(shop, place);
-                purchaseLists.get(i).setRadius(point.distanceTo(place));
+                purchaseLists.get(i).setPointRadius(point.distanceTo(place));
             } else if (shop != null){
                 point = shop;
             } else if (place != null){
                 point = place;
             }
 
-            purchaseLists.get(i).setPoint(point);
+            purchaseLists.get(i).setPointLocation(point);
         }
 
         if (purchaseLists.size() == 0) {
@@ -402,8 +408,8 @@ public class GpsAppointmentService extends Service {
         for (PurchaseListModel list : lists) {
             if (!list.isDone()) {
                 //float distance = location.distanceTo(list.getPoint());
-                float distance = Coordinate.distance(location, list.getPoint());
-                Log.d(TAG, list.getListName() + " distance: " + distance + "/" + list.getMaxDistance());
+                float distance = Coordinate.distance(location, list.getPlaceLocation());
+                Log.d(TAG, list.getListName() + " distance: " + distance + "/" + list.getMaxPointDistance());
                 if (distance < GPS_RADIUS) {
                     /*if (!isGps) {
                         if (latencyLocation == null
@@ -420,7 +426,7 @@ public class GpsAppointmentService extends Service {
 
                     if (latencyLocation == null
                             | (latencyLocation != null
-                            && Coordinate.distance(latencyLocation, list.getPoint()) > MIN_RADIUS)) {
+                            && Coordinate.distance(latencyLocation, list.getPointLocation()) > MIN_RADIUS)) {
                         needGps = true;
                         if (isGps) {
                             latencyLocation = location;
@@ -430,19 +436,19 @@ public class GpsAppointmentService extends Service {
                     latencyLocation = null;
                 }
                 if (!needGps | (needGps & isGps)) {
-                    if (list.getMaxDistance() < distance && distance > MIN_RADIUS + location.getAccuracy()) {
-                        list.setMaxDistance(distance);
+                    if (list.getMaxPointDistance() < distance && distance > MIN_RADIUS + location.getAccuracy()) {
+                        list.setMaxPointDistance(distance);
                         updatePurchaseList(list);
                         Log.d(TAG, " --- Update!!!");
                         //Log.d("LOCATION", "location: " + location.toString());
                         //Log.d("LOCATION", "point: " + list.getPoint().toString());
-                    } else if (list.getMaxDistance() / 2 > distance) {
+                    } else if (list.getMaxPointDistance() / 2 > distance) {
                         showNotification("/2 distance: " + list.getListName());
-                        list.setMaxDistance(0);
+                        list.setMaxPointDistance(0);
                         list.setIsAlarm(false);
                         updatePurchaseList(list);
                     }
-                    if (!list.isAlarm() && distance < list.getRadius() + APPOINTMENT_RADIUS) {
+                    if (!list.isAlarm() && distance < list.getPointRadius() + APPOINTMENT_RADIUS) {
                         showNotification("Appointment distance: " + list.getListName());
                         list.setIsAlarm(true);
                         updatePurchaseList(list);
@@ -471,7 +477,7 @@ public class GpsAppointmentService extends Service {
     private int updatePurchaseList(PurchaseListModel list) {
         Uri uri = Uri.parse(ShoppingContentProvider.PURCHASE_LIST_CONTENT_APPOINTMENT_URI + "/" + list.getDbId());
         ContentValues values = new ContentValues();
-        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE, list.getMaxDistance());
+        values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_POINT_DISTANCE, list.getMaxPointDistance());
         values.put(SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM, list.isAlarm() ? 1 : 0);
         return getContentResolver().update(
                 uri,

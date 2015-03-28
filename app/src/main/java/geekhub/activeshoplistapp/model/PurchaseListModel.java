@@ -17,15 +17,21 @@ public class PurchaseListModel {
     private long placeId;
     private boolean isUserPlace;
     private boolean isDone;
-    private float maxDistance;
     private boolean isAlarm;
     private long timeAlarm;
     private long timeCreate;
     private long timeStamp;
     private List<PurchaseItemModel> purchasesItems;
 
-    private Location point;
-    private float radius;
+    private Location shopLocation;
+    private Location placeLocation;
+    private Location pointLocation;
+    private float shopRadius;
+    private float placeRadius;
+    private float pointRadius;
+    private float maxShopDistance;
+    private float maxPlaceDistance;
+    private float maxPointDistance;
 
     public PurchaseListModel() {
 
@@ -40,7 +46,6 @@ public class PurchaseListModel {
                              long placeId,
                              boolean isUserPlace,
                              boolean isDone,
-                             float maxDistance,
                              boolean isAlarm,
                              long timeAlarm,
                              long timeCreate,
@@ -55,7 +60,6 @@ public class PurchaseListModel {
         this.placeId = placeId;
         this.isUserPlace = isUserPlace;
         this.isDone = isDone;
-        this.maxDistance = maxDistance;
         this.isAlarm = isAlarm;
         this.timeAlarm = timeAlarm;
         this.timeCreate = timeCreate;
@@ -135,14 +139,6 @@ public class PurchaseListModel {
         this.isDone = isDone;
     }
 
-    public float getMaxDistance() {
-        return maxDistance;
-    }
-
-    public void setMaxDistance(float maxDistance) {
-        this.maxDistance = maxDistance;
-    }
-
     public boolean isAlarm() {
         return isAlarm;
     }
@@ -183,19 +179,75 @@ public class PurchaseListModel {
         this.purchasesItems = purchasesItems;
     }
 
-    public Location getPoint() {
-        return point;
+    public Location getShopLocation() {
+        return shopLocation;
     }
 
-    public void setPoint(Location point) {
-        this.point = point;
+    public void setShopLocation(Location shopLocation) {
+        this.shopLocation = shopLocation;
     }
 
-    public float getRadius() {
-        return radius;
+    public Location getPlaceLocation() {
+        return placeLocation;
     }
 
-    public void setRadius(float radius) {
-        this.radius = radius;
+    public void setPlaceLocation(Location placeLocation) {
+        this.placeLocation = placeLocation;
+    }
+
+    public Location getPointLocation() {
+        return pointLocation;
+    }
+
+    public void setPointLocation(Location pointLocation) {
+        this.pointLocation = pointLocation;
+    }
+
+    public float getShopRadius() {
+        return shopRadius;
+    }
+
+    public void setShopRadius(float shopRadius) {
+        this.shopRadius = shopRadius;
+    }
+
+    public float getPlaceRadius() {
+        return placeRadius;
+    }
+
+    public void setPlaceRadius(float placeRadius) {
+        this.placeRadius = placeRadius;
+    }
+
+    public float getPointRadius() {
+        return pointRadius;
+    }
+
+    public void setPointRadius(float pointRadius) {
+        this.pointRadius = pointRadius;
+    }
+
+    public float getMaxShopDistance() {
+        return maxShopDistance;
+    }
+
+    public void setMaxShopDistance(float maxShopDistance) {
+        this.maxShopDistance = maxShopDistance;
+    }
+
+    public float getMaxPlaceDistance() {
+        return maxPlaceDistance;
+    }
+
+    public void setMaxPlaceDistance(float maxPlaceDistance) {
+        this.maxPlaceDistance = maxPlaceDistance;
+    }
+
+    public float getMaxPointDistance() {
+        return maxPointDistance;
+    }
+
+    public void setMaxPointDistance(float maxPointDistance) {
+        this.maxPointDistance = maxPointDistance;
     }
 }

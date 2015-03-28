@@ -89,8 +89,8 @@ public class ShoppingHelper {
                 point.setLongitude(shop.getGpsLongitude());
             }
             if (point != null) {
-                purchaseList.setPoint(point);
-                purchaseList.setRadius(radius);
+                /*purchaseList.setPoint(point);
+                purchaseList.setRadius(radius);*/
                 if (appointmentLists.indexOf(purchaseList.getDbId()) == -1) {
                     appointmentLists.add(purchaseList.getDbId());
                     Log.d(TAG, "Add appointment. size " + appointmentLists.size());
@@ -174,7 +174,7 @@ public class ShoppingHelper {
     }
 
     public void updatePurchaseListMaxDistance(long dbId, float maxDistance) {
-        getPurchaseListByDbId(dbId).setMaxDistance(maxDistance);
+        /*getPurchaseListByDbId(dbId).setMaxDistance(maxDistance);*/
         dataBaseHelper.open();
         dataBaseHelper.updatePurchaseListMaxDistamce(dbId, maxDistance);
         dataBaseHelper.close();

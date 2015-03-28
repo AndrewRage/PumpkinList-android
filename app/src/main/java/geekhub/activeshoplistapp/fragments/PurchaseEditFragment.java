@@ -740,7 +740,6 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                         SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID,
                         SqlDbHelper.PURCHASE_LIST_COLUMN_IS_USER_PLACE,
                         SqlDbHelper.PURCHASE_LIST_COLUMN_DONE,
-                        SqlDbHelper.PURCHASE_LIST_COLUMN_MAX_DISTANCE,
                         SqlDbHelper.PURCHASE_LIST_COLUMN_IS_ALARM,
                         SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_ALARM,
                         SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE,
