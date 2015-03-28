@@ -37,10 +37,10 @@ public class GpsAppointmentService extends Service {
     private static final int UPDATE_PLACE_NETWORK = 0;
     private static final int UPDATE_PLACE_GPS = 10;
     private static final int GPS_PASIVE_TIME = 1000 * 60;
-    private static final int GPS_RADIUS = 1500;
-    private static final int MIN_RADIUS = 200;
-    private static final int APPOINTMENT_RADIUS = 400;
-    private static final int LOCATION_CHECK_SIZE = 5;
+    private static final int GPS_RADIUS = 2000;
+    private static final int MIN_RADIUS = 150;
+    private static final int APPOINTMENT_RADIUS = 300;
+    private static final int LOCATION_CHECK_SIZE = 3;
     private static final int LOCATION_CHECK_MAX_DISTANCE = 5000;
     private Handler handler;
     private LocationManager locationManager;
@@ -48,7 +48,7 @@ public class GpsAppointmentService extends Service {
     private List<Location> locationList;
     private boolean isGps;
     private int ringCount = 0;
-    private Location latenceLocation;
+    private Location latencyLocation;
 
     @Override
     public void onCreate() {
@@ -72,7 +72,11 @@ public class GpsAppointmentService extends Service {
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             locationManager.requestLocationUpdates(
                     LocationManager.PASSIVE_PROVIDER, UPDATE_TIME_NETWORK, UPDATE_PLACE_NETWORK, passiveListener);
-            startGps();
+            locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER, UPDATE_TIME_NETWORK, UPDATE_PLACE_NETWORK, networkListener);
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER, UPDATE_TIME_NETWORK, UPDATE_PLACE_NETWORK, gpsListener);
+            //startGps();
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -333,57 +337,65 @@ public class GpsAppointmentService extends Service {
 
     private void checkLocation(Location location) {
         //Log.d(TAG, "checkLocation: " + location.getProvider() + ", time: " + location.getTime());
-        if (locationList.size() < LOCATION_CHECK_SIZE) {
-            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (!isGps | (isGps && location.getProvider().equals(LocationManager.GPS_PROVIDER))) {
+            if (locationList.size() < LOCATION_CHECK_SIZE) {
+            /*if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 if (location.getProvider().equals(LocationManager.GPS_PROVIDER)) {
                     locationList.add(location);
                     //locationAction(location);
                 }
             } else {
                 locationList.add(location);
-            }
-        } else {
-            float distanceAvr = 0;
-            float distanceLast = Coordinate.distance(location, locationList.get(locationList.size() - 1));
-            float speedAvr = 0;
-            float speedLast = distanceLast / (location.getTime() - (locationList.get(locationList.size() - 1)).getTime()) * 1000;
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0; i < locationList.size() - 1; i++) {
-                //float distanceCur = (locationList.get(i)).distanceTo(locationList.get(i + 1));
-                float distanceCur = Coordinate.distance(locationList.get(i), locationList.get(i + 1));
-                float time = (float) ((locationList.get(i + 1)).getTime() - (locationList.get(i)).getTime()) / 1000;
-                float speedCur = distanceCur / time;
+            }*/
 
-                distanceAvr += distanceCur;
-                speedAvr += (speedCur * time);
-
-                stringBuilder.append(speedCur).append(" | ");
-            }
-            distanceAvr /= locationList.size();
-            speedAvr /= ((locationList.get(locationList.size() - 1).getTime() - locationList.get(0).getTime()) / 1000);
-            Log.d(TAG, "---------------------------------");
-            Log.d(TAG, "distanceLast: " + distanceLast + " speedLast: " + speedLast);
-            Log.d(TAG, "distanceAvr: " + distanceAvr + " speedAvr: " + speedAvr);
-            Log.d(TAG, stringBuilder.toString());
-
-            float speedCheck;
-            if (speedAvr == 0) {
-                speedCheck = 10;
+                locationList.add(location);
             } else {
-                speedCheck = speedAvr * 1.5f;
-            }
+                //float distanceAvr = 0;
+                float distanceLast = Coordinate.distance(location, locationList.get(locationList.size() - 1));
+                float speedAvr = 0;
+                float speedLast = distanceLast / (location.getTime() - (locationList.get(locationList.size() - 1)).getTime()) * 1000;
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int i = 0; i < locationList.size() - 1; i++) {
+                    float distanceCur = Coordinate.distance(locationList.get(i), locationList.get(i + 1));
+                    float time = (float) ((locationList.get(i + 1)).getTime() - (locationList.get(i)).getTime()) / 1000;
+                    float speedCur = distanceCur / time;
 
-            if (speedLast < speedCheck) {
-                if (speedLast != 0) {
-                    locationAction(location);
+                    //distanceAvr += distanceCur;
+                    speedAvr += (speedCur * time);
+
+                    stringBuilder.append(speedCur).append(" | ");
                 }
-                addNewLocation(location);
-                ringCount = 0;
-            } else {
-                if (ringCount < 3) {
-                    ringCount++;
+                //distanceAvr /= locationList.size();
+                speedAvr /= ((locationList.get(locationList.size() - 1).getTime() - locationList.get(0).getTime()) / 1000);
+
+                float speedCheck;
+                /*if (speedAvr == 0) {
+                    speedCheck = 10;
                 } else {
-                    if (speedLast < 50) {
+                    speedCheck = speedAvr * 1.5f;
+                }*/
+                speedCheck = (float) ((Math.atan(speedAvr * 0.04)) * 50) + 3;
+
+                Log.d(TAG, "---------------------------------");
+                //Log.d(TAG, "distanceLast: " + distanceLast + " distanceAvr: " + distanceAvr);
+                Log.d(TAG, "speedCheck: " + speedCheck + " speedAvr: " + speedAvr);
+                Log.d(TAG, "speedLast: " + speedLast + " speedAvr: " + speedAvr);
+                Log.d(TAG, stringBuilder.toString());
+
+                if (speedLast < speedCheck) {
+                    /*if (speedLast != 0) {
+                        locationAction(location);
+                    }*/
+                    locationAction(location);
+                    addNewLocation(location);
+                    ringCount = 0;
+                } else {
+                    if (ringCount < 3) {
+                        ringCount++;
+                    } else {
+                        /*if (speedLast < 50) {
+                            addNewLocation(location);
+                        }*/
                         addNewLocation(location);
                     }
                 }
@@ -399,59 +411,70 @@ public class GpsAppointmentService extends Service {
     private void locationAction(Location location) {
         Log.d(TAG, "locationAction: " + location.getProvider() + ", accuracy: " + location.getAccuracy() + ", speed: " + location.getSpeed());
 
-        if (!isGps | (isGps && location.getProvider().equals(LocationManager.GPS_PROVIDER))) {
+        List<PurchaseListModel> lists = new ArrayList<>(purchaseLists);
+        boolean needGps = false;
 
-            List<PurchaseListModel> lists = new ArrayList<>(purchaseLists);
-            boolean needGps = false;
+        for (PurchaseListModel list : lists) {
+            if (!list.isDone()) {
+                //float distance = location.distanceTo(list.getPoint());
+                float distance = Coordinate.distance(location, list.getPoint());
+                Log.d(TAG, list.getListName() + " distance: " + distance + "/" + list.getMaxDistance());
+                if (distance < GPS_RADIUS) {
+                    /*if (!isGps) {
+                        if (latencyLocation == null
+                                | (latencyLocation != null
+                                && Coordinate.distance(latencyLocation, list.getPoint()) > MIN_RADIUS)) {
+                            needGps = true;
+                        }
+                    } else {
+                        if (latencyLocation == null) {
+                            latencyLocation = location;
+                            needGps = true;
+                        }
+                    }*/
 
-            for (PurchaseListModel list : lists) {
-                if (!list.isDone()) {
-                    //float distance = location.distanceTo(list.getPoint());
-                    float distance = Coordinate.distance(location, list.getPoint());
-                    Log.d(TAG, list.getListName() + " distance: " + distance + "/" + list.getMaxDistance());
-                    if (distance < GPS_RADIUS) {
-                        if (!isGps) {
-                            if (latenceLocation == null
-                                    | (latenceLocation != null
-                                    && Coordinate.distance(latenceLocation, list.getPoint()) > MIN_RADIUS)) {
-                                needGps = true;
-                            }
-                        } else {
-                            if (latenceLocation == null) {
-                                latenceLocation = location;
-                            }
+                    if (latencyLocation == null
+                            | (latencyLocation != null
+                            && Coordinate.distance(latencyLocation, list.getPoint()) > MIN_RADIUS)) {
+                        needGps = true;
+                        if (isGps) {
+                            latencyLocation = location;
                         }
                     }
-                    if (!needGps) {
-                        if (list.getMaxDistance() < distance && distance > MIN_RADIUS + location.getAccuracy()) {
-                            list.setMaxDistance(distance);
-                            updatePurchaseList(list);
-                            Log.d(TAG, " --- Update!!!");
-                            //Log.d("LOCATION", "location: " + location.toString());
-                            //Log.d("LOCATION", "point: " + list.getPoint().toString());
-                        } else if (list.getMaxDistance() / 2 > distance) {
-                            showNotification("/2 distance: " + list.getListName());
-                            list.setMaxDistance(0);
-                            list.setIsAlarm(false);
-                            updatePurchaseList(list);
-                        }
-                        if (!list.isAlarm() && distance < list.getRadius() + APPOINTMENT_RADIUS) {
-                            showNotification("Appointment distance: " + list.getListName());
-                            list.setIsAlarm(true);
-                            updatePurchaseList(list);
-                        }
+                } else {
+                    latencyLocation = null;
+                }
+                if (!needGps | (needGps & isGps)) {
+                    if (list.getMaxDistance() < distance && distance > MIN_RADIUS + location.getAccuracy()) {
+                        list.setMaxDistance(distance);
+                        updatePurchaseList(list);
+                        Log.d(TAG, " --- Update!!!");
+                        //Log.d("LOCATION", "location: " + location.toString());
+                        //Log.d("LOCATION", "point: " + list.getPoint().toString());
+                    } else if (list.getMaxDistance() / 2 > distance) {
+                        showNotification("/2 distance: " + list.getListName());
+                        list.setMaxDistance(0);
+                        list.setIsAlarm(false);
+                        updatePurchaseList(list);
+                    }
+                    if (!list.isAlarm() && distance < list.getRadius() + APPOINTMENT_RADIUS) {
+                        showNotification("Appointment distance: " + list.getListName());
+                        list.setIsAlarm(true);
+                        updatePurchaseList(list);
                     }
                 }
             }
+        }
 
-            if (needGps) {
+        if (needGps) {
+            if (!isGps) {
                 startGps();
-            } else if (isGps){
-                int time = (int)(location.getTime() - latenceLocation.getTime() / 1000);
-                if (locationList.size() == LOCATION_CHECK_SIZE
-                        && time > 30) {
-                    stopGps();
-                }
+            }
+        } else if (isGps){
+            int time = (int)(location.getTime() - latencyLocation.getTime() / 1000);
+            if (locationList.size() == LOCATION_CHECK_SIZE
+                    && time > 30) {
+                stopGps();
             }
         }
     }
