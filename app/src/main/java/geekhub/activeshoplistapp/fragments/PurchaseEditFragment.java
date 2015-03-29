@@ -476,7 +476,9 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             }
         }
         hideSoftKeyboard();
-        getActivity().getSupportFragmentManager().popBackStack();
+        if (getActivity() != null) {
+            getActivity().getSupportFragmentManager().popBackStack();
+        }
         return false;
     }
 

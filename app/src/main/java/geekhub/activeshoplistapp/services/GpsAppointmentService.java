@@ -42,7 +42,7 @@ public class GpsAppointmentService extends Service {
     private static final int GPS_PASSIVE_TIME = 1000 * 60;
     private static final int GPS_RADIUS = 1000;
     private static final int MIN_RADIUS = 150;
-    private static final int APPOINTMENT_RADIUS = 350;
+    private static final int APPOINTMENT_RADIUS = 400;
     private static final int LOCATION_CHECK_SIZE = 3;
     private static final int APPOINTMENT_TIME = 1000 * 60 * 60;
 
@@ -511,8 +511,8 @@ public class GpsAppointmentService extends Service {
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(getString(R.string.app_name))
                         .setContentText(list.getListName())
-                //.setContentInfo("" + count)
-                //.setTicker(getString(R.string.notification_new_feeds))
+                        //.setContentInfo("info")
+                        //.setTicker("ticker")
                 ;
         Intent startIntent = new Intent(getApplicationContext(), PurchaseActivity.class);
         startIntent.putExtra(AppConstants.NOTIFICATION_LIST_ARGS, list.getDbId());

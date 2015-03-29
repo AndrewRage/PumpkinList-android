@@ -54,13 +54,15 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
-        getDrawerToggle().syncState();
+        //getDrawerToggle().syncState();
+        syncDrawerToggle();
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        getDrawerToggle().syncState();
+        //getDrawerToggle().syncState();
+        syncDrawerToggle();
     }
 
     @Override
@@ -84,6 +86,11 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
     }
 
     private void showList(long id) {
+        if (purchaseListEditFragment != null) {
+            purchaseListEditFragment.onBackPressed();
+            getSupportFragmentManager().popBackStack();
+            purchaseListEditFragment = null;
+        }
         purchaseListEditFragment = PurchaseEditFragment.newInstance(id);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, purchaseListEditFragment)
@@ -97,6 +104,13 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
         if(backStackEntryCount <= 0){
             getDrawerToggle().syncState();
             purchaseListEditFragment = null;
+        }
+    }
+
+    private void syncDrawerToggle(){
+        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+        if(backStackEntryCount <= 0){
+            getDrawerToggle().syncState();
         }
     }
 

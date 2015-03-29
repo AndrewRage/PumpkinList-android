@@ -32,10 +32,11 @@ public abstract class BaseFragment extends Fragment implements BaseActivity.OnBa
         ActionBarActivity activity = (ActionBarActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(displayHome);
+        activity.getSupportActionBar().setHomeButtonEnabled(displayHome);
     }
 
     public void hideSoftKeyboard() {
-        if(getActivity().getCurrentFocus()!=null) {
+        if(getActivity() != null && getActivity().getCurrentFocus() != null) {
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
         }
