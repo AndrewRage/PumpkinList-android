@@ -8,6 +8,11 @@ import java.util.List;
  * Created by rage on 08.02.15. Create by task: 003
  */
 public class PurchaseListModel {
+
+    public static final int PLACE_SHOP = 1;
+    public static final int PLACE_PLACE = 2;
+    public static final int PLACE_POINT = 3;
+
     private long dbId;
     private long serverId;
     private String listName;
@@ -32,6 +37,10 @@ public class PurchaseListModel {
     private float maxShopDistance;
     private float maxPlaceDistance;
     private float maxPointDistance;
+
+    private Location latencyShopLocation;
+    private Location latencyPlaceLocation;
+    private Location latencyPointLocation;
 
     public PurchaseListModel() {
 
@@ -249,5 +258,139 @@ public class PurchaseListModel {
 
     public void setMaxPointDistance(float maxPointDistance) {
         this.maxPointDistance = maxPointDistance;
+    }
+
+    public Location getLatencyShopLocation() {
+        return latencyShopLocation;
+    }
+
+    public void setLatencyShopLocation(Location latencyShopLocation) {
+        this.latencyShopLocation = latencyShopLocation;
+    }
+
+    public Location getLatencyPlaceLocation() {
+        return latencyPlaceLocation;
+    }
+
+    public void setLatencyPlaceLocation(Location latencyPlaceLocation) {
+        this.latencyPlaceLocation = latencyPlaceLocation;
+    }
+
+    public Location getLatencyPointLocation() {
+        return latencyPointLocation;
+    }
+
+    public void setLatencyPointLocation(Location latencyPointLocation) {
+        this.latencyPointLocation = latencyPointLocation;
+    }
+
+
+    //Index setters and getters
+    public Location getLocation(int place) {
+        if (place == PLACE_SHOP) {
+            return getShopLocation();
+        }
+        if (place == PLACE_PLACE) {
+            return getPlaceLocation();
+        }
+        if (place == PLACE_POINT) {
+            return getPointLocation();
+        }
+        return null;
+    }
+
+    public Location getLatencyLocation(int place) {
+        if (place == PLACE_SHOP) {
+            return getLatencyShopLocation();
+        }
+        if (place == PLACE_PLACE) {
+            return getLatencyPlaceLocation();
+        }
+        if (place == PLACE_POINT) {
+            return getLatencyPointLocation();
+        }
+        return null;
+    }
+
+    public float getRadius(int place) {
+        if (place == PLACE_SHOP) {
+            return getShopRadius();
+        }
+        if (place == PLACE_PLACE) {
+            return getPlaceRadius();
+        }
+        if (place == PLACE_POINT) {
+            return getPointRadius();
+        }
+        return 0;
+    }
+
+    public float getMaxDistance(int place) {
+        if (place == PLACE_SHOP) {
+            return getMaxShopDistance();
+        }
+        if (place == PLACE_PLACE) {
+            return getMaxPlaceDistance();
+        }
+        if (place == PLACE_POINT) {
+            return getMaxPointDistance();
+        }
+        return 0;
+    }
+
+    public void setLocation(int place, Location location) {
+        if (place == PLACE_SHOP) {
+            setShopLocation(location);
+        }
+        if (place == PLACE_PLACE) {
+            setPlaceLocation(location);
+        }
+        if (place == PLACE_POINT) {
+            setPointLocation(location);
+        }
+    }
+
+    public void setLatencyLocation(int place, Location location) {
+        if (place == PLACE_SHOP) {
+            setLatencyShopLocation(location);
+        }
+        if (place == PLACE_PLACE) {
+            setLatencyPlaceLocation(location);
+        }
+        if (place == PLACE_POINT) {
+            setLatencyPointLocation(location);
+        }
+    }
+
+    public void setRadius(int place, float radius) {
+        if (place == PLACE_SHOP) {
+            setShopRadius(radius);
+        }
+        if (place == PLACE_PLACE) {
+            setPlaceRadius(radius);
+        }
+        if (place == PLACE_POINT) {
+            setPointRadius(radius);
+        }
+    }
+
+    public void setMaxDistance(int place, float distance) {
+        if (place == PLACE_SHOP) {
+            setMaxShopDistance(distance);
+        }
+        if (place == PLACE_PLACE) {
+            setMaxPlaceDistance(distance);
+        }
+        if (place == PLACE_POINT) {
+            setMaxPointDistance(distance);
+        }
+    }
+
+    public boolean isPointIsSingle(){
+        if (getShopLocation() == null && getPlaceLocation() == null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
