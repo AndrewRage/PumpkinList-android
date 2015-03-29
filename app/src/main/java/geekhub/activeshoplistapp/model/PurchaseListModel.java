@@ -26,8 +26,10 @@ public class PurchaseListModel {
     private long timeAlarm;
     private long timeCreate;
     private long timeStamp;
-    private List<PurchaseItemModel> purchasesItems;
 
+    private long alarmTimeStamp;
+
+    private List<PurchaseItemModel> purchasesItems;
     private Location shopLocation;
     private Location placeLocation;
     private Location pointLocation;
@@ -284,6 +286,13 @@ public class PurchaseListModel {
         this.latencyPointLocation = latencyPointLocation;
     }
 
+    public long getAlarmTimeStamp() {
+        return alarmTimeStamp;
+    }
+
+    public void setAlarmTimeStamp(long alarmTimeStamp) {
+        this.alarmTimeStamp = alarmTimeStamp;
+    }
 
     //Index setters and getters
     public Location getLocation(int place) {
@@ -386,7 +395,13 @@ public class PurchaseListModel {
         }
     }
 
-    public boolean isPointIsSingle(){
+    public void setMaxDistance(float distance) {
+        setMaxShopDistance(distance);
+        setMaxPlaceDistance(distance);
+        setMaxPointDistance(distance);
+    }
+
+    public boolean isSinglePoint(){
         if (getShopLocation() == null && getPlaceLocation() == null) {
             return true;
         } else {

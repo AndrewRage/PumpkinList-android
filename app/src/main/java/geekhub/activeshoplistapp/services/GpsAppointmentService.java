@@ -19,7 +19,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.helpers.AppConstants;
@@ -37,12 +36,12 @@ public class GpsAppointmentService extends Service {
     private static final int UPDATE_TIME_GPS = 1000;
     private static final int UPDATE_PLACE_NETWORK = 0;
     private static final int UPDATE_PLACE_GPS = 10;
-    private static final int GPS_PASIVE_TIME = 1000 * 60;
-    private static final int GPS_RADIUS = 2000;
+    private static final int GPS_PASSIVE_TIME = 1000 * 60;
+    private static final int GPS_RADIUS = 1000;
     private static final int MIN_RADIUS = 150;
-    private static final int APPOINTMENT_RADIUS = 300;
+    private static final int APPOINTMENT_RADIUS = 350;
     private static final int LOCATION_CHECK_SIZE = 3;
-    private static final int LOCATION_CHECK_MAX_DISTANCE = 5000;
+    private static final int APPOINTMENT_TIME = 1000 * 60 * 60;
 
     private Handler handler;
     private LocationManager locationManager;
@@ -255,8 +254,10 @@ public class GpsAppointmentService extends Service {
             if (shop != null && place != null) {
                 point = Coordinate.middlePoint(shop, place);
                 pointRadius = Coordinate.distance(point, place);
-                purchaseLists.get(i).setPointRadius(pointRadius);
-                purchaseLists.get(i).setPointLocation(point);
+                if (pointRadius < 1500) {
+                    purchaseLists.get(i).setPointRadius(pointRadius);
+                    purchaseLists.get(i).setPointLocation(point);
+                }
             }
             if (pointRadius == 0 || pointRadius > MIN_RADIUS * 2) {
                 if (shop != null) {
@@ -284,7 +285,6 @@ public class GpsAppointmentService extends Service {
         @Override
         public void onLocationChanged(Location location) {
             //Log.d(TAG, "passiveListener");
-            //locationAction(location);
             checkLocation(location);
         }
 
@@ -358,37 +358,22 @@ public class GpsAppointmentService extends Service {
             }
             if (locationList.size() < LOCATION_CHECK_SIZE) {
                 locationList.add(location);
+                Log.d(TAG, "locationList.size = " + locationList.size());
             } else {
-                //float distanceAvr = 0;
                 float distanceLast = Coordinate.distance(location, locationList.get(locationList.size() - 1));
                 float speedAvr = 0;
                 float speedLast = distanceLast / (location.getTime() - (locationList.get(locationList.size() - 1)).getTime()) * 1000;
-                //StringBuilder stringBuilder = new StringBuilder();
                 for (int i = 0; i < locationList.size() - 1; i++) {
                     float distanceCur = Coordinate.distance(locationList.get(i), locationList.get(i + 1));
                     float time = (float) ((locationList.get(i + 1)).getTime() - (locationList.get(i)).getTime()) / 1000;
                     float speedCur = distanceCur / time;
-
-                    //distanceAvr += distanceCur;
                     speedAvr += (speedCur * time);
-
-                    //stringBuilder.append(speedCur).append(" | ");
                 }
-                //distanceAvr /= locationList.size();
                 speedAvr /= ((locationList.get(locationList.size() - 1).getTime() - locationList.get(0).getTime()) / 1000);
 
                 float speedCheck = (float) ((Math.atan(speedAvr * 0.04)) * 50) + 3;
 
-                /*Log.d(TAG, "---------------------------------");
-                //Log.d(TAG, "distanceLast: " + distanceLast + " distanceAvr: " + distanceAvr);
-                Log.d(TAG, "speedCheck: " + speedCheck + " speedAvr: " + speedAvr);
-                Log.d(TAG, "speedLast: " + speedLast + " speedAvr: " + speedAvr);
-                Log.d(TAG, stringBuilder.toString());*/
-
                 if (speedLast < speedCheck) {
-                    /*if (speedLast != 0) {
-                        locationAction(location);
-                    }*/
                     locationAction(location);
                     addNewLocation(location);
                     ringCount = 0;
@@ -396,9 +381,6 @@ public class GpsAppointmentService extends Service {
                     if (ringCount < 3) {
                         ringCount++;
                     } else {
-                        /*if (speedLast < 50) {
-                            addNewLocation(location);
-                        }*/
                         addNewLocation(location);
                     }
                 }
@@ -437,7 +419,7 @@ public class GpsAppointmentService extends Service {
                     float distance = Coordinate.distance(location, list.getLocation(place));
                     Log.d(TAG, list.getListName() + "/" + place + " distance: " + distance + "/" + list.getMaxDistance(place));
                     if ((place != PurchaseListModel.PLACE_POINT
-                            | list.isPointIsSingle()) & distance < GPS_RADIUS) {
+                            | list.isSinglePoint()) & distance < GPS_RADIUS) {
                         if (list.getLatencyLocation(place) == null
                                 | (list.getLatencyLocation(place) != null
                                 && Coordinate.distance(list.getLatencyLocation(place), location) > MIN_RADIUS)) {
@@ -454,25 +436,27 @@ public class GpsAppointmentService extends Service {
                         list.setLatencyLocation(place, null);
                     }
                     if (!needGps | (needGps & isGps)) {
-                        if (list.getMaxDistance(place) < distance && distance > MIN_RADIUS + location.getAccuracy()) {
+                        if (list.getMaxDistance(place) < distance
+                                && distance > MIN_RADIUS + location.getAccuracy() + list.getRadius(place)) {
                             list.setMaxDistance(place, distance);
-                            //updatePurchaseList(list);
-                            needUpdate = true;
-                            Log.d(TAG, " --- Update MaxDistance: " + distance);
-                            //Log.d("LOCATION", "location: " + location.toString());
-                            //Log.d("LOCATION", "point: " + list.getPoint().toString());
-                        } else if (list.getMaxDistance(place) / 2 > distance) {
-                            //showNotification("/2 distance: " + list.getListName());
+                        } else if (list.getMaxDistance(place) * 0.5f > distance) {
                             list.setMaxDistance(place, 0);
-                            list.setIsAlarm(false);
-                            //updatePurchaseList(list);
+                            if (list.getAlarmTimeStamp() == 0
+                                    | (list.getAlarmTimeStamp() > 0
+                                    && System.currentTimeMillis() - list.getAlarmTimeStamp() > APPOINTMENT_TIME)) {
+                                list.setIsAlarm(false);
+                            }
                             needUpdate = true;
-                            Log.d(TAG, " --- Clear MaxDistance: 0");
+                        }
+                        if (distance < MIN_RADIUS && list.getMaxDistance(place) > 0) {
+                            list.setMaxDistance(0);
+                            needUpdate = true;
                         }
                         if (!list.isAlarm() && distance < list.getRadius(place) + APPOINTMENT_RADIUS) {
-                            showNotification("Appointment distance: " + list.getListName());
+                            showNotification(list);
+                            list.setMaxDistance(0);
                             list.setIsAlarm(true);
-                            //updatePurchaseList(list);
+                            list.setAlarmTimeStamp(System.currentTimeMillis());
                             needUpdate = true;
                             Log.d(TAG, " --- Alarm!!!");
                         }
@@ -491,9 +475,9 @@ public class GpsAppointmentService extends Service {
         } else if (isGps){
 
             if (latencyMaxTime > 0) {
-                int time = (int) (location.getTime() - latencyMaxTime / 1000);
+                int time = (int) (location.getTime() - latencyMaxTime);
                 if (locationList.size() == LOCATION_CHECK_SIZE
-                        && time > 30) {
+                        && time > GPS_PASSIVE_TIME) {
                     stopGps();
                 }
             } else {
@@ -518,12 +502,12 @@ public class GpsAppointmentService extends Service {
         );
     }
 
-    private void showNotification(String text) {
+    private void showNotification(PurchaseListModel list) {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(GpsAppointmentService.this)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(getString(R.string.app_name))
-                        .setContentText(text)
+                        .setContentText(list.getListName())
                 //.setContentInfo("" + count)
                 //.setTicker(getString(R.string.notification_new_feeds))
                 ;

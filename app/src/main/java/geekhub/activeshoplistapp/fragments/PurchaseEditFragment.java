@@ -333,6 +333,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                     needUpdate = true;
                 }
                 if (needUpdate && purchaseList.getDbId() != 0) {
+                    purchaseList.setMaxDistance(0);
+                    purchaseList.setIsAlarm(false);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -404,6 +406,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                     needUpdate = true;
                 }
                 if (needUpdate && purchaseList.getDbId() != 0) {
+                    purchaseList.setMaxDistance(0);
+                    purchaseList.setIsAlarm(false);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
