@@ -31,6 +31,7 @@ public final class AppConstants {
     public static final int PLACES_USER = 2;
 
     public static final int NOTIFICATION_ID = 3001;
+    public static final String NOTIFICATION_LIST_ARGS = "ListDbId";
 
     public static final String LOCATION = "AsListLocation";
     public static final String EXTRA_GPS_APPOINTMENT = "ExtraGps";

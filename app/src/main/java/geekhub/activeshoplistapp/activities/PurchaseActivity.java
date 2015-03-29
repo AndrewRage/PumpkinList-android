@@ -31,7 +31,18 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
                     .commit();
         }
 
-        getDrawerToggle().syncState();
+        onNewIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent != null && intent.getExtras() != null) {
+            long listDbId = intent.getExtras().getLong(AppConstants.NOTIFICATION_LIST_ARGS, -1);
+            if (listDbId >= 0) {
+                showList(listDbId);
+            }
+        }
     }
 
     @Override
@@ -43,7 +54,7 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
-        
+        getDrawerToggle().syncState();
     }
 
     @Override
@@ -69,6 +80,10 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
 
     @Override
     public void onPurchaseListMainFragmentClickListener(long id) {
+        showList(id);
+    }
+
+    private void showList(long id) {
         purchaseListEditFragment = PurchaseEditFragment.newInstance(id);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, purchaseListEditFragment)

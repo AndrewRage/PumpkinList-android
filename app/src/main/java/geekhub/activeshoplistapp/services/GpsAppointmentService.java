@@ -20,6 +20,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.activities.PurchaseActivity;
@@ -514,11 +515,19 @@ public class GpsAppointmentService extends Service {
                 //.setTicker(getString(R.string.notification_new_feeds))
                 ;
         Intent startIntent = new Intent(getApplicationContext(), PurchaseActivity.class);
+        startIntent.putExtra(AppConstants.NOTIFICATION_LIST_ARGS, list.getDbId());
+        startIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent
-                .getActivity(GpsAppointmentService.this, 0, startIntent, 0);
+                .getActivity(
+                        GpsAppointmentService.this,
+                        new Random().nextInt(),
+                        startIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
         builder.setContentIntent(pendingIntent);
         Notification notification = builder.build();
         notification.defaults = Notification.DEFAULT_ALL;
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(AppConstants.NOTIFICATION_ID, notification);
