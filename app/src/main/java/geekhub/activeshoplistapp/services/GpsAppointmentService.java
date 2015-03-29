@@ -2,6 +2,7 @@ package geekhub.activeshoplistapp.services;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import geekhub.activeshoplistapp.R;
+import geekhub.activeshoplistapp.activities.PurchaseActivity;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
@@ -511,10 +513,10 @@ public class GpsAppointmentService extends Service {
                 //.setContentInfo("" + count)
                 //.setTicker(getString(R.string.notification_new_feeds))
                 ;
-        /*Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent startIntent = new Intent(getApplicationContext(), PurchaseActivity.class);
         PendingIntent pendingIntent = PendingIntent
-                .getActivity(ReaderService.this, 0, startIntent, 0);
-        builder.setContentIntent(pendingIntent);*/
+                .getActivity(GpsAppointmentService.this, 0, startIntent, 0);
+        builder.setContentIntent(pendingIntent);
         Notification notification = builder.build();
         notification.defaults = Notification.DEFAULT_ALL;
         NotificationManager notificationManager =
