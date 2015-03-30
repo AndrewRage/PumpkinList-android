@@ -42,7 +42,7 @@ public class GpsAppointmentService extends Service {
     private static final int GPS_PASSIVE_TIME = 1000 * 60;
     private static final int GPS_RADIUS = 1000;
     private static final int MIN_RADIUS = 150;
-    private static final int APPOINTMENT_RADIUS = 400;
+    private static final int APPOINTMENT_RADIUS = 500;
     private static final int LOCATION_CHECK_SIZE = 3;
     private static final int APPOINTMENT_TIME = 1000 * 60 * 60;
 
@@ -442,7 +442,9 @@ public class GpsAppointmentService extends Service {
                         if (list.getMaxDistance(place) < distance
                                 && distance > MIN_RADIUS + location.getAccuracy() + list.getRadius(place)) {
                             list.setMaxDistance(place, distance);
-                        } else if (list.getMaxDistance(place) * 0.5f > distance) {
+                        } else if (list.getMaxDistance(place) * 0.3f > distance
+                                | (distance > list.getRadius(place) + APPOINTMENT_RADIUS
+                                && list.getMaxDistance(place) * 0.5f > distance )) {
                             list.setMaxDistance(place, 0);
                             if (list.getAlarmTimeStamp() == 0
                                     | (list.getAlarmTimeStamp() > 0
