@@ -84,7 +84,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onResume();
 
         SharedPrefHelper sharedPrefHelper = SharedPrefHelper.getInstance();
-        if (TextUtils.isEmpty(sharedPrefHelper.getUserName())) {
+        if (!sharedPrefHelper.isLogin()) {
             finish();
         }
     }

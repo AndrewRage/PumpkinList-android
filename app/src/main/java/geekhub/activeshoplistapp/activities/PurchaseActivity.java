@@ -49,7 +49,7 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
     protected void onResume() {
         superOnResume();
         SharedPrefHelper sharedPrefHelper = SharedPrefHelper.getInstance();
-        if (TextUtils.isEmpty(sharedPrefHelper.getUserName())) {
+        if (!sharedPrefHelper.isLogin()) {
             finish();
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);

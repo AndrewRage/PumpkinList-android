@@ -26,6 +26,7 @@ public class LoginFragment extends BaseFragment{
     private View loginButton;
     private View continueButton;
     private OnLoginFragmentListener onLoginFragmentListener;
+    private SharedPrefHelper sharedPrefHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,18 +44,27 @@ public class LoginFragment extends BaseFragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        sharedPrefHelper = SharedPrefHelper.getInstance();
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(emailEditText.getText())) {
                     if (TextUtils.equals(passwordEditText.getText(), "123")) {
                         if (rememberCheckBox.isChecked()) {
-                            SharedPrefHelper sharedPrefHelper = SharedPrefHelper.getInstance();
                             sharedPrefHelper.setUserName(emailEditText.getText().toString());
                         }
                         onLoginFragmentListener.onLoginFragmentClickListener(AppConstants.LOGIN_BUTTON);
                     }
                 }
+            }
+        });
+
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedPrefHelper.setOffLine(true);
+                onLoginFragmentListener.onLoginFragmentClickListener(AppConstants.LOGIN_BUTTON_CONTINUE);
             }
         });
     }
@@ -72,6 +82,6 @@ public class LoginFragment extends BaseFragment{
     }
 
     public interface OnLoginFragmentListener {
-        public void onLoginFragmentClickListener(int button);
+        void onLoginFragmentClickListener(int button);
     }
 }

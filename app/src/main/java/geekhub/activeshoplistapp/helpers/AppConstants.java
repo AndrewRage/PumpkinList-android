@@ -18,6 +18,7 @@ public final class AppConstants {
 
     public static final String APP_PREFERENCES = "ASlistPreferences";
     public static final String APP_PREFERENCES_USERNAME = "UserName";
+    public static final String APP_PREFERENCES_OFFLINE = "OffLine";
 
     public static final String BACK_STACK_PURCHASE = "BackStackPurchase";
 

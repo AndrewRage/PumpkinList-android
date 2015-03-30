@@ -2,6 +2,7 @@ package geekhub.activeshoplistapp.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import android.util.Log;
 
 /**
@@ -42,6 +43,28 @@ public class SharedPrefHelper {
             userName = preferences.getString(AppConstants.APP_PREFERENCES_USERNAME, null);
         }
         return userName;
+    }
+
+    public void setOffLine(boolean offLine){
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(AppConstants.APP_PREFERENCES_OFFLINE, offLine);
+        editor.apply();
+    }
+
+    public boolean getOffLine(){
+        if (preferences.contains(AppConstants.APP_PREFERENCES_OFFLINE)) {
+            return preferences.getBoolean(AppConstants.APP_PREFERENCES_OFFLINE, false);
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isLogin(){
+        if (!TextUtils.isEmpty(getUserName()) | getOffLine()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

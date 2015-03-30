@@ -20,8 +20,11 @@ public class LoginActivity extends BaseActivity implements LoginFragment.OnLogin
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPrefHelper sharedPrefHelper = SharedPrefHelper.getInstance();
-        if (TextUtils.isEmpty(sharedPrefHelper.getUserName())) {
-            //setContentView(R.layout.activity_with_fragment);
+
+        //This only for offline demo app
+        sharedPrefHelper.setOffLine(true);
+
+        if (!sharedPrefHelper.isLogin()) {
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
                         .add(android.R.id.content, new LoginFragment())
