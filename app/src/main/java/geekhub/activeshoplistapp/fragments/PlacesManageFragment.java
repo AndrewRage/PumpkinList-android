@@ -1,10 +1,9 @@
 package geekhub.activeshoplistapp.fragments;
 
 import android.content.Intent;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -33,11 +32,13 @@ import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
 public class PlacesManageFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = PlacesManageFragment.class.getSimpleName();
     private static final String ARG_MENU_ID = "argMenuId";
-    private ListView shopListView;
+    private static final String STATE_LIST = "PlaceListState";
+    private ListView placeListView;
     private View plusButton;
     private List<PlacesModel> placesList;
     private PlaceAdapter adapter;
     private int menuItemId = -1;
+    private Parcelable placeListViewState;
 
     public PlacesManageFragment() {
     }
@@ -51,10 +52,18 @@ public class PlacesManageFragment extends BaseFragment implements LoaderManager.
     }
 
     @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            placeListViewState = savedInstanceState.getParcelable(STATE_LIST);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_places_manage, container, false);
         addToolbar(view);
-        shopListView = (ListView) view.findViewById(R.id.shop_list);
+        placeListView = (ListView) view.findViewById(R.id.shop_list);
         plusButton = view.findViewById(R.id.plus_button);
         return view;
     }
@@ -73,8 +82,8 @@ public class PlacesManageFragment extends BaseFragment implements LoaderManager.
         getLoaderManager().initLoader(menuItemId, null, this);
 
         adapter = new PlaceAdapter(getActivity(), R.layout.item_shop, placesList);
-        shopListView.setAdapter(adapter);
-        shopListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        placeListView.setAdapter(adapter);
+        placeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), MapActivity.class)
@@ -114,6 +123,17 @@ public class PlacesManageFragment extends BaseFragment implements LoaderManager.
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
+        if (placeListViewState != null) {
+            placeListView.onRestoreInstanceState(placeListViewState);
+        }
+        placeListViewState = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        placeListViewState = placeListView.onSaveInstanceState();
+        outState.putParcelable(STATE_LIST, placeListViewState);
     }
 
     @Override
