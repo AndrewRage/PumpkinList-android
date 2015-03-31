@@ -35,7 +35,12 @@ public abstract class BaseActivity extends ActionBarActivity {
         menus.add(AppConstants.MENU_SHOW_PURCHASE_LIST);
         menus.add(AppConstants.MENU_SHOW_SHOPS);
         menus.add(AppConstants.MENU_SHOW_PLACES);
-        menus.add(AppConstants.MENU_LOGOUT);
+
+        SharedPrefHelper sharedPrefHelper = SharedPrefHelper.getInstance();
+        if (!sharedPrefHelper.getOffLine()) {
+            menus.add(AppConstants.MENU_LOGOUT);
+        }
+
         final DrawerMenuAdapter drawerMenuAdapter = new DrawerMenuAdapter(this, R.layout.item_drawer_menu, menus);
         setContentView(R.layout.activity_with_fragment);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
