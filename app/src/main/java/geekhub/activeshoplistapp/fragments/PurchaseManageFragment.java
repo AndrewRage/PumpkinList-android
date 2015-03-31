@@ -95,8 +95,10 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        purchaseViewState = purchaseView.onSaveInstanceState();
-        outState.putParcelable(STATE_LIST, purchaseViewState);
+        if (purchaseView != null) {
+            purchaseViewState = purchaseView.onSaveInstanceState();
+            outState.putParcelable(STATE_LIST, purchaseViewState);
+        }
     }
 
     @Override
