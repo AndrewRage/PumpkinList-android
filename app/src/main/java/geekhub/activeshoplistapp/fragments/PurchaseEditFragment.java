@@ -54,6 +54,7 @@ import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
 public class PurchaseEditFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = PurchaseEditFragment.class.getSimpleName();
     private static final String ARG_LIST_ID = "PurchaseList_param";
+    private static final String STATE_LIST = "PurchaseListState";
     private static final int REQUEST_SHOP = 10101;
     private static final int REQUEST_PLACES = 10102;
     private static final int LOADER_ITEM_ID = 0;
@@ -98,7 +99,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
-            purchaseListViewState = savedInstanceState.getParcelable("Save");
+            purchaseListViewState = savedInstanceState.getParcelable(STATE_LIST);
         }
     }
 
@@ -446,7 +447,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         purchaseListViewState = purchaseListView.onSaveInstanceState();
-        outState.putParcelable("Save", purchaseListViewState);
+        outState.putParcelable(STATE_LIST, purchaseListViewState);
     }
 
     @Override

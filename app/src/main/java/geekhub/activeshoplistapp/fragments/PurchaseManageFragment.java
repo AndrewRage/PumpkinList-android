@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -27,10 +28,20 @@ import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
  */
 public class PurchaseManageFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = PurchaseManageFragment.class.getSimpleName();
+    private static final String STATE_LIST = "PurchaseListState";
 
     private GridView purchaseView;
     private OnPurchaseListMainFragmentListener purchaseListMainFragmentListener;
     private PurchaseListAdapter adapter;
+    private Parcelable purchaseViewState;
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            purchaseViewState = savedInstanceState.getParcelable(STATE_LIST);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -82,6 +93,13 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        purchaseViewState = purchaseView.onSaveInstanceState();
+        outState.putParcelable(STATE_LIST, purchaseViewState);
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] projection = {
                 SqlDbHelper.COLUMN_ID,
@@ -110,6 +128,10 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         adapter.changeCursor(data);
+        if (purchaseViewState != null) {
+            purchaseView.onRestoreInstanceState(purchaseViewState);
+        }
+        purchaseViewState = null;
     }
 
     @Override
