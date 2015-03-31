@@ -25,11 +25,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -47,6 +49,7 @@ import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
 import geekhub.activeshoplistapp.model.PlacesModel;
 import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
+import geekhub.activeshoplistapp.utils.ViewUtils;
 
 /**
  * Created by rage on 08.02.15. Create by task: 004
@@ -75,6 +78,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private List<PlacesModel> shopsList;
     private List<PlacesModel> placesList;
     private View progressBar;
+    private View toolbarBottom;
     private Parcelable purchaseListViewState;
 
     public static PurchaseEditFragment newInstance(long purchaseListId) {
@@ -123,6 +127,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
         progressBar = view.findViewById(R.id.progress_bar);
 
+        toolbarBottom = view.findViewById(R.id.toolbar_bottom);
+
         return view;
     }
 
@@ -143,6 +149,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
             initScreen();
         }
+
+        ViewUtils.setY(toolbarBottom, 20);
     }
 
     private void initScreen() {

@@ -1,4 +1,5 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -28,14 +29,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar" >
 
         <ListView
             android:id="@+id/purchase_item_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:footerDividersEnabled="false"
-            android:layout_above="@+id/toolbar_bottom"  />
+            android:footerDividersEnabled="false" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -45,31 +46,31 @@
             android:layout_centerHorizontal="true"
             android:visibility="gone" />
 
-        <RelativeLayout
-            android:id="@+id/toolbar_bottom"
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/toolbar_bottom"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="@dimen/bottom_toolbar_height"
+        android:background="?attr/colorPrimary"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <Spinner
+            android:id="@+id/shops_spinner"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/place_spinner"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:minHeight="@dimen/bottom_toolbar_height"
-            android:background="?attr/colorPrimary"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
-
-            <Spinner
-                android:id="@+id/shops_spinner"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content" />
-
-            <Spinner
-                android:id="@+id/place_spinner"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/shops_spinner"
-                android:layout_toEndOf="@+id/shops_spinner" />
-
-        </RelativeLayout>
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/shops_spinner"
+            android:layout_toEndOf="@+id/shops_spinner" />
 
     </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>
