@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -73,6 +74,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private List<PlacesModel> shopsList;
     private List<PlacesModel> placesList;
     private View progressBar;
+    private Parcelable purchaseListViewState;
 
     public static PurchaseEditFragment newInstance(long purchaseListId) {
         PurchaseEditFragment fragment = new PurchaseEditFragment();
@@ -90,6 +92,14 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            purchaseListViewState = savedInstanceState.getParcelable("Save");
+        }
     }
 
     @Override
@@ -433,6 +443,13 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        purchaseListViewState = purchaseListView.onSaveInstanceState();
+        outState.putParcelable("Save", purchaseListViewState);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         getLoaderManager().destroyLoader(LOADER_LIST);
@@ -770,6 +787,10 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         switch (loader.getId()) {
             case LOADER_ITEM_ID:
                 adapter.changeCursor(data);
+                if (purchaseListViewState != null) {
+                    purchaseListView.onRestoreInstanceState(purchaseListViewState);
+                }
+                purchaseListViewState = null;
                 progressBar.setVisibility(View.GONE);
                 break;
             case LOADER_SHOP_ID:
