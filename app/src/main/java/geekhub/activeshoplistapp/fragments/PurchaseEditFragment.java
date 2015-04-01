@@ -3,6 +3,7 @@ package geekhub.activeshoplistapp.fragments;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -595,11 +596,12 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                     .setMessage(message)
                     .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
+                            final Context context = getActivity().getApplicationContext();
                             if (purchaseList.getDbId() != 0) {
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        ContentHelper.deletePurchaseList(getActivity(), purchaseList);
+                                        ContentHelper.deletePurchaseList(context, purchaseList);
                                     }
                                 }).start();
                             }
