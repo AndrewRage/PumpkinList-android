@@ -114,10 +114,10 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        map = mapFragment.getMap();
+        /*map = mapFragment.getMap();
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
-        map.setOnMarkerDragListener(markerDragListener);
+        map.setOnMarkerDragListener(markerDragListener);*/
     }
 
     private void readPlaceModel(Cursor cursor) {
@@ -167,6 +167,13 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
+
+        //fix map crash - need test!
+        map = googleMap;
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        map.setMyLocationEnabled(true);
+        map.setOnMarkerDragListener(markerDragListener);
+
         googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
