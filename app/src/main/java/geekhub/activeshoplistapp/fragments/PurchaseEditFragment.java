@@ -1,5 +1,6 @@
 package geekhub.activeshoplistapp.fragments;
 
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -26,11 +27,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -67,20 +70,15 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private static final int LOADER_LIST = 3;
     private PurchaseItemAdapter adapter;
     private ListView purchaseListView;
-    private View header;
-    private PurchaseListModel purchaseList;
+    private View header, progressBar, addItemButton, toolbarBottom, hidePanel, moreButton;
     private EditText listNameEdit;
     private EditText goodsLabelEdit;
-    private View addItemButton;
-    private Spinner shopsSpinner;
-    private Spinner placeSpinner;
-    private SettingsSpinnerAdapter shopSpinnerAdapter;
-    private SettingsSpinnerAdapter placeSpinnerAdapter;
-    private List<PlacesModel> shopsList;
-    private List<PlacesModel> placesList;
-    private View progressBar;
-    private View toolbarBottom;
+    private Spinner shopsSpinner, placeSpinner;
+    private SettingsSpinnerAdapter shopSpinnerAdapter, placeSpinnerAdapter;
+    private List<PlacesModel> shopsList, placesList;
+    private PurchaseListModel purchaseList;
     private Parcelable purchaseListViewState;
+    private boolean isShowMore = false;
 
     public static PurchaseEditFragment newInstance(long purchaseListId) {
         PurchaseEditFragment fragment = new PurchaseEditFragment();
@@ -123,12 +121,14 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         addItemButton = header.findViewById(R.id.button_goods_add);
 
         listNameEdit = (EditText) view.findViewById(R.id.edit_list_name);
-        shopsSpinner = (Spinner) view.findViewById(R.id.shops_spinner);
-        placeSpinner = (Spinner) view.findViewById(R.id.place_spinner);
 
         progressBar = view.findViewById(R.id.progress_bar);
 
         toolbarBottom = view.findViewById(R.id.toolbar_bottom);
+        moreButton = view.findViewById(R.id.more_button);
+        hidePanel = view.findViewById(R.id.hide_panel);
+        shopsSpinner = (Spinner) view.findViewById(R.id.shops_spinner);
+        placeSpinner = (Spinner) view.findViewById(R.id.place_spinner);
 
         return view;
     }
@@ -151,7 +151,32 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             initScreen();
         }
 
-        ViewUtils.setY(toolbarBottom, 20);
+        final int heightHidePanel = getActivity().getResources().getDimensionPixelSize(R.dimen.purchase_item_hide_panel_height);
+        //ViewUtils.setY(toolbarBottom, heightHidePanel);
+
+        moreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isShowMore = !isShowMore;
+                if (isShowMore) {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) toolbarBottom.getLayoutParams();
+                        params.bottomMargin = 0;
+                        toolbarBottom.setLayoutParams(params);
+                    } else {
+                        ObjectAnimator.ofFloat(toolbarBottom, "translationY", 0, -heightHidePanel).setDuration(1000).start();
+                    }
+                } else {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) toolbarBottom.getLayoutParams();
+                        params.bottomMargin = (-heightHidePanel);
+                        toolbarBottom.setLayoutParams(params);
+                    } else {
+                        ObjectAnimator.ofFloat(toolbarBottom, "translationY", -heightHidePanel, 0).setDuration(1000).start();
+                    }
+                }
+            }
+        });
     }
 
     private void initScreen() {

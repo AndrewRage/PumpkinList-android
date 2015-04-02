@@ -31,4 +31,11 @@ public class ViewUtils {
         }
     }
 
+    private static int getRelativeTop(View myView) {
+        if (myView.getParent() == myView.getRootView())
+            return myView.getTop();
+        else
+            return myView.getTop() + getRelativeTop((View) myView.getParent());
+    }
+
 }
