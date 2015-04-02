@@ -21,6 +21,7 @@
     <dimen name="purchase_item_margin">6dp</dimen>
     <dimen name="purchase_item_checkbox_size">50dp</dimen>
     <dimen name="purchase_item_count_horizontal_margin">16dp</dimen>
+    <dimen name="purchase_item_hide_panel_height">150dp</dimen>
 
     <dimen name="bottom_toolbar_height">48dp</dimen>
     <dimen name="toolbar_padding_vertical">4dp</dimen>
