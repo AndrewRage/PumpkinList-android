@@ -151,7 +151,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         }
 
         final int heightHidePanel = getActivity().getResources().getDimensionPixelSize(R.dimen.purchase_item_hide_panel_height);
-        //ViewUtils.setY(toolbarBottom, heightHidePanel);
+        final int panelTime = getResources().getInteger(R.integer.purchase_item_panel_time);
 
         moreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,19 +159,25 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 isShowMore = !isShowMore;
                 if (isShowMore) {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) toolbarBottom.getLayoutParams();
+                        RelativeLayout.LayoutParams params =
+                                (RelativeLayout.LayoutParams) toolbarBottom.getLayoutParams();
                         params.bottomMargin = 0;
                         toolbarBottom.setLayoutParams(params);
                     } else {
-                        ObjectAnimator.ofFloat(toolbarBottom, "translationY", 0, -heightHidePanel).setDuration(1000).start();
+                        ObjectAnimator
+                                .ofFloat(toolbarBottom, "translationY", 0, -heightHidePanel)
+                                .setDuration(panelTime).start();
                     }
                 } else {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) toolbarBottom.getLayoutParams();
+                        RelativeLayout.LayoutParams params =
+                                (RelativeLayout.LayoutParams) toolbarBottom.getLayoutParams();
                         params.bottomMargin = (-heightHidePanel);
                         toolbarBottom.setLayoutParams(params);
                     } else {
-                        ObjectAnimator.ofFloat(toolbarBottom, "translationY", -heightHidePanel, 0).setDuration(1000).start();
+                        ObjectAnimator
+                                .ofFloat(toolbarBottom, "translationY", -heightHidePanel, 0)
+                                .setDuration(panelTime).start();
                     }
                 }
             }
