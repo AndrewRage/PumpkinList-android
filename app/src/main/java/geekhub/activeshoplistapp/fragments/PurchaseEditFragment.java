@@ -2,7 +2,9 @@ package geekhub.activeshoplistapp.fragments;
 
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -32,14 +34,17 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import geekhub.activeshoplistapp.R;
@@ -74,11 +79,13 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private EditText listNameEdit;
     private EditText goodsLabelEdit;
     private Spinner shopsSpinner, placeSpinner;
+    private TextView timeText, dateText;
     private SettingsSpinnerAdapter shopSpinnerAdapter, placeSpinnerAdapter;
     private List<PlacesModel> shopsList, placesList;
     private PurchaseListModel purchaseList;
     private Parcelable purchaseListViewState;
-    private boolean isShowMore = false;
+    private boolean isShowMore = false, isDateSelect = false, isTimeSelect = false;
+    private int mYear = 0, mMonth = 0, mDay = 0, mHour = 0, mMinute = 0;
 
     public static PurchaseEditFragment newInstance(long purchaseListId) {
         PurchaseEditFragment fragment = new PurchaseEditFragment();
@@ -129,6 +136,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         hidePanel = view.findViewById(R.id.hide_panel);
         shopsSpinner = (Spinner) view.findViewById(R.id.shops_spinner);
         placeSpinner = (Spinner) view.findViewById(R.id.place_spinner);
+        timeText = (TextView) view.findViewById(R.id.time_time);
+        dateText = (TextView) view.findViewById(R.id.time_date);
 
         return view;
     }
@@ -181,6 +190,20 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                                 .setDuration(panelTime).start();
                     }
                 }
+            }
+        });
+
+        timeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimeSpinner();
+            }
+        });
+
+        dateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDateSpinner();
             }
         });
     }
@@ -473,6 +496,56 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 //
             }
         });
+    }
+
+    private void showTimeSpinner(){
+        final Calendar c = Calendar.getInstance();
+        int hourOfDay = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+
+        new TimePickerDialog(
+                getActivity(),
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        mHour = hourOfDay;
+                        mMinute = minute;
+                        isTimeSelect = true;
+                        saveTime();
+                    }
+                },
+                hourOfDay,
+                minute,
+                true
+        ).show();
+    }
+
+    private void showDateSpinner(){
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        new DatePickerDialog(
+                getActivity(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        mYear = year;
+                        mMonth = monthOfYear;
+                        mDay = dayOfMonth;
+                        isDateSelect = true;
+                        saveTime();
+                    }
+                },
+                year,
+                month,
+                day
+        ).show();
+    }
+
+    private void saveTime(){
+
     }
 
     @Override
