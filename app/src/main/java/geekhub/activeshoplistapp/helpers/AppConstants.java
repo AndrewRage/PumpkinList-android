@@ -36,4 +36,6 @@ public final class AppConstants {
 
     public static final String LOCATION = "AsListLocation";
     public static final String EXTRA_GPS_APPOINTMENT = "ExtraGps";
+
+    public static final String EXTRA_LIST_ID = "ExtraListId";
 }

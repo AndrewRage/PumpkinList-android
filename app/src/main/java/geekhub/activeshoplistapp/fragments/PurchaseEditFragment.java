@@ -1,9 +1,11 @@
 package geekhub.activeshoplistapp.fragments;
 
 import android.animation.ObjectAnimator;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -51,6 +53,7 @@ import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.activities.PlacesActivity;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
 import geekhub.activeshoplistapp.adapters.SettingsSpinnerAdapter;
+import geekhub.activeshoplistapp.broadcasts.AlarmBroadcastReceiver;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ContentHelper;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
@@ -566,6 +569,23 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             c.set(mYear, mMonth, mDay, mHour, mMinute);
             purchaseList.setTimeAlarm(c.getTimeInMillis());
             updateList();
+
+            AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(getActivity(), AlarmBroadcastReceiver.class);
+            Uri data = Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME));
+            intent.setData(data);
+            intent.putExtra(AppConstants.EXTRA_LIST_ID, purchaseList.getDbId());
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                    getActivity(),
+                    0,
+                    intent,
+                    PendingIntent.FLAG_CANCEL_CURRENT
+            );
+            alarmManager.set(
+                    AlarmManager.RTC_WAKEUP,
+                    purchaseList.getAlarmTimeStamp(),
+                    pendingIntent
+            );
         }
     }
 
