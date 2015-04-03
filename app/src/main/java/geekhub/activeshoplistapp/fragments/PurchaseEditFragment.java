@@ -85,7 +85,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private PurchaseListModel purchaseList;
     private Parcelable purchaseListViewState;
     private boolean isShowMore = false, isDateSelect = false, isTimeSelect = false;
-    private int mYear = 0, mMonth = 0, mDay = 0, mHour = 0, mMinute = 0;
+    private int mYear, mMonth, mDay, mHour, mMinute;
 
     public static PurchaseEditFragment newInstance(long purchaseListId) {
         PurchaseEditFragment fragment = new PurchaseEditFragment();
@@ -192,20 +192,6 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 }
             }
         });
-
-        timeText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTimeSpinner();
-            }
-        });
-
-        dateText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDateSpinner();
-            }
-        });
     }
 
     private void initScreen() {
@@ -260,6 +246,34 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         //placesList = new ArrayList<>();
         //initPlaceSpinner();
         getLoaderManager().initLoader(LOADER_PLACE_ID, null, this);
+
+        if (purchaseList.getTimeAlarm() > 0) {
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(purchaseList.getTimeAlarm());
+            mYear = c.get(Calendar.YEAR);
+            mMonth = c.get(Calendar.MONTH);
+            mDay = c.get(Calendar.DAY_OF_MONTH);
+            mHour = c.get(Calendar.HOUR_OF_DAY);
+            mMinute = c.get(Calendar.MINUTE);
+            isDateSelect = true;
+            isTimeSelect = true;
+
+            showTime();
+        }
+
+        timeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimeSpinner();
+            }
+        });
+
+        dateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDateSpinner();
+            }
+        });
     }
 
     private void showDialog(Cursor cursor) {
@@ -512,6 +526,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                         mMinute = minute;
                         isTimeSelect = true;
                         saveTime();
+                        showTime();
                     }
                 },
                 hourOfDay,
@@ -536,6 +551,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                         mDay = dayOfMonth;
                         isDateSelect = true;
                         saveTime();
+                        showTime();
                     }
                 },
                 year,
@@ -545,7 +561,21 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     }
 
     private void saveTime(){
+        if (isDateSelect && isTimeSelect) {
+            Calendar c = Calendar.getInstance();
+            c.set(mYear, mMonth, mDay, mHour, mMinute);
+            purchaseList.setTimeAlarm(c.getTimeInMillis());
+            updateList();
+        }
+    }
 
+    private void showTime(){
+        if (isDateSelect) {
+            dateText.setText(mYear + "." + (mMonth + 1) + "." + mDay);
+        }
+        if (isTimeSelect) {
+            timeText.setText(mHour + ":" + mMinute);
+        }
     }
 
     @Override

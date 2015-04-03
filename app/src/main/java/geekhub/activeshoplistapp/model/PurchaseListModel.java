@@ -2,6 +2,7 @@ package geekhub.activeshoplistapp.model;
 
 import android.location.Location;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
