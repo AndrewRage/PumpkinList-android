@@ -100,15 +100,15 @@ public class DrawerMenuAdapter extends BaseAdapter {
             case AppConstants.MENU_SHOW_PURCHASE_LIST:
                 return R.drawable.ic_menu_active_lists;
             case AppConstants.MENU_SHOW_PURCHASE_ARCHIVE:
-                return -1;
+                return R.drawable.ic_menu_archive_lists;
             case AppConstants.MENU_SHOW_PURCHASE_INBOX:
                 return -1;
             case AppConstants.MENU_SHOW_PURCHASE_OUTBOX:
                 return -1;
             case AppConstants.MENU_SHOW_SHOPS:
-                return -1;
+                return R.drawable.ic_menu_shops;
             case AppConstants.MENU_SHOW_PLACES:
-                return -1;
+                return R.drawable.ic_menu_map;
             case AppConstants.MENU_SHOW_SETTINGS:
                 return -1;
             default:

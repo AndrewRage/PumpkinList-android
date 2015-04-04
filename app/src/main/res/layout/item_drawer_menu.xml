@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/drawer_item_height"
     android:paddingLeft="@dimen/drawer_item_horizontal_padding"
-    android:paddingRight="@dimen/drawer_item_horizontal_padding" >
+    android:paddingRight="@dimen/drawer_item_horizontal_padding"
+    android:background="@drawable/menu_item_background">
 
     <ImageView
         android:id="@+id/icon"

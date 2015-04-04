@@ -19,6 +19,7 @@
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
+        android:listSelector="@drawable/menu_item_background"
         android:background="@color/background_material_light" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -12,4 +12,6 @@
     <color name="theme_divider">#B6B6B6</color>
 
     <color name="theme_background">#fff1eee8</color>
+
+    <color name="gray_overlay">#09000000</color>
 </resources>
