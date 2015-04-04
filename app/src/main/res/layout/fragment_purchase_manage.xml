@@ -25,7 +25,7 @@
             android:id="@+id/plus_button"
             android:layout_width="@dimen/fab_button_size_big"
             android:layout_height="@dimen/fab_button_size_big"
-            android:background="@drawable/fab_normal"
+            android:background="@drawable/fab_background"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
