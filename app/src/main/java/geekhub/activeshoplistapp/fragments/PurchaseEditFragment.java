@@ -1,11 +1,9 @@
 package geekhub.activeshoplistapp.fragments;
 
 import android.animation.ObjectAnimator;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -29,16 +27,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -54,7 +50,6 @@ import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.activities.PlacesActivity;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
 import geekhub.activeshoplistapp.adapters.SettingsSpinnerAdapter;
-import geekhub.activeshoplistapp.broadcasts.AlarmBroadcastReceiver;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ContentHelper;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
@@ -63,7 +58,6 @@ import geekhub.activeshoplistapp.model.PurchaseListModel;
 import geekhub.activeshoplistapp.model.PlacesModel;
 import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
 import geekhub.activeshoplistapp.utils.AlarmUtils;
-import geekhub.activeshoplistapp.utils.ViewUtils;
 
 /**
  * Created by rage on 08.02.15. Create by task: 004
@@ -80,7 +74,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private static final int LOADER_LIST = 3;
     private PurchaseItemAdapter adapter;
     private ListView purchaseListView;
-    private View header, progressBar, addItemButton, toolbarBottom, hidePanel, moreButton;
+    private View header, progressBar, addItemButton, toolbarBottom, clearTimeButton, moreButton;
     private EditText listNameEdit;
     private EditText goodsLabelEdit;
     private Spinner shopsSpinner, placeSpinner;
@@ -138,11 +132,18 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
         toolbarBottom = view.findViewById(R.id.toolbar_bottom);
         moreButton = view.findViewById(R.id.more_button);
-        hidePanel = view.findViewById(R.id.hide_panel);
+        clearTimeButton = view.findViewById(R.id.clear_time_button);
         shopsSpinner = (Spinner) view.findViewById(R.id.shops_spinner);
         placeSpinner = (Spinner) view.findViewById(R.id.place_spinner);
         timeText = (TextView) view.findViewById(R.id.time_time);
         dateText = (TextView) view.findViewById(R.id.time_date);
+
+        toolbarBottom.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
 
         return view;
     }
@@ -277,6 +278,30 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             @Override
             public void onClick(View v) {
                 showDateSpinner();
+            }
+        });
+
+        clearTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (purchaseList.getTimeAlarm() > 0) {
+                    mYear = 0;
+                    mMonth = 0;
+                    mDay = 0;
+                    mHour = 0;
+                    mMinute = 0;
+                    isDateSelect = false;
+                    isTimeSelect = false;
+
+                    purchaseList.setTimeAlarm(0);
+                    AlarmUtils alarmUtils = new AlarmUtils(getActivity());
+                    alarmUtils.cancelListAlarm(purchaseList);
+
+                    dateText.setText(R.string.purchase_edit_bottom_set_date);
+                    timeText.setText(R.string.purchase_edit_bottom_set_time);
+
+                    updateList();
+                }
             }
         });
     }
@@ -428,12 +453,13 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 if (needUpdate && purchaseList.getDbId() != 0) {
                     purchaseList.setMaxDistance(0);
                     purchaseList.setIsAlarm(false);
-                    new Thread(new Runnable() {
+                    /*new Thread(new Runnable() {
                         @Override
                         public void run() {
                             ContentHelper.updatePurchaseList(getActivity(), purchaseList);
                         }
-                    }).start();
+                    }).start();*/
+                    updateList();
                 }
             }
 
@@ -501,12 +527,13 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 if (needUpdate && purchaseList.getDbId() != 0) {
                     purchaseList.setMaxDistance(0);
                     purchaseList.setIsAlarm(false);
-                    new Thread(new Runnable() {
+                    /*new Thread(new Runnable() {
                         @Override
                         public void run() {
                             ContentHelper.updatePurchaseList(getActivity(), purchaseList);
                         }
-                    }).start();
+                    }).start();*/
+                    updateList();
                 }
             }
 
@@ -595,7 +622,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 alarmUtils.cancelListAlarm(purchaseList);
                 Toast.makeText(
                         getActivity(),
-                        R.string.purchase_edit_fail_time_toast,
+                        R.string.purchase_edit_bottom_fail_time_toast,
                         Toast.LENGTH_SHORT
                 ).show();
             }

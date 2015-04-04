@@ -34,6 +34,7 @@
         android:layout_below="@+id/visible_panel" >
 
         <LinearLayout
+            android:id="@+id/time_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -51,66 +52,95 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Set date"
+                android:text="@string/purchase_edit_bottom_set_date"
                 android:background="@drawable/background_normal"
                 android:padding="10dp"
                 android:id="@+id/time_date"
                 android:gravity="center" />
 
-            <TextView
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Set time"
-                android:background="@drawable/background_normal"
-                android:padding="10dp"
-                android:id="@+id/time_time"
-                android:gravity="center" />
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/purchase_edit_bottom_set_time"
+                    android:background="@drawable/background_normal"
+                    android:padding="10dp"
+                    android:id="@+id/time_time"
+                    android:gravity="center"
+                    android:layout_toLeftOf="@+id/clear_time_button"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="C"
+                    android:background="@drawable/background_normal"
+                    android:padding="10dp"
+                    android:id="@+id/clear_time_button"
+                    android:gravity="center"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+
+            </RelativeLayout>
+
 
         </LinearLayout>
 
-        <Spinner
-            android:id="@+id/shops_spinner"
-            android:layout_width="140dp"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/place_spinner"
-            android:background="@drawable/background_normal"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_below="@+id/time_layout">
 
-        <Spinner
-            android:id="@+id/place_spinner"
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_normal"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            <Spinner
+                android:id="@+id/shops_spinner"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/place_spinner"
+                android:background="@drawable/background_normal"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Remind on the way to:"
-            android:id="@+id/place_text"
-            android:layout_below="@+id/shops_spinner"
-            android:layout_toLeftOf="@+id/place_spinner"
-            android:layout_alignBottom="@+id/place_spinner"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:gravity="center_vertical" />
+            <Spinner
+                android:id="@+id/place_spinner"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_normal"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Remind near the:"
-            android:id="@+id/shop_text"
-            android:layout_alignTop="@+id/shops_spinner"
-            android:layout_alignRight="@+id/place_text"
-            android:layout_alignEnd="@+id/place_text"
-            android:layout_above="@+id/place_text"
-            android:gravity="center_vertical"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remind on the way to:"
+                android:id="@+id/place_text"
+                android:layout_below="@+id/shops_spinner"
+                android:layout_toLeftOf="@+id/place_spinner"
+                android:layout_alignBottom="@+id/place_spinner"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:gravity="center_vertical" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remind near the:"
+                android:id="@+id/shop_text"
+                android:layout_alignTop="@+id/shops_spinner"
+                android:layout_alignRight="@+id/place_text"
+                android:layout_alignEnd="@+id/place_text"
+                android:layout_above="@+id/place_text"
+                android:gravity="center_vertical"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
