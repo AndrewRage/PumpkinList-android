@@ -31,4 +31,6 @@
 
     <dimen name="shops_spinner_vertical_padding">15dp</dimen>
     <dimen name="shops_spinner_horizontal_padding">10dp</dimen>
+
+    <dimen name="drawer_header_height">180dp</dimen>
 </resources>

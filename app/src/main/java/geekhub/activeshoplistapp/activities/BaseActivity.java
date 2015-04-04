@@ -7,6 +7,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,6 +32,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     private ListView drawerListView;
+    private View drawerHeader;
     private boolean drawerHamburgerScreen = false;
     public PurchaseActivityHelper purchaseActivityHelper;
 
@@ -64,6 +66,9 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         };
         drawerListView = (ListView) findViewById(R.id.left_drawer);
+        LayoutInflater inflater = getLayoutInflater();
+        drawerHeader = inflater.inflate(R.layout.item_drawer_header, drawerListView, false);
+        drawerListView.addHeaderView(drawerHeader);
         drawerListView.setAdapter(drawerMenuAdapter);
         drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
