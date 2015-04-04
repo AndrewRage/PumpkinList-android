@@ -148,17 +148,6 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
             initScreen();
 
-            marker = map.addMarker(new MarkerOptions()
-                    .position(new LatLng(
-                            placesModel.getGpsLatitude(),
-                            placesModel.getGpsLongitude()
-                    ))
-                    .draggable(false)); //TODO draggable
-
-            LatLng latLng = new LatLng(placesModel.getGpsLatitude(), placesModel.getGpsLongitude());
-            showMyLocation(latLng);
-            isOnceShowMyLocation = true;
-
             placeNameEdit.setText(placesModel.getShopName());
         } else {
             finish();
@@ -173,6 +162,19 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
         map.setOnMarkerDragListener(markerDragListener);
+
+        if (placesModel.getDbId() > 0) {
+            marker = map.addMarker(new MarkerOptions()
+                    .position(new LatLng(
+                            placesModel.getGpsLatitude(),
+                            placesModel.getGpsLongitude()
+                    ))
+                    .draggable(false)); //TODO draggable
+
+            LatLng latLng = new LatLng(placesModel.getGpsLatitude(), placesModel.getGpsLongitude());
+            showMyLocation(latLng);
+            isOnceShowMyLocation = true;
+        }
 
         googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             @Override
