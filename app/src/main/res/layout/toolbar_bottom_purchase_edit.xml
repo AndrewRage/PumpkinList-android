@@ -11,20 +11,38 @@
     android:layout_alignParentEnd="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/visible_panel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/more_button"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="more"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_weight="1"
+            android:text="Appointment"
+            android:background="@drawable/background_normal" />
 
-    </RelativeLayout>
+        <Button
+            android:id="@+id/done_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Done shopping"
+            android:background="@drawable/background_normal"/>
+
+        <Button
+            android:id="@+id/create_list_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Create list"
+            android:background="@drawable/background_normal"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/hide_panel"

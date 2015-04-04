@@ -52,6 +52,7 @@
     <string name="purchase_edit_item_check_bought">bought</string>
     <string name="purchase_edit_item_button_delete">Delete</string>
     <string name="purchase_edit_item_button_restore">Restore</string>
+    <string name="purchase_edit_create_empty_toast">Can\'t create empty shopping list!</string>
     <string name="purchase_edit_bottom_set_date">Set date</string>
     <string name="purchase_edit_bottom_set_time">Set time</string>
     <string name="purchase_edit_bottom_fail_time_toast">Please, select a future time for notification</string>

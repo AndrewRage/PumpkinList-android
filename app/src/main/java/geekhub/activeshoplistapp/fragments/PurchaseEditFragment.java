@@ -74,7 +74,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private static final int LOADER_LIST = 3;
     private PurchaseItemAdapter adapter;
     private ListView purchaseListView;
-    private View header, progressBar, addItemButton, toolbarBottom, clearTimeButton, moreButton;
+    private View header, progressBar, addItemButton, toolbarBottom, doneButton, createButton, clearTimeButton, moreButton;
     private EditText listNameEdit;
     private EditText goodsLabelEdit;
     private Spinner shopsSpinner, placeSpinner;
@@ -132,16 +132,18 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
         toolbarBottom = view.findViewById(R.id.toolbar_bottom);
         moreButton = view.findViewById(R.id.more_button);
+        doneButton = view.findViewById(R.id.done_button);
+        createButton = view.findViewById(R.id.create_list_button);
         clearTimeButton = view.findViewById(R.id.clear_time_button);
         shopsSpinner = (Spinner) view.findViewById(R.id.shops_spinner);
         placeSpinner = (Spinner) view.findViewById(R.id.place_spinner);
         timeText = (TextView) view.findViewById(R.id.time_time);
         dateText = (TextView) view.findViewById(R.id.time_date);
 
-        toolbarBottom.setOnTouchListener(new View.OnTouchListener() {
+        toolbarBottom.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
+            public void onClick(View v) {
+                //Nothing
             }
         });
 
@@ -224,7 +226,25 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         if (purchaseList.getDbId() != 0) {
             getLoaderManager().initLoader(LOADER_ITEM_ID, null, this);
             progressBar.setVisibility(View.VISIBLE);
+        } else {
+            createButton.setVisibility(View.VISIBLE);
         }
+
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (purchaseList.getDbId() == 0
+                        && TextUtils.isEmpty(listNameEdit.getText().toString())) {
+                    Toast.makeText(
+                            getActivity(),
+                            R.string.purchase_edit_create_empty_toast,
+                            Toast.LENGTH_LONG
+                    ).show();
+                } else {
+                    onBackPressed();
+                }
+            }
+        });
 
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -245,12 +265,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             }
         });
 
-        //shopsList = new ArrayList<>();
-        //initShopSpinner();
         getLoaderManager().initLoader(LOADER_SHOP_ID, null, this);
 
-        //placesList = new ArrayList<>();
-        //initPlaceSpinner();
         getLoaderManager().initLoader(LOADER_PLACE_ID, null, this);
 
         if (purchaseList.getTimeAlarm() > 0) {
@@ -691,8 +707,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 updateList();
             }
         } else {
-            if (purchaseList.getPurchasesItems().size() > 0
-                    || !TextUtils.isEmpty(listNameEdit.getText().toString())) {
+            if (!TextUtils.isEmpty(listNameEdit.getText().toString())) {
                 addNewList();
             }
         }
