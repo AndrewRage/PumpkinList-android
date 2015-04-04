@@ -63,11 +63,11 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
     private void showNotification(Context context, PurchaseListModel list) {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_notification_icon)
                         .setContentTitle(context.getString(R.string.app_name))
                         .setContentText("Appointment: " + list.getListName())
-                //.setContentInfo("info")
-                //.setTicker("ticker")
+                        //.setContentInfo("info")
+                        //.setTicker("ticker")
                 ;
         Intent startIntent = new Intent(context, PurchaseActivity.class);
         startIntent.putExtra(AppConstants.NOTIFICATION_LIST_ARGS, list.getDbId());

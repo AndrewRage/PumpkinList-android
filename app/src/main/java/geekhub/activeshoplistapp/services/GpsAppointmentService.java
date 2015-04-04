@@ -511,7 +511,7 @@ public class GpsAppointmentService extends Service {
     private void showNotification(PurchaseListModel list) {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(GpsAppointmentService.this)
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_notification_icon)
                         .setContentTitle(getString(R.string.app_name))
                         .setContentText(list.getListName())
                         //.setContentInfo("info")
