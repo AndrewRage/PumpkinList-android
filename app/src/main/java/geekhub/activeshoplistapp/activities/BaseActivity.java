@@ -2,11 +2,9 @@ package geekhub.activeshoplistapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +17,7 @@ import java.util.List;
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.adapters.DrawerMenuAdapter;
 import geekhub.activeshoplistapp.helpers.AppConstants;
-import geekhub.activeshoplistapp.helpers.PurchaseActivityHelper;
+import geekhub.activeshoplistapp.helpers.ActivityHelper;
 import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 
 /**
@@ -30,16 +28,15 @@ import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 public abstract class BaseActivity extends ActionBarActivity {
     private static final String TAG = BaseActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle drawerToggle;
     private ListView drawerListView;
     private View drawerHeader;
     private boolean drawerHamburgerScreen = false;
-    public PurchaseActivityHelper purchaseActivityHelper;
+    public ActivityHelper activityHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        purchaseActivityHelper = PurchaseActivityHelper.getInstance();
+        activityHelper = ActivityHelper.getInstance();
     }
 
     public void initDrawer() {
@@ -57,14 +54,6 @@ public abstract class BaseActivity extends ActionBarActivity {
         final DrawerMenuAdapter drawerMenuAdapter = new DrawerMenuAdapter(this, R.layout.item_drawer_menu, menus);
         setContentView(R.layout.activity_with_fragment);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
-
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, 0); // this disables the animation
-            }
-
-        };
         drawerListView = (ListView) findViewById(R.id.left_drawer);
         LayoutInflater inflater = getLayoutInflater();
         drawerHeader = inflater.inflate(R.layout.item_drawer_header, drawerListView, false);
@@ -81,6 +70,7 @@ public abstract class BaseActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position > 0) {
                     drawerLayout.closeDrawer(drawerListView);
+                    activityHelper.setGlobalId(drawerMenuAdapter.getItem(position - 1));
                     menuOnClick(drawerMenuAdapter.getItem(position - 1));
                     int menuId = drawerMenuAdapter.getItem(position - 1);
                     switch (menuId) {
@@ -103,16 +93,10 @@ public abstract class BaseActivity extends ActionBarActivity {
                 }
             }
         });
-        drawerLayout.setDrawerListener(drawerToggle);
     }
 
-    public ActionBarDrawerToggle getDrawerToggle() {
-        drawerHamburgerScreen = true;
-        return drawerToggle;
-    }
-
-    public void setDrawerLayout(DrawerLayout drawerLayout) {
-        this.drawerLayout = drawerLayout;
+    public void setHamburgerScreen(boolean hamburger) {
+        drawerHamburgerScreen = hamburger;
     }
 
     @Override
@@ -154,8 +138,11 @@ public abstract class BaseActivity extends ActionBarActivity {
     public void onBackPressed() {
         if (drawerLayout != null && drawerLayout.isDrawerOpen(drawerListView)) {
             drawerLayout.closeDrawer(drawerListView);
-        } else if (onBackPressedListener != null) {
-            if (onBackPressedListener.onBackPressed()) {
+        } else if (activityHelper.getGlobalId() == AppConstants.MENU_SHOW_PURCHASE_ARCHIVE) {
+            activityHelper.setGlobalId(AppConstants.MENU_SHOW_PURCHASE_LIST);
+            menuShowPurchaseLists(AppConstants.MENU_SHOW_PURCHASE_LIST);
+        } else if (interactionListener != null) {
+            if (interactionListener.onBackPressed()) {
                 super.onBackPressed();
             }
         } else {
@@ -163,14 +150,14 @@ public abstract class BaseActivity extends ActionBarActivity {
         }
     }
 
-    protected OnBackPressedListener onBackPressedListener;
+    protected InteractionListener interactionListener;
 
-    public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
-        this.onBackPressedListener = onBackPressedListener;
+    public void setInteractionListener(InteractionListener interactionListener) {
+        this.interactionListener = interactionListener;
     }
 
-    public interface OnBackPressedListener {
-        public boolean onBackPressed();
+    public interface InteractionListener {
+        boolean onBackPressed();
     }
 
     public void menuOnClick(int menuId) {
@@ -197,7 +184,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     public void menuShowPurchaseLists(int menuId) {
-        purchaseActivityHelper.setMenuId(menuId);
+        activityHelper.setMenuId(menuId);
         finish();
         overridePendingTransition(0, 0);
     }

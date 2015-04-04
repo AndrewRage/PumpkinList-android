@@ -1,7 +1,6 @@
 package geekhub.activeshoplistapp.activities;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
@@ -52,26 +51,11 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
-        //getDrawerToggle().syncState();
-        syncDrawerToggle();
 
         int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
         if(backStackEntryCount <= 0){
             showPurchaseLists();
         }
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        //getDrawerToggle().syncState();
-        syncDrawerToggle();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        getDrawerToggle().onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -89,14 +73,17 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
     }
 
     private void showPurchaseLists(){
+        activityHelper.setGlobalId(activityHelper.getMenuId());
         purchaseManageFragment = null;
-        purchaseManageFragment = PurchaseManageFragment.newInstance(purchaseActivityHelper.getMenuId());
+        purchaseManageFragment = PurchaseManageFragment.newInstance(activityHelper.getMenuId());
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container, purchaseManageFragment)
                 .commit();
-        if (purchaseActivityHelper.getMenuId() == AppConstants.MENU_SHOW_PURCHASE_LIST) {
-            syncDrawerToggle();
+        if (activityHelper.getMenuId() == AppConstants.MENU_SHOW_PURCHASE_LIST) {
+            setHamburgerScreen(true);
+        } else {
+            setHamburgerScreen(false);
         }
     }
 
@@ -117,17 +104,17 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
     public void onBackStackChanged() {
         int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
         if(backStackEntryCount <= 0){
-            getDrawerToggle().syncState();
+            //getDrawerToggle().syncState();
             purchaseListEditFragment = null;
         }
     }
 
-    private void syncDrawerToggle(){
+    /*private void syncDrawerToggle(){
         int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
         if(backStackEntryCount <= 0){
             getDrawerToggle().syncState();
         }
-    }
+    }*/
 
     @Override
     public void menuOnClick(int menuId) {
@@ -140,7 +127,7 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
 
     @Override
     public void menuShowPurchaseLists(int menuId) {
-        purchaseActivityHelper.setMenuId(menuId);
+        activityHelper.setMenuId(menuId);
         showPurchaseLists();
     }
 

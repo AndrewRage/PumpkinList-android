@@ -1,26 +1,23 @@
 package geekhub.activeshoplistapp.fragments;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.activities.BaseActivity;
+import geekhub.activeshoplistapp.helpers.AppConstants;
+import geekhub.activeshoplistapp.helpers.ActivityHelper;
 
 /**
  * Created by rage on 06.02.15.
  *
  * Base Fragment
  */
-public abstract class BaseFragment extends Fragment implements BaseActivity.OnBackPressedListener {
+public abstract class BaseFragment extends Fragment implements BaseActivity.InteractionListener {
     private static final String TAG = BaseFragment.class.getSimpleName();
 
     public void addToolbar(View view) {
@@ -33,6 +30,7 @@ public abstract class BaseFragment extends Fragment implements BaseActivity.OnBa
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(displayHome);
         activity.getSupportActionBar().setHomeButtonEnabled(displayHome);
+        changeHomeUpToHamburger();
     }
 
     public void hideSoftKeyboard() {
@@ -45,18 +43,26 @@ public abstract class BaseFragment extends Fragment implements BaseActivity.OnBa
     @Override
     public void onResume() {
         super.onResume();
-        ((BaseActivity)getActivity()).setOnBackPressedListener(this);
+        ((BaseActivity)getActivity()).setInteractionListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        ((BaseActivity)getActivity()).setOnBackPressedListener(null);
+        ((BaseActivity)getActivity()).setInteractionListener(null);
     }
 
     @Override
     public boolean onBackPressed() {
         return true;
+    }
+
+    public void changeHomeUpToHamburger() {
+        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        ActivityHelper helper = ActivityHelper.getInstance();
+        if (helper.getGlobalId() == AppConstants.MENU_SHOW_PURCHASE_LIST) {
+            activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+        }
     }
 
 }
