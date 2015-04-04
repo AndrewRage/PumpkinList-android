@@ -61,6 +61,7 @@ import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
 import geekhub.activeshoplistapp.model.PlacesModel;
 import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
+import geekhub.activeshoplistapp.utils.AlarmUtils;
 import geekhub.activeshoplistapp.utils.ViewUtils;
 
 /**
@@ -570,22 +571,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             purchaseList.setTimeAlarm(c.getTimeInMillis());
             updateList();
 
-            AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-            Intent intent = new Intent(getActivity(), AlarmBroadcastReceiver.class);
-            intent.putExtra(AppConstants.EXTRA_LIST_ID, purchaseList.getDbId());
-            Uri data = Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME));
-            intent.setData(data);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                    getActivity(),
-                    0,
-                    intent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
-            );
-            alarmManager.set(
-                    AlarmManager.RTC_WAKEUP,
-                    purchaseList.getTimeAlarm(),
-                    pendingIntent
-            );
+            AlarmUtils alarmUtils = new AlarmUtils(getActivity());
+            alarmUtils.setListAlarm(purchaseList);
         }
     }
 
