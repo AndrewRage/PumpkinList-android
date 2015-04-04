@@ -27,11 +27,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -74,7 +74,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private static final int LOADER_LIST = 3;
     private PurchaseItemAdapter adapter;
     private ListView purchaseListView;
-    private View header, progressBar, addItemButton, toolbarBottom, doneButton, createButton, clearTimeButton, moreButton;
+    private View header, progressBar, addItemButton, toolbarBottom, createButton, clearTimeButton, moreButton;
+    private Button doneButton;
     private EditText listNameEdit;
     private EditText goodsLabelEdit;
     private Spinner shopsSpinner, placeSpinner;
@@ -132,7 +133,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
         toolbarBottom = view.findViewById(R.id.toolbar_bottom);
         moreButton = view.findViewById(R.id.more_button);
-        doneButton = view.findViewById(R.id.done_button);
+        doneButton = (Button) view.findViewById(R.id.done_button);
         createButton = view.findViewById(R.id.create_list_button);
         clearTimeButton = view.findViewById(R.id.clear_time_button);
         shopsSpinner = (Spinner) view.findViewById(R.id.shops_spinner);
@@ -219,7 +220,9 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         purchaseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showDialog((Cursor) purchaseListView.getItemAtPosition(position));
+                if (!purchaseList.isDone()) {
+                    showDialog((Cursor) purchaseListView.getItemAtPosition(position));
+                }
             }
         });
 
@@ -320,6 +323,57 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 }
             }
         });
+
+        setEnableInterface(!purchaseList.isDone());
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StringBuilder titleBuilder = new StringBuilder();
+                StringBuilder massageBuilder = new StringBuilder();
+                if (purchaseList.isDone()) {
+                    titleBuilder.append(getString(R.string.purchase_edit_alert_continue_title));
+                    massageBuilder.append(getString(R.string.purchase_edit_alert_continue_message));
+                } else {
+                    titleBuilder.append(getString(R.string.purchase_edit_alert_done_title));
+                    massageBuilder.append(getString(R.string.purchase_edit_alert_done_message));
+                }
+                new AlertDialog.Builder(getActivity())
+                        .setTitle(titleBuilder.toString())
+                        .setMessage(massageBuilder.toString())
+                        .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                purchaseList.setIsDone(!purchaseList.isDone());
+                                updateList();
+                                setEnableInterface(!purchaseList.isDone());
+                            }
+                        })
+                        .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .show();
+            }
+        });
+    }
+
+    private void setEnableInterface(boolean enable){
+        purchaseListView.setClickable(enable);
+        adapter.setItemEnable(enable);
+        adapter.notifyDataSetChanged();
+        listNameEdit.setEnabled(enable);
+        goodsLabelEdit.setEnabled(enable);
+        addItemButton.setEnabled(enable);
+        dateText.setEnabled(enable);
+        timeText.setEnabled(enable);
+        clearTimeButton.setEnabled(enable);
+        shopsSpinner.setEnabled(enable);
+        placeSpinner.setEnabled(enable);
+        if (enable) {
+            doneButton.setText(R.string.purchase_edit_button_done);
+        } else {
+            doneButton.setText(R.string.purchase_edit_button_continue);
+        }
     }
 
     private void showDialog(Cursor cursor) {

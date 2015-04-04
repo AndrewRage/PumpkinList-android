@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Appointment"
+            android:singleLine="true"
             android:background="@drawable/background_normal" />
 
         <Button
@@ -31,6 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Done shopping"
+            android:singleLine="true"
             android:background="@drawable/background_normal"/>
 
         <Button
@@ -39,6 +41,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Create list"
+            android:singleLine="true"
             android:background="@drawable/background_normal"
             android:visibility="gone"/>
 

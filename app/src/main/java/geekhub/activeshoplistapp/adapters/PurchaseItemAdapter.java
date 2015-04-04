@@ -26,6 +26,7 @@ public class PurchaseItemAdapter extends CursorAdapter {
     private int resource;
     private LayoutInflater inflater;
     private OnItemInteractionListener onItemInteractionListener;
+    private boolean isItemEnable = true;
 
     public PurchaseItemAdapter(Context context, Cursor c, int resource) {
         super(context, c);
@@ -41,6 +42,14 @@ public class PurchaseItemAdapter extends CursorAdapter {
 
     public void setOnItemInteractionListener(OnItemInteractionListener onItemInteractionListener) {
         this.onItemInteractionListener = onItemInteractionListener;
+    }
+
+    public boolean isItemEnable() {
+        return isItemEnable;
+    }
+
+    public void setItemEnable(boolean isItemEnable) {
+        this.isItemEnable = isItemEnable;
     }
 
     @Override
@@ -85,22 +94,22 @@ public class PurchaseItemAdapter extends CursorAdapter {
         float quantity = cursor.getFloat(indexQuantity);
 
         holder.title.setText(cursor.getString(indexName));
-        holder.title.setEnabled(!isCancel);
+        holder.title.setEnabled(isItemEnable && !isCancel);
         holder.checkBox.setChecked(cursor.getInt(indexBought) > 0);
-        holder.checkBox.setEnabled(!isCancel);
+        holder.checkBox.setEnabled(isItemEnable && !isCancel);
         holder.checkBox.setClickable(!isCancel);
         if (!TextUtils.isEmpty(description)) {
             holder.description.setText(description);
-            holder.description.setEnabled(!isCancel);
+            holder.description.setEnabled(isItemEnable && !isCancel);
             holder.description.setVisibility(View.VISIBLE);
         }
         if (quantity > 0) {
             holder.count.setText(Float.toString(quantity));
-            holder.count.setEnabled(!isCancel);
+            holder.count.setEnabled(isItemEnable && !isCancel);
             holder.count_container.setVisibility(View.VISIBLE);
         }
 
-        if (onItemInteractionListener != null) {
+        if (isItemEnable && onItemInteractionListener != null) {
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

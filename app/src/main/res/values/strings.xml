@@ -52,6 +52,13 @@
     <string name="purchase_edit_item_check_bought">bought</string>
     <string name="purchase_edit_item_button_delete">Delete</string>
     <string name="purchase_edit_item_button_restore">Restore</string>
+    <string name="purchase_edit_alert_done_title">Purchase made?</string>
+    <string name="purchase_edit_alert_done_message">Shopping has been done?</string>
+    <string name="purchase_edit_alert_continue_title">Continue shopping?</string>
+    <string name="purchase_edit_alert_continue_message">Continue edit shopping list?</string>
+    <string name="purchase_edit_button_appointment">Reminder</string>
+    <string name="purchase_edit_button_done">Shopping done</string>
+    <string name="purchase_edit_button_continue">Continue shopping</string>
     <string name="purchase_edit_create_empty_toast">Can\'t create empty shopping list!</string>
     <string name="purchase_edit_bottom_set_date">Set date</string>
     <string name="purchase_edit_bottom_set_time">Set time</string>
