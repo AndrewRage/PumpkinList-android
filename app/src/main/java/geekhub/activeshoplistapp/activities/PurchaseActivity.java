@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.text.TextUtils;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.fragments.PurchaseEditFragment;
@@ -18,6 +17,7 @@ import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 public class PurchaseActivity extends BaseActivity implements PurchaseManageFragment.OnPurchaseListMainFragmentListener, FragmentManager.OnBackStackChangedListener {
     private static final String TAG = PurchaseActivity.class.getSimpleName();
     private PurchaseEditFragment purchaseListEditFragment;
+    private PurchaseManageFragment purchaseManageFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,9 +26,7 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
         if (savedInstanceState == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.addOnBackStackChangedListener(this);
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, new PurchaseManageFragment())
-                    .commit();
+            showPurchaseLists();
         }
 
         onNewIntent(getIntent());
@@ -56,6 +54,11 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
         }
         //getDrawerToggle().syncState();
         syncDrawerToggle();
+
+        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+        if(backStackEntryCount <= 0){
+            showPurchaseLists();
+        }
     }
 
     @Override
@@ -83,6 +86,15 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
     @Override
     public void onPurchaseListMainFragmentClickListener(long id) {
         showList(id);
+    }
+
+    private void showPurchaseLists(){
+        purchaseManageFragment = null;
+        purchaseManageFragment = PurchaseManageFragment.newInstance(purchaseActivityHelper.getMenuId());
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, purchaseManageFragment)
+                .commit();
     }
 
     private void showList(long id) {
@@ -124,7 +136,9 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
     }
 
     @Override
-    public void menuShowPurchaseLists() {
+    public void menuShowPurchaseLists(int menuId) {
+        purchaseActivityHelper.setMenuId(menuId);
+        showPurchaseLists();
     }
 
     @Override

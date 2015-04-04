@@ -70,6 +70,8 @@ public class DrawerMenuAdapter extends BaseAdapter {
                 return context.getString(R.string.menu_logout);
             case AppConstants.MENU_SHOW_PURCHASE_LIST:
                 return context.getString(R.string.menu_show_purchase_list);
+            case AppConstants.MENU_SHOW_PURCHASE_ARCHIVE:
+                return context.getString(R.string.menu_show_purchase_archive);
             case AppConstants.MENU_SHOW_PURCHASE_INBOX:
                 return context.getString(R.string.menu_show_purchase_inbox);
             case AppConstants.MENU_SHOW_PURCHASE_OUTBOX:

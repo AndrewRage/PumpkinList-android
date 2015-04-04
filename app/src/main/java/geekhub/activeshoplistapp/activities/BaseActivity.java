@@ -1,6 +1,8 @@
 package geekhub.activeshoplistapp.activities;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,6 +18,7 @@ import java.util.List;
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.adapters.DrawerMenuAdapter;
 import geekhub.activeshoplistapp.helpers.AppConstants;
+import geekhub.activeshoplistapp.helpers.PurchaseActivityHelper;
 import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 
 /**
@@ -29,10 +32,18 @@ public abstract class BaseActivity extends ActionBarActivity {
     private ActionBarDrawerToggle drawerToggle;
     private ListView drawerListView;
     private boolean drawerHamburgerScreen = false;
+    public PurchaseActivityHelper purchaseActivityHelper;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        purchaseActivityHelper = PurchaseActivityHelper.getInstance();
+    }
 
     public void initDrawer() {
         List<Integer> menus = new ArrayList<>();
         menus.add(AppConstants.MENU_SHOW_PURCHASE_LIST);
+        menus.add(AppConstants.MENU_SHOW_PURCHASE_ARCHIVE);
         menus.add(AppConstants.MENU_SHOW_SHOPS);
         menus.add(AppConstants.MENU_SHOW_PLACES);
 
@@ -65,7 +76,10 @@ public abstract class BaseActivity extends ActionBarActivity {
                         menuLogout();
                         break;
                     case AppConstants.MENU_SHOW_PURCHASE_LIST:
-                        menuShowPurchaseLists();
+                        menuShowPurchaseLists(AppConstants.MENU_SHOW_PURCHASE_LIST);
+                        break;
+                    case AppConstants.MENU_SHOW_PURCHASE_ARCHIVE:
+                        menuShowPurchaseLists(AppConstants.MENU_SHOW_PURCHASE_ARCHIVE);
                         break;
                     case AppConstants.MENU_SHOW_SHOPS:
                         menuManageShop();
@@ -82,6 +96,10 @@ public abstract class BaseActivity extends ActionBarActivity {
     public ActionBarDrawerToggle getDrawerToggle() {
         drawerHamburgerScreen = true;
         return drawerToggle;
+    }
+
+    public void setDrawerLayout(DrawerLayout drawerLayout) {
+        this.drawerLayout = drawerLayout;
     }
 
     @Override
@@ -165,7 +183,8 @@ public abstract class BaseActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
-    public void menuShowPurchaseLists() {
+    public void menuShowPurchaseLists(int menuId) {
+        purchaseActivityHelper.setMenuId(menuId);
         finish();
         overridePendingTransition(0, 0);
     }

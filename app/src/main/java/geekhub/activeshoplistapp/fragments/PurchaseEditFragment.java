@@ -345,6 +345,9 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                                 purchaseList.setIsDone(!purchaseList.isDone());
                                 updateList();
                                 setEnableInterface(!purchaseList.isDone());
+                                if (purchaseList.isDone()) {
+                                    onBackPressed();
+                                }
                             }
                         })
                         .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {

@@ -19,6 +19,7 @@ import android.widget.GridView;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.adapters.PurchaseListAdapter;
+import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ContentHelper;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
@@ -28,12 +29,22 @@ import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
  */
 public class PurchaseManageFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = PurchaseManageFragment.class.getSimpleName();
+    private static final String ARG_MENU_ID = "argMenuId";
     private static final String STATE_LIST = "PurchaseListState";
 
     private GridView purchaseView;
     private OnPurchaseListMainFragmentListener purchaseListMainFragmentListener;
     private PurchaseListAdapter adapter;
     private Parcelable purchaseViewState;
+    private int menuItemId = -1;
+
+    public static PurchaseManageFragment newInstance(int menuItemId) {
+        PurchaseManageFragment fragment = new PurchaseManageFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_MENU_ID, menuItemId);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
@@ -54,6 +65,10 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (getArguments() != null) {
+            menuItemId = getArguments().getInt(ARG_MENU_ID);
+        }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             adapter = new PurchaseListAdapter(getActivity(), null, R.layout.item_purchase_view);
@@ -117,12 +132,19 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
                 SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP,
         };
         String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
+        String[] selectionArgs;
+        if (menuItemId == AppConstants.MENU_SHOW_PURCHASE_LIST) {
+            selectionArgs = new String[]{"0"};
+        } else {
+            selectionArgs = new String[]{"1"};
+        }
+        String selection = SqlDbHelper.PURCHASE_LIST_COLUMN_DONE + "=?";
         return new CursorLoader(
                 getActivity(),
                 ShoppingContentProvider.PURCHASE_LIST_CONTENT_URI,
                 projection,
-                null,
-                null,
+                selection,
+                selectionArgs,
                 orderBy
         );
     }
