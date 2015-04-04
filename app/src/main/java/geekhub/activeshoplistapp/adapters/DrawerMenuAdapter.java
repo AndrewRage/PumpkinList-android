@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -52,16 +53,21 @@ public class DrawerMenuAdapter extends BaseAdapter {
             convertView = inflater.inflate(resource, parent, false);
             holder = new Holder();
             holder.title = (TextView) convertView.findViewById(R.id.title);
+            holder.icon = (ImageView) convertView.findViewById(R.id.icon);
             convertView.setTag(holder);
         } else {
             holder = (Holder) convertView.getTag();
         }
         holder.title.setText(getMenuTitle(menuList.get(position)));
+        if (getMenuIcon(menuList.get(position)) != -1) {
+            holder.icon.setImageResource(getMenuIcon(menuList.get(position)));
+        }
         return convertView;
     }
 
     private class Holder {
         TextView title;
+        ImageView icon;
     }
 
     private String getMenuTitle(int menuId){
@@ -84,6 +90,29 @@ public class DrawerMenuAdapter extends BaseAdapter {
                 return context.getString(R.string.menu_show_settings);
             default:
                 return "";
+        }
+    }
+
+    private int getMenuIcon(int menuId){
+        switch (menuId) {
+            case AppConstants.MENU_LOGOUT:
+                return -1;
+            case AppConstants.MENU_SHOW_PURCHASE_LIST:
+                return R.drawable.ic_menu_active_lists;
+            case AppConstants.MENU_SHOW_PURCHASE_ARCHIVE:
+                return -1;
+            case AppConstants.MENU_SHOW_PURCHASE_INBOX:
+                return -1;
+            case AppConstants.MENU_SHOW_PURCHASE_OUTBOX:
+                return -1;
+            case AppConstants.MENU_SHOW_SHOPS:
+                return -1;
+            case AppConstants.MENU_SHOW_PLACES:
+                return -1;
+            case AppConstants.MENU_SHOW_SETTINGS:
+                return -1;
+            default:
+                return -1;
         }
     }
 }
