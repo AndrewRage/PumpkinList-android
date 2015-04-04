@@ -52,6 +52,7 @@
     <string name="purchase_edit_item_check_bought">bought</string>
     <string name="purchase_edit_item_button_delete">Delete</string>
     <string name="purchase_edit_item_button_restore">Restore</string>
+    <string name="purchase_edit_fail_time_toast">Please, select a future time for notification</string>
 
     <!--Shop edit-->
     <string name="shop_edit_name_hint">Shop name</string>

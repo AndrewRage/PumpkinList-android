@@ -44,6 +44,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -517,9 +518,16 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     }
 
     private void showTimeSpinner(){
-        final Calendar c = Calendar.getInstance();
-        int hourOfDay = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
+        int hourOfDay;
+        int minute;
+        if (!isTimeSelect) {
+            final Calendar c = Calendar.getInstance();
+            hourOfDay = c.get(Calendar.HOUR_OF_DAY);
+            minute = c.get(Calendar.MINUTE);
+        } else {
+            hourOfDay = mHour;
+            minute = mMinute;
+        }
 
         new TimePickerDialog(
                 getActivity(),
@@ -540,10 +548,19 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     }
 
     private void showDateSpinner(){
-        final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+        int year;
+        int month;
+        int day;
+        if (!isDateSelect) {
+            final Calendar c = Calendar.getInstance();
+            year = c.get(Calendar.YEAR);
+            month = c.get(Calendar.MONTH);
+            day = c.get(Calendar.DAY_OF_MONTH);
+        } else {
+            year = mYear;
+            month = mMonth;
+            day = mDay;
+        }
 
         new DatePickerDialog(
                 getActivity(),
@@ -572,7 +589,16 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             updateList();
 
             AlarmUtils alarmUtils = new AlarmUtils(getActivity());
-            alarmUtils.setListAlarm(purchaseList);
+            if (purchaseList.getTimeAlarm() > System.currentTimeMillis()) {
+                alarmUtils.setListAlarm(purchaseList);
+            } else {
+                alarmUtils.cancelListAlarm(purchaseList);
+                Toast.makeText(
+                        getActivity(),
+                        R.string.purchase_edit_fail_time_toast,
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
         }
     }
 
