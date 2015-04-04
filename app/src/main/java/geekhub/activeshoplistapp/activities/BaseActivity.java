@@ -68,30 +68,38 @@ public abstract class BaseActivity extends ActionBarActivity {
         drawerListView = (ListView) findViewById(R.id.left_drawer);
         LayoutInflater inflater = getLayoutInflater();
         drawerHeader = inflater.inflate(R.layout.item_drawer_header, drawerListView, false);
+        drawerHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //nothing
+            }
+        });
         drawerListView.addHeaderView(drawerHeader);
         drawerListView.setAdapter(drawerMenuAdapter);
         drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                drawerLayout.closeDrawer(drawerListView);
-                menuOnClick(drawerMenuAdapter.getItem(position));
-                int menuId = drawerMenuAdapter.getItem(position);
-                switch (menuId) {
-                    case AppConstants.MENU_LOGOUT:
-                        menuLogout();
-                        break;
-                    case AppConstants.MENU_SHOW_PURCHASE_LIST:
-                        menuShowPurchaseLists(AppConstants.MENU_SHOW_PURCHASE_LIST);
-                        break;
-                    case AppConstants.MENU_SHOW_PURCHASE_ARCHIVE:
-                        menuShowPurchaseLists(AppConstants.MENU_SHOW_PURCHASE_ARCHIVE);
-                        break;
-                    case AppConstants.MENU_SHOW_SHOPS:
-                        menuManageShop();
-                        break;
-                    case AppConstants.MENU_SHOW_PLACES:
-                        menuManagePlaces();
-                        break;
+                if (position > 0) {
+                    drawerLayout.closeDrawer(drawerListView);
+                    menuOnClick(drawerMenuAdapter.getItem(position - 1));
+                    int menuId = drawerMenuAdapter.getItem(position - 1);
+                    switch (menuId) {
+                        case AppConstants.MENU_LOGOUT:
+                            menuLogout();
+                            break;
+                        case AppConstants.MENU_SHOW_PURCHASE_LIST:
+                            menuShowPurchaseLists(AppConstants.MENU_SHOW_PURCHASE_LIST);
+                            break;
+                        case AppConstants.MENU_SHOW_PURCHASE_ARCHIVE:
+                            menuShowPurchaseLists(AppConstants.MENU_SHOW_PURCHASE_ARCHIVE);
+                            break;
+                        case AppConstants.MENU_SHOW_SHOPS:
+                            menuManageShop();
+                            break;
+                        case AppConstants.MENU_SHOW_PLACES:
+                            menuManagePlaces();
+                            break;
+                    }
                 }
             }
         });
