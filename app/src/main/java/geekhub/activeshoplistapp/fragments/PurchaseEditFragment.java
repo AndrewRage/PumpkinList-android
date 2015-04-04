@@ -566,15 +566,15 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private void saveTime(){
         if (isDateSelect && isTimeSelect) {
             Calendar c = Calendar.getInstance();
-            c.set(mYear, mMonth, mDay, mHour, mMinute);
+            c.set(mYear, mMonth, mDay, mHour, mMinute, 0);
             purchaseList.setTimeAlarm(c.getTimeInMillis());
             updateList();
 
             AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
             Intent intent = new Intent(getActivity(), AlarmBroadcastReceiver.class);
+            intent.putExtra(AppConstants.EXTRA_LIST_ID, purchaseList.getDbId());
             Uri data = Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME));
             intent.setData(data);
-            intent.putExtra(AppConstants.EXTRA_LIST_ID, purchaseList.getDbId());
             PendingIntent pendingIntent = PendingIntent.getBroadcast(
                     getActivity(),
                     0,
@@ -583,7 +583,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             );
             alarmManager.set(
                     AlarmManager.RTC_WAKEUP,
-                    purchaseList.getAlarmTimeStamp(),
+                    purchaseList.getTimeAlarm(),
                     pendingIntent
             );
         }
