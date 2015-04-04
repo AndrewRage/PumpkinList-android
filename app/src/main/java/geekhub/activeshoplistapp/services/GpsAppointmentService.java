@@ -126,9 +126,10 @@ public class GpsAppointmentService extends Service {
                     SqlDbHelper.PURCHASE_LIST_COLUMN_TIME_CREATE,
                     SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP,
             };
-            String[] args = new String[]{"0", "0"};
-            String selection = SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID + "!=? OR "
-                    + SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID + "!=?";
+            String[] args = new String[]{"0", "0", "0"};
+            String selection = "(" + SqlDbHelper.PURCHASE_LIST_COLUMN_SHOP_ID + "!=? OR "
+                    + SqlDbHelper.PURCHASE_LIST_COLUMN_PLACE_ID + "!=?) AND "
+                    + SqlDbHelper.PURCHASE_LIST_COLUMN_DONE + "=?";
             Cursor cursor = getContentResolver().query(
                     ShoppingContentProvider.PURCHASE_LIST_CONTENT_URI,
                     projection,
