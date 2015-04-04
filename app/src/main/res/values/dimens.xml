@@ -12,7 +12,7 @@
     <dimen name="button_vertical_padding">12dp</dimen>
     <dimen name="button_text_size">16sp</dimen>
 
-    <dimen name="fab_button_size_big">56dp</dimen>
+    <dimen name="fab_button_size_big">60dp</dimen>
     <dimen name="fab_button_right_margin">16dp</dimen>
     <dimen name="fab_button_bottom_margin">16dp</dimen>
 

@@ -95,6 +95,9 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
                 .beginTransaction()
                 .replace(R.id.container, purchaseManageFragment)
                 .commit();
+        if (purchaseActivityHelper.getMenuId() == AppConstants.MENU_SHOW_PURCHASE_LIST) {
+            syncDrawerToggle();
+        }
     }
 
     private void showList(long id) {
