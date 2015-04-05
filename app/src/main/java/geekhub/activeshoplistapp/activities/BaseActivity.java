@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -103,6 +102,12 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
+        if (activityHelper.getPurchaseMenuId() == AppConstants.MENU_SHOW_PURCHASE_LIST) {
+            setHamburgerScreen(true);
+        } else {
+            setHamburgerScreen(false);
+        }
+
         SharedPrefHelper sharedPrefHelper = SharedPrefHelper.getInstance();
         if (!sharedPrefHelper.isLogin()) {
             finish();
@@ -184,7 +189,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     public void menuShowPurchaseLists(int menuId) {
-        activityHelper.setMenuId(menuId);
+        activityHelper.setPurchaseMenuId(menuId);
         finish();
         overridePendingTransition(0, 0);
     }

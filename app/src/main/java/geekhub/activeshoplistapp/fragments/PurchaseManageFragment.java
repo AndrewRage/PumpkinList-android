@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.adapters.PurchaseListAdapter;
+import geekhub.activeshoplistapp.helpers.ActivityHelper;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ContentHelper;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
@@ -33,7 +34,7 @@ import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
  */
 public class PurchaseManageFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = PurchaseManageFragment.class.getSimpleName();
-    private static final String ARG_MENU_ID = "argMenuId";
+    //private static final String ARG_MENU_ID = "argMenuId";
     private static final String STATE_LIST = "PurchaseListState";
 
     private GridView purchaseView;
@@ -41,16 +42,15 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
     private OnPurchaseListMainFragmentListener purchaseListMainFragmentListener;
     private PurchaseListAdapter adapter;
     private Parcelable purchaseViewState;
-    private int menuItemId = -1;
     private boolean showFabPlus;
 
-    public static PurchaseManageFragment newInstance(int menuItemId) {
+    /*public static PurchaseManageFragment newInstance(int menuItemId) {
         PurchaseManageFragment fragment = new PurchaseManageFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_MENU_ID, menuItemId);
         fragment.setArguments(args);
         return fragment;
-    }
+    }*/
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
@@ -76,10 +76,6 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
 
         progressBar.setVisibility(View.VISIBLE);
 
-        if (getArguments() != null) {
-            menuItemId = getArguments().getInt(ARG_MENU_ID);
-        }
-
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             adapter = new PurchaseListAdapter(getActivity(), null, R.layout.item_purchase_view);
         } else {
@@ -94,6 +90,7 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
                 );
             }
         });
+
         getLoaderManager().initLoader(0, null, this);
 
         //Show edit fragment
@@ -194,7 +191,7 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
         };
         String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
         String[] selectionArgs;
-        if (menuItemId == AppConstants.MENU_SHOW_PURCHASE_LIST) {
+        if (ActivityHelper.getInstance().getPurchaseMenuId() == AppConstants.MENU_SHOW_PURCHASE_LIST) {
             selectionArgs = new String[]{"0"};
         } else {
             selectionArgs = new String[]{"1"};

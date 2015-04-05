@@ -16,7 +16,6 @@ import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 public class PurchaseActivity extends BaseActivity implements PurchaseManageFragment.OnPurchaseListMainFragmentListener, FragmentManager.OnBackStackChangedListener {
     private static final String TAG = PurchaseActivity.class.getSimpleName();
     private PurchaseEditFragment purchaseListEditFragment;
-    private PurchaseManageFragment purchaseManageFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,11 +50,6 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
-
-        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-        if(backStackEntryCount <= 0){
-            showPurchaseLists();
-        }
     }
 
     @Override
@@ -73,18 +67,10 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
     }
 
     private void showPurchaseLists(){
-        activityHelper.setGlobalId(activityHelper.getMenuId());
-        purchaseManageFragment = null;
-        purchaseManageFragment = PurchaseManageFragment.newInstance(activityHelper.getMenuId());
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container, purchaseManageFragment)
+        activityHelper.setGlobalId(activityHelper.getPurchaseMenuId());
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new PurchaseManageFragment())
                 .commit();
-        if (activityHelper.getMenuId() == AppConstants.MENU_SHOW_PURCHASE_LIST) {
-            setHamburgerScreen(true);
-        } else {
-            setHamburgerScreen(false);
-        }
     }
 
     private void showList(long id) {
@@ -104,17 +90,9 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
     public void onBackStackChanged() {
         int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
         if(backStackEntryCount <= 0){
-            //getDrawerToggle().syncState();
             purchaseListEditFragment = null;
         }
     }
-
-    /*private void syncDrawerToggle(){
-        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-        if(backStackEntryCount <= 0){
-            getDrawerToggle().syncState();
-        }
-    }*/
 
     @Override
     public void menuOnClick(int menuId) {
@@ -127,7 +105,7 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
 
     @Override
     public void menuShowPurchaseLists(int menuId) {
-        activityHelper.setMenuId(menuId);
+        activityHelper.setPurchaseMenuId(menuId);
         showPurchaseLists();
     }
 

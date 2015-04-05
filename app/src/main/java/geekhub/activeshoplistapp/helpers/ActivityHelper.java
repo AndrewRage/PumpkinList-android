@@ -5,7 +5,7 @@ package geekhub.activeshoplistapp.helpers;
  */
 public class ActivityHelper {
     private static ActivityHelper helper;
-    private int menuId = AppConstants.MENU_SHOW_PURCHASE_LIST;
+    private int purchaseMenuId = AppConstants.MENU_SHOW_PURCHASE_LIST;
     private int globalId = AppConstants.MENU_SHOW_PURCHASE_LIST;
 
     private ActivityHelper() {
@@ -18,12 +18,12 @@ public class ActivityHelper {
         return helper;
     }
 
-    public int getMenuId() {
-        return menuId;
+    public int getPurchaseMenuId() {
+        return purchaseMenuId;
     }
 
-    public void setMenuId(int menuId) {
-        this.menuId = menuId;
+    public void setPurchaseMenuId(int purchaseMenuId) {
+        this.purchaseMenuId = purchaseMenuId;
     }
 
     public int getGlobalId() {
