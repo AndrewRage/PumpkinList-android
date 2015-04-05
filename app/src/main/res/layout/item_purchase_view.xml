@@ -3,41 +3,48 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/card_overlay"
     android:padding="@dimen/purchase_list_item_margin">
-    
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Purchase Title"
-        android:textSize="@dimen/purchase_list_item_title_text_size"
-        android:lines="2"
-        android:ellipsize="marquee"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/icon"
-        android:layout_toStartOf="@+id/icon" />
 
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Description"
-        android:textSize="@dimen/purchase_list_item_description_text_size"
-        android:layout_below="@+id/title"
-        android:layout_alignLeft="@+id/title"
-        android:layout_alignStart="@+id/title" />
+        android:background="@drawable/card_overlay"
+        android:padding="@dimen/purchase_list_item_margin">
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:scaleType="center"
-        android:src="@drawable/ic_check_done_circle"
-        android:layout_alignTop="@+id/title"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:visibility="gone"/>
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Purchase Title"
+            android:textSize="@dimen/purchase_list_item_title_text_size"
+            android:lines="2"
+            android:ellipsize="marquee"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/icon"
+            android:layout_toStartOf="@+id/icon" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textSize="@dimen/purchase_list_item_description_text_size"
+            android:layout_below="@+id/title"
+            android:layout_alignLeft="@+id/title"
+            android:layout_alignStart="@+id/title" />
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_check_done_circle"
+            android:layout_alignTop="@+id/title"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>
