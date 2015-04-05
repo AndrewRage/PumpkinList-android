@@ -690,18 +690,20 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             Calendar c = Calendar.getInstance();
             c.set(mYear, mMonth, mDay, mHour, mMinute, 0);
             purchaseList.setTimeAlarm(c.getTimeInMillis());
-            updateList();
 
-            AlarmUtils alarmUtils = new AlarmUtils(getActivity());
-            if (purchaseList.getTimeAlarm() > System.currentTimeMillis()) {
-                alarmUtils.setListAlarm(purchaseList);
-            } else {
-                alarmUtils.cancelListAlarm(purchaseList);
-                Toast.makeText(
-                        getActivity(),
-                        R.string.purchase_edit_bottom_fail_time_toast,
-                        Toast.LENGTH_SHORT
-                ).show();
+            if (purchaseList.getDbId() > 0) {
+                updateList();
+                AlarmUtils alarmUtils = new AlarmUtils(getActivity());
+                if (purchaseList.getTimeAlarm() > System.currentTimeMillis()) {
+                    alarmUtils.setListAlarm(purchaseList);
+                } else {
+                    alarmUtils.cancelListAlarm(purchaseList);
+                    Toast.makeText(
+                            getActivity(),
+                            R.string.purchase_edit_bottom_fail_time_toast,
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
             }
         }
     }
@@ -921,7 +923,21 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             listNameEdit.setText(R.string.purchase_edit_new_list_default);
         }
         purchaseList.setListName(listNameEdit.getText().toString());
-        return ContentHelper.insertPurchaseList(getActivity(), purchaseList);
+        if (isDateSelect && isTimeSelect) {
+            Calendar c = Calendar.getInstance();
+            c.set(mYear, mMonth, mDay, mHour, mMinute, 0);
+            purchaseList.setTimeAlarm(c.getTimeInMillis());
+        }
+
+        Uri uri = ContentHelper.insertPurchaseList(getActivity(), purchaseList);
+        purchaseList.setDbId(Long.parseLong(uri.getLastPathSegment()));
+
+        if (purchaseList.getTimeAlarm() > System.currentTimeMillis()
+                && purchaseList.getDbId() > 0) {
+            AlarmUtils alarmUtils = new AlarmUtils(getActivity());
+            alarmUtils.setListAlarm(purchaseList);
+        }
+        return uri;
     }
 
     private void changeBought(final long dbId, final boolean checked) {
