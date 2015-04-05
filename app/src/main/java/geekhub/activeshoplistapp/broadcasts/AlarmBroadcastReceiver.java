@@ -64,8 +64,8 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_notification_icon)
-                        .setContentTitle(context.getString(R.string.app_name))
-                        .setContentText("Appointment: " + list.getListName())
+                        .setContentTitle(list.getListName())
+                        .setContentText(context.getString(R.string.notification_alarm_description))
                         //.setContentInfo("info")
                         //.setTicker("ticker")
                 ;

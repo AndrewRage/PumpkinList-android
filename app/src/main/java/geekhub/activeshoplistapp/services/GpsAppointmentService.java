@@ -512,8 +512,8 @@ public class GpsAppointmentService extends Service {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(GpsAppointmentService.this)
                         .setSmallIcon(R.drawable.ic_notification_icon)
-                        .setContentTitle(getString(R.string.app_name))
-                        .setContentText(list.getListName())
+                        .setContentTitle(list.getListName())
+                        .setContentText(getApplicationContext().getString(R.string.notification_gps_description))
                         //.setContentInfo("info")
                         //.setTicker("ticker")
                 ;

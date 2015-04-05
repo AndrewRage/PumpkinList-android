@@ -84,4 +84,8 @@
     <string name="place_edit_alert_delete_description">Are you sure you want to delete %s?</string>
     <string name="place_edit_spinner_default_entry">Select places</string>
 
+    <!--Notification-->
+    <string name="notification_alarm_description">Time for shopping</string>
+    <string name="notification_gps_description">Do not forget about shopping</string>
+
 </resources>
