@@ -1,9 +1,12 @@
 package geekhub.activeshoplistapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by rage on 08.02.15. Create by task: 003
  */
-public class PlacesModel {
+public class PlacesModel implements Parcelable {
     private long dbId;
     private long serverId;
     private long category;
@@ -111,4 +114,44 @@ public class PlacesModel {
     public long getTimeStamp() {
         return timeStamp;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.dbId);
+        dest.writeLong(this.serverId);
+        dest.writeLong(this.category);
+        dest.writeString(this.shopName);
+        dest.writeString(this.shopDescription);
+        dest.writeDouble(this.gpsLatitude);
+        dest.writeDouble(this.gpsLongitude);
+        dest.writeByte(isDelete ? (byte) 1 : (byte) 0);
+        dest.writeLong(this.timeStamp);
+    }
+
+    private PlacesModel(Parcel in) {
+        this.dbId = in.readLong();
+        this.serverId = in.readLong();
+        this.category = in.readLong();
+        this.shopName = in.readString();
+        this.shopDescription = in.readString();
+        this.gpsLatitude = in.readDouble();
+        this.gpsLongitude = in.readDouble();
+        this.isDelete = in.readByte() != 0;
+        this.timeStamp = in.readLong();
+    }
+
+    public static final Parcelable.Creator<PlacesModel> CREATOR = new Parcelable.Creator<PlacesModel>() {
+        public PlacesModel createFromParcel(Parcel source) {
+            return new PlacesModel(source);
+        }
+
+        public PlacesModel[] newArray(int size) {
+            return new PlacesModel[size];
+        }
+    };
 }

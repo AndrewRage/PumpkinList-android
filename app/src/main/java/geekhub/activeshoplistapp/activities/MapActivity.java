@@ -9,6 +9,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -42,7 +43,10 @@ import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
 public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private static final String TAG = MapActivity.class.getSimpleName();
     private static final String ID_ARG = "arg_id";
+    private static final String PLACE_STATE = "placeState";
+    private static final String IS_EDIT_STATE = "isEditState";
     private int menuItemId = -1;
+    private long dbId = -1;
     private PlacesModel placesModel;
     private GoogleMap map;
     private EditText placeNameEdit;
@@ -65,14 +69,31 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         placeNameEdit.clearFocus();
 
         Intent args = getIntent();
-        long id = -1;
+
         if (args != null) {
             menuItemId = args.getExtras().getInt(AppConstants.EXTRA_MENU_ITEM);
-            id = args.getExtras().getLong(AppConstants.EXTRA_PLACE_ID, -1);
+            dbId = args.getExtras().getLong(AppConstants.EXTRA_PLACE_ID, -1);
         }
-        if (id >= 0) {
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        placesModel = savedInstanceState.getParcelable(PLACE_STATE);
+        isEdit = savedInstanceState.getBoolean(IS_EDIT_STATE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (placesModel != null) {
+            initScreen();
+        } else if (dbId >= 0) {
             Bundle bundle = new Bundle();
-            bundle.putLong(ID_ARG, id);
+            bundle.putLong(ID_ARG, dbId);
             getSupportLoaderManager().initLoader(0, bundle, loaderCallbacks);
         } else {
             placesModel = new PlacesModel();
@@ -163,7 +184,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         map.setMyLocationEnabled(true);
         map.setOnMarkerDragListener(markerDragListener);
 
-        if (placesModel.getDbId() > 0) {
+        if (placesModel.getGpsLatitude() > 0 && placesModel.getGpsLongitude() > 0) {
             marker = map.addMarker(new MarkerOptions()
                     .position(new LatLng(
                             placesModel.getGpsLatitude(),
@@ -319,6 +340,13 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
             }).start();
         }
         if (isEdit) {
+            savePosition();
+        }
+        super.onBackPressed();
+    }
+
+    private void savePosition() {
+        if (isEdit) {
             if (placesModel.getGpsLatitude() != marker.getPosition().latitude
                     || placesModel.getGpsLongitude() != marker.getPosition().longitude) {
                 needSave = true;
@@ -343,7 +371,24 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                 }).start();
             }
         }
-        super.onBackPressed();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (!isEdit) {
+            if (placesModel != null) {
+                placesModel.setShopName(placeNameEdit.getText().toString());
+                if (marker != null) {
+                    placesModel.setGpsLatitude(marker.getPosition().latitude);
+                    placesModel.setGpsLongitude(marker.getPosition().longitude);
+                }
+                outState.putParcelable(PLACE_STATE, placesModel);
+            }
+            outState.putBoolean(IS_EDIT_STATE, isEdit);
+        } else {
+            savePosition();
+        }
     }
 
     @Override
