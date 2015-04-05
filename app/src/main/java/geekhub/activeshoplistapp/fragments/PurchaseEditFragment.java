@@ -226,12 +226,12 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             }
         });
 
-        //TODO create new list button
-        //Not ready yet
-        /*if (purchaseList.getDbId() != 0) {
+        if (purchaseList.getDbId() != 0) {
             getLoaderManager().initLoader(LOADER_ITEM_ID, null, this);
             progressBar.setVisibility(View.VISIBLE);
-        } else {
+        }/*if else {
+            //TODO create new list button
+            //Not ready yet
             createButton.setVisibility(View.VISIBLE);
         }*/
 
