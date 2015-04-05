@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/toolbar_bottom"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_marginBottom="@dimen/purchase_item_hide_panel_height_negative"
+    android:minHeight="@dimen/bottom_toolbar_height"
+    android:background="?attr/colorPrimary"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/visible_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/more_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/purchase_edit_button_appointment"
+            android:singleLine="true"
+            android:background="@drawable/background_normal" />
+
+        <Button
+            android:id="@+id/done_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/purchase_edit_button_done"
+            android:singleLine="true"
+            android:background="@drawable/background_normal"/>
+
+        <Button
+            android:id="@+id/create_list_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Create list"
+            android:singleLine="true"
+            android:background="@drawable/background_normal"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/hide_panel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/purchase_item_hide_panel_height"
+        android:padding="@dimen/bottom_toolbar_padding"
+        android:layout_below="@+id/visible_panel" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/time_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingRight="@dimen/bottom_toolbar_padding">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_alignParentTop="true"
+                    android:paddingBottom="3dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/purchase_edit_bottom_time_label"
+                        android:id="@+id/time_text"
+                        android:gravity="center_vertical" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/bottom_toolbar_time_layout_size"
+                        android:layout_weight="1"
+                        android:text="@string/purchase_edit_bottom_set_date"
+                        android:background="@drawable/background_normal"
+                        android:padding="10dp"
+                        android:id="@+id/time_date"
+                        android:gravity="center" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/bottom_toolbar_time_layout_size"
+                            android:text="@string/purchase_edit_bottom_set_time"
+                            android:background="@drawable/background_normal"
+                            android:padding="10dp"
+                            android:id="@+id/time_time"
+                            android:gravity="center"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_toLeftOf="@+id/clear_time_button"
+                            android:layout_toStartOf="@+id/clear_time_button" />
+
+                        <ImageView
+                            android:layout_width="@dimen/bottom_toolbar_time_layout_size"
+                            android:layout_height="@dimen/bottom_toolbar_time_layout_size"
+                            android:background="@drawable/background_normal"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_reload"
+                            android:scaleType="fitCenter"
+                            android:id="@+id/clear_time_button"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
+                            android:visibility="gone"/>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="@dimen/bottom_toolbar_padding">
+
+                <TextView
+                    android:id="@+id/place_group_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <RelativeLayout
+                    android:id="@+id/place_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/place_group_text">
+
+                    <Spinner
+                        android:id="@+id/shops_spinner"
+                        android:layout_width="@dimen/bottom_toolbar_spinner_width"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_normal"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/purchase_edit_bottom_shop_label"
+                        android:id="@+id/shop_text"
+                        android:gravity="center_vertical"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_toLeftOf="@+id/shops_spinner"
+                        android:layout_toStartOf="@+id/shops_spinner" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/place_layout">
+
+                    <Spinner
+                        android:id="@+id/place_spinner"
+                        android:layout_width="@dimen/bottom_toolbar_spinner_width"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_normal"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/purchase_edit_bottom_place_label"
+                        android:id="@+id/place_text"
+                        android:gravity="center_vertical"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_toLeftOf="@+id/place_spinner"
+                        android:layout_toStartOf="@+id/place_spinner" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
