@@ -226,12 +226,14 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             }
         });
 
-        if (purchaseList.getDbId() != 0) {
+        //TODO create new list button
+        //Not ready yet
+        /*if (purchaseList.getDbId() != 0) {
             getLoaderManager().initLoader(LOADER_ITEM_ID, null, this);
             progressBar.setVisibility(View.VISIBLE);
         } else {
             createButton.setVisibility(View.VISIBLE);
-        }
+        }*/
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -320,6 +322,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                     timeText.setText(R.string.purchase_edit_bottom_set_time);
 
                     updateList();
+
+                    clearTimeButton.setVisibility(View.GONE);
                 }
             }
         });
@@ -709,6 +713,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         if (isTimeSelect) {
             timeText.setText(mHour + ":" + mMinute);
         }
+
+        clearTimeButton.setVisibility(View.VISIBLE);
     }
 
     @Override

@@ -64,6 +64,9 @@
     <string name="purchase_edit_bottom_set_date">Set date</string>
     <string name="purchase_edit_bottom_set_time">Set time</string>
     <string name="purchase_edit_bottom_fail_time_toast">Please, select a future time for notification</string>
+    <string name="purchase_edit_bottom_time_label">Remind at the time:</string>
+    <string name="purchase_edit_bottom_shop_label">Remind near the:</string>
+    <string name="purchase_edit_bottom_place_label">Remind on the way to:</string>
 
     <!--Shop edit-->
     <string name="shop_edit_name_hint">Shop name</string>

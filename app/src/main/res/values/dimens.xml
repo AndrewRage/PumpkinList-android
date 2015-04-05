@@ -26,6 +26,9 @@
     <integer name="purchase_item_panel_time">300</integer>
 
     <dimen name="bottom_toolbar_height">48dp</dimen>
+    <dimen name="bottom_toolbar_padding">6dp</dimen>
+    <dimen name="bottom_toolbar_time_layout_size">42dp</dimen>
+    <dimen name="bottom_toolbar_spinner_width">140dp</dimen>
     <dimen name="toolbar_padding_vertical">4dp</dimen>
     <dimen name="toolbar_edit_description_text_size">13dp</dimen>
 

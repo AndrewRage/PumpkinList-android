@@ -51,7 +51,7 @@
         android:id="@+id/hide_panel"
         android:layout_width="match_parent"
         android:layout_height="@dimen/purchase_item_hide_panel_height"
-        android:padding="@dimen/activity_vertical_margin"
+        android:padding="@dimen/bottom_toolbar_padding"
         android:layout_below="@+id/visible_panel" >
 
         <LinearLayout
@@ -65,13 +65,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Remind at the time:"
+                android:text="@string/purchase_edit_bottom_time_label"
                 android:id="@+id/time_text"
                 android:gravity="center_vertical" />
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/bottom_toolbar_time_layout_size"
                 android:layout_weight="1"
                 android:text="@string/purchase_edit_bottom_set_date"
                 android:background="@drawable/background_normal"
@@ -85,28 +85,29 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bottom_toolbar_time_layout_size"
                     android:text="@string/purchase_edit_bottom_set_time"
                     android:background="@drawable/background_normal"
                     android:padding="10dp"
                     android:id="@+id/time_time"
                     android:gravity="center"
-                    android:layout_toLeftOf="@+id/clear_time_button"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
+                    android:layout_alignParentStart="true"
+                    android:layout_toLeftOf="@+id/clear_time_button"
+                    android:layout_toStartOf="@+id/clear_time_button" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="C"
+                <ImageView
+                    android:layout_width="@dimen/bottom_toolbar_time_layout_size"
+                    android:layout_height="@dimen/bottom_toolbar_time_layout_size"
                     android:background="@drawable/background_normal"
-                    android:padding="10dp"
+                    android:src="@drawable/ic_reload"
+                    android:scaleType="fitCenter"
                     android:id="@+id/clear_time_button"
-                    android:gravity="center"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true" />
+                    android:layout_alignParentEnd="true"
+                    android:visibility="gone"/>
 
             </RelativeLayout>
 
@@ -120,7 +121,7 @@
 
             <Spinner
                 android:id="@+id/shops_spinner"
-                android:layout_width="140dp"
+                android:layout_width="@dimen/bottom_toolbar_spinner_width"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/place_spinner"
                 android:background="@drawable/background_normal"
@@ -129,7 +130,7 @@
 
             <Spinner
                 android:id="@+id/place_spinner"
-                android:layout_width="140dp"
+                android:layout_width="@dimen/bottom_toolbar_spinner_width"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_normal"
                 android:layout_alignParentBottom="true"
@@ -139,7 +140,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Remind on the way to:"
+                android:text="@string/purchase_edit_bottom_place_label"
                 android:id="@+id/place_text"
                 android:layout_below="@+id/shops_spinner"
                 android:layout_toLeftOf="@+id/place_spinner"
@@ -151,7 +152,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Remind near the:"
+                android:text="@string/purchase_edit_bottom_shop_label"
                 android:id="@+id/shop_text"
                 android:layout_alignTop="@+id/shops_spinner"
                 android:layout_alignRight="@+id/place_text"
