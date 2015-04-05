@@ -141,9 +141,11 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
+        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
         if (drawerLayout != null && drawerLayout.isDrawerOpen(drawerListView)) {
             drawerLayout.closeDrawer(drawerListView);
-        } else if (activityHelper.getGlobalId() == AppConstants.MENU_SHOW_PURCHASE_ARCHIVE) {
+        } else if (activityHelper.getGlobalId() == AppConstants.MENU_SHOW_PURCHASE_ARCHIVE
+                && backStackEntryCount <= 0) {
             activityHelper.setGlobalId(AppConstants.MENU_SHOW_PURCHASE_LIST);
             menuShowPurchaseLists(AppConstants.MENU_SHOW_PURCHASE_LIST);
         } else if (interactionListener != null) {
