@@ -30,7 +30,18 @@ public abstract class BaseFragment extends Fragment implements BaseActivity.Inte
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(displayHome);
         activity.getSupportActionBar().setHomeButtonEnabled(displayHome);
+        changeActionBarTitle();
         changeHomeUpToHamburger();
+    }
+
+    public void setActionBarTitle(int resId) {
+        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        activity.getSupportActionBar().setTitle(resId);
+    }
+
+    public void setActionBarTitle(String string) {
+        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        activity.getSupportActionBar().setTitle(string);
     }
 
     public void hideSoftKeyboard() {
@@ -62,6 +73,27 @@ public abstract class BaseFragment extends Fragment implements BaseActivity.Inte
         ActivityHelper helper = ActivityHelper.getInstance();
         if (helper.getGlobalId() == AppConstants.MENU_SHOW_PURCHASE_LIST) {
             activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+        }
+    }
+
+    private void changeActionBarTitle() {
+        ActivityHelper helper = ActivityHelper.getInstance();
+        int menuId = helper.getGlobalId();
+        switch (menuId) {
+            case AppConstants.MENU_SHOW_PURCHASE_LIST:
+                setActionBarTitle(R.string.menu_show_purchase_list);
+                break;
+            case AppConstants.MENU_SHOW_PURCHASE_ARCHIVE:
+                setActionBarTitle(R.string.menu_show_purchase_archive);
+                break;
+            case AppConstants.MENU_SHOW_SHOPS:
+                setActionBarTitle(R.string.menu_show_shops);
+                break;
+            case AppConstants.MENU_SHOW_PLACES:
+                setActionBarTitle(R.string.menu_show_places);
+                break;
+            default:
+                break;
         }
     }
 
