@@ -38,6 +38,7 @@
             android:name=".activities.PurchaseActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateAlwaysHidden"
+            android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTask" >
         </activity>
         <activity

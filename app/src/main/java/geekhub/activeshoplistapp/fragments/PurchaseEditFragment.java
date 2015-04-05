@@ -29,6 +29,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -117,6 +118,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_purchase_edit, container, false);
 
+        setListenerToRootView();
+
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ActionBarActivity activity = (ActionBarActivity) getActivity();
         activity.setSupportActionBar(toolbar);
@@ -169,38 +172,46 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             initScreen();
         }
 
-        final int heightHidePanel = getActivity().getResources().getDimensionPixelSize(R.dimen.purchase_item_hide_panel_height);
-        final int panelTime = getResources().getInteger(R.integer.purchase_item_panel_time);
-
         moreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isShowMore = !isShowMore;
-                if (isShowMore) {
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                        RelativeLayout.LayoutParams params =
-                                (RelativeLayout.LayoutParams) toolbarBottom.getLayoutParams();
-                        params.bottomMargin = 0;
-                        toolbarBottom.setLayoutParams(params);
-                    } else {
-                        ObjectAnimator
-                                .ofFloat(toolbarBottom, "translationY", 0, -heightHidePanel)
-                                .setDuration(panelTime).start();
-                    }
-                } else {
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                        RelativeLayout.LayoutParams params =
-                                (RelativeLayout.LayoutParams) toolbarBottom.getLayoutParams();
-                        params.bottomMargin = (-heightHidePanel);
-                        toolbarBottom.setLayoutParams(params);
-                    } else {
-                        ObjectAnimator
-                                .ofFloat(toolbarBottom, "translationY", -heightHidePanel, 0)
-                                .setDuration(panelTime).start();
-                    }
-                }
+                showToolbarBottomPanel(!isShowMore);
             }
         });
+    }
+
+    private void showToolbarBottomPanel(boolean show) {
+        if (show != isShowMore) {
+
+            final int heightHidePanel = getActivity().getResources().getDimensionPixelSize(R.dimen.purchase_item_hide_panel_height);
+            final int panelTime = getResources().getInteger(R.integer.purchase_item_panel_time);
+
+            if (show) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                    RelativeLayout.LayoutParams params =
+                            (RelativeLayout.LayoutParams) toolbarBottom.getLayoutParams();
+                    params.bottomMargin = 0;
+                    toolbarBottom.setLayoutParams(params);
+                } else {
+                    ObjectAnimator
+                            .ofFloat(toolbarBottom, "translationY", 0, -heightHidePanel)
+                            .setDuration(panelTime).start();
+                }
+                isShowMore = true;
+            } else {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                    RelativeLayout.LayoutParams params =
+                            (RelativeLayout.LayoutParams) toolbarBottom.getLayoutParams();
+                    params.bottomMargin = (-heightHidePanel);
+                    toolbarBottom.setLayoutParams(params);
+                } else {
+                    ObjectAnimator
+                            .ofFloat(toolbarBottom, "translationY", -heightHidePanel, 0)
+                            .setDuration(panelTime).start();
+                }
+                isShowMore = false;
+            }
+        }
     }
 
     private void initScreen() {
@@ -750,6 +761,32 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         goodsLabelEdit.requestFocus();
         shopsSpinner.setEnabled(true);
         placeSpinner.setEnabled(true);
+    }
+
+    /*
+    * Keyboard show/hide listener
+    * */
+    boolean isOpened = false;
+    public void setListenerToRootView(){
+        final View activityRootView = getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+
+                int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
+                if (heightDiff > 100) { // 99% of the time the height diff will be due to a keyboard.
+                    showToolbarBottomPanel(false);
+                    toolbarBottom.setVisibility(View.GONE);
+                    /*if (!isOpened) {
+                        //Do two things, make the view top visible and the editText smaller
+                    }*/
+                    isOpened = true;
+                } else if (isOpened) {
+                    isOpened = false; //Show keyboard
+                    toolbarBottom.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     @Override

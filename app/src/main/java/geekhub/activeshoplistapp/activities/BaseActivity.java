@@ -118,6 +118,8 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onResume();
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
