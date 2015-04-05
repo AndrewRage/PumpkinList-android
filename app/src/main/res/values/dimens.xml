@@ -16,6 +16,7 @@
     <dimen name="fab_button_right_margin">16dp</dimen>
     <dimen name="fab_button_bottom_margin">16dp</dimen>
 
+    <integer name="purchase_list_item_columns">2</integer>
     <dimen name="purchase_list_item_margin">10dp</dimen>
     <dimen name="purchase_list_item_negative_padding">-10dp</dimen>
     <dimen name="purchase_list_item_title_text_size">18sp</dimen>

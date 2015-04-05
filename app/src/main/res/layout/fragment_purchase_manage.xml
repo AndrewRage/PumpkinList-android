@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background_material_light" >
 
     <include layout="@layout/toolbar" />
 
@@ -17,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
-            android:numColumns="2"
+            android:numColumns="@integer/purchase_list_item_columns"
             android:horizontalSpacing="@dimen/purchase_list_item_negative_padding"
             android:verticalSpacing="@dimen/purchase_list_item_negative_padding"/>
 
