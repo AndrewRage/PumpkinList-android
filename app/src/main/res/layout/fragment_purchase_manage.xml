@@ -21,6 +21,14 @@
             android:horizontalSpacing="@dimen/purchase_list_item_negative_padding"
             android:verticalSpacing="@dimen/purchase_list_item_negative_padding"/>
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone" />
+
         <ImageButton
             android:id="@+id/plus_button"
             android:layout_width="@dimen/fab_button_size_big"

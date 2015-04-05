@@ -33,6 +33,7 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
     private static final String STATE_LIST = "PurchaseListState";
 
     private GridView purchaseView;
+    private View progressBar;
     private OnPurchaseListMainFragmentListener purchaseListMainFragmentListener;
     private PurchaseListAdapter adapter;
     private Parcelable purchaseViewState;
@@ -59,12 +60,15 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
         View view = inflater.inflate(R.layout.fragment_purchase_manage, container, false);
         addToolbar(view);
         purchaseView = (GridView) view.findViewById(R.id.purchase_view);
+        progressBar = view.findViewById(R.id.progress_bar);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        progressBar.setVisibility(View.VISIBLE);
 
         if (getArguments() != null) {
             menuItemId = getArguments().getInt(ARG_MENU_ID);
@@ -156,6 +160,8 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
             purchaseView.onRestoreInstanceState(purchaseViewState);
         }
         purchaseViewState = null;
+
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
