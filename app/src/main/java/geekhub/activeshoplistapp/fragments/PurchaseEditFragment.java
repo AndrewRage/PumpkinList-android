@@ -67,6 +67,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private static final String TAG = PurchaseEditFragment.class.getSimpleName();
     private static final String ARG_LIST_ID = "PurchaseList_param";
     private static final String STATE_LIST = "PurchaseListState";
+    private static final String STATE_ID = "ListIdState";
     private static final int REQUEST_SHOP = 10101;
     private static final int REQUEST_PLACES = 10102;
     private static final int LOADER_ITEM_ID = 0;
@@ -158,8 +159,16 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (getArguments() != null) {
-            long id = getArguments().getLong(ARG_LIST_ID);
+        long id = -1;
+
+        if (savedInstanceState != null) {
+            id = savedInstanceState.getLong(STATE_ID);
+        }
+        if (id < 0 && getArguments() != null) {
+            id = getArguments().getLong(ARG_LIST_ID);
+        }
+
+        if (id > 0) {
             Bundle args = new Bundle();
             args.putLong(ARG_LIST_ID, id);
             getLoaderManager().initLoader(LOADER_LIST, args, this);
@@ -794,6 +803,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         super.onSaveInstanceState(outState);
         purchaseListViewState = purchaseListView.onSaveInstanceState();
         outState.putParcelable(STATE_LIST, purchaseListViewState);
+        outState.putLong(STATE_ID, purchaseList.getDbId());
     }
 
     @Override
