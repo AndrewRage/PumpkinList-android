@@ -708,13 +708,38 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
     private void showTime(){
         if (isDateSelect) {
-            dateText.setText(mYear + "." + (mMonth + 1) + "." + mDay);
+            StringBuilder date = new StringBuilder();
+            date.append(mYear + ".");
+            if (mMonth + 1 > 9) {
+                date.append((mMonth + 1) + ".");
+            } else {
+                date.append("0" + (mMonth + 1) + ".");
+            }
+            if (mDay > 9) {
+                date.append(mDay);
+            } else {
+                date.append("0" + mDay);
+            }
+            dateText.setText(date.toString());
         }
         if (isTimeSelect) {
-            timeText.setText(mHour + ":" + mMinute);
+            StringBuilder time = new StringBuilder();
+            if (mHour > 9) {
+                time.append(mHour + ":");
+            } else {
+                time.append("0" + mHour + ":");
+            }
+            if (mMinute > 9) {
+                time.append(mMinute);
+            } else {
+                time.append("0" + mMinute);
+            }
+            timeText.setText(time.toString());
         }
 
-        clearTimeButton.setVisibility(View.VISIBLE);
+        if (isDateSelect && isTimeSelect) {
+            clearTimeButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
