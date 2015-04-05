@@ -44,4 +44,7 @@
     <dimen name="drawer_item_height">48dp</dimen>
     <dimen name="drawer_item_text_size">14sp</dimen>
 
+    <integer name="fab_button_hide_time">400</integer>
+    <dimen name="fab_button_hide_distance">100dp</dimen>
+
 </resources>

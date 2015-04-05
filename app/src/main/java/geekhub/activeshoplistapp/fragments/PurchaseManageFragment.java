@@ -1,5 +1,6 @@
 package geekhub.activeshoplistapp.fragments;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -11,11 +12,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.adapters.PurchaseListAdapter;
@@ -33,11 +37,12 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
     private static final String STATE_LIST = "PurchaseListState";
 
     private GridView purchaseView;
-    private View progressBar;
+    private View progressBar, floatPlus;
     private OnPurchaseListMainFragmentListener purchaseListMainFragmentListener;
     private PurchaseListAdapter adapter;
     private Parcelable purchaseViewState;
     private int menuItemId = -1;
+    private boolean showFabPlus;
 
     public static PurchaseManageFragment newInstance(int menuItemId) {
         PurchaseManageFragment fragment = new PurchaseManageFragment();
@@ -61,6 +66,7 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
         addToolbar(view);
         purchaseView = (GridView) view.findViewById(R.id.purchase_view);
         progressBar = view.findViewById(R.id.progress_bar);
+        floatPlus = view.findViewById(R.id.plus_button);
         return view;
     }
 
@@ -91,12 +97,63 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
         getLoaderManager().initLoader(0, null, this);
 
         //Show edit fragment
-        view.findViewById(R.id.plus_button).setOnClickListener(new View.OnClickListener() {
+        floatPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 purchaseListMainFragmentListener.onPurchaseListMainFragmentClickListener();
             }
         });
+
+        purchaseView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (totalItemCount > visibleItemCount) {
+                    if (firstVisibleItem + visibleItemCount == totalItemCount) {
+                        showFabPlus(false);
+                    } else {
+                        showFabPlus(true);
+                    }
+                }
+            }
+        });
+    }
+
+    private void showFabPlus(boolean show) {
+        if (show != showFabPlus) {
+            showFabPlus = show;
+
+            int time = getResources().getInteger(R.integer.fab_button_hide_time);
+            int distance = getResources().getDimensionPixelSize(R.dimen.fab_button_hide_distance);
+            int padding = getResources().getDimensionPixelSize(R.dimen.fab_button_right_margin);
+
+            if (!show) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                    RelativeLayout.LayoutParams params =
+                            (RelativeLayout.LayoutParams) floatPlus.getLayoutParams();
+                    params.bottomMargin = (-distance);
+                    floatPlus.setLayoutParams(params);
+                } else {
+                    ObjectAnimator
+                            .ofFloat(floatPlus, "translationX", 0, distance)
+                            .setDuration(time).start();
+                }
+            } else {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                    RelativeLayout.LayoutParams params =
+                            (RelativeLayout.LayoutParams) floatPlus.getLayoutParams();
+                    params.bottomMargin = padding;
+                    floatPlus.setLayoutParams(params);
+                } else {
+                    ObjectAnimator
+                            .ofFloat(floatPlus, "translationX", distance, 0)
+                            .setDuration(time).start();
+                }
+            }
+        }
     }
 
     @Override
