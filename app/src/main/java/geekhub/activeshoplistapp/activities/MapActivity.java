@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -55,6 +56,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private Marker marker;
     private GoogleMap.OnMarkerDragListener markerDragListener;
     private boolean needSave = false;
+    private View doneButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,26 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
         placeNameEdit = (EditText) findViewById(R.id.title);
         placeNameEdit.clearFocus();
+
+        doneButton = findViewById(R.id.done_button);
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (marker == null) {
+                    new AlertDialog.Builder(MapActivity.this)
+                            .setTitle(getString(R.string.create_alert_title))
+                            .setMessage(getString(R.string.create_alert_massage))
+                            .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //nothing
+                                }
+                            })
+                            .show();
+                } else {
+                    onBackPressed();
+                }
+            }
+        });
 
         Intent args = getIntent();
 

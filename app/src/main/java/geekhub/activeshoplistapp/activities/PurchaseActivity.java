@@ -50,6 +50,9 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
+        if (activityHelper.getGlobalId() != activityHelper.getPurchaseMenuId()) {
+            menuShowPurchaseLists(AppConstants.MENU_SHOW_PURCHASE_LIST);
+        }
     }
 
     @Override

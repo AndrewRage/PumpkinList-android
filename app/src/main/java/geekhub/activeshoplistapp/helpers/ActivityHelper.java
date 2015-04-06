@@ -7,6 +7,7 @@ public class ActivityHelper {
     private static ActivityHelper helper;
     private int purchaseMenuId = AppConstants.MENU_SHOW_PURCHASE_LIST;
     private int globalId = AppConstants.MENU_SHOW_PURCHASE_LIST;
+    private boolean isNotMainScreen = false;
 
     private ActivityHelper() {
     }
@@ -32,5 +33,13 @@ public class ActivityHelper {
 
     public void setGlobalId(int globalId) {
         this.globalId = globalId;
+    }
+
+    public boolean isNotMainScreen() {
+        return isNotMainScreen;
+    }
+
+    public void setIsNotMainScreen(boolean isNotMainScreen) {
+        this.isNotMainScreen = isNotMainScreen;
     }
 }

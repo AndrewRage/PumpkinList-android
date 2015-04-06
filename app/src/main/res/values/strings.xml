@@ -68,6 +68,10 @@
     <string name="purchase_edit_bottom_shop_label">Remind near the:</string>
     <string name="purchase_edit_bottom_place_label">Remind on the way to:</string>
 
+    <!--Map Activity-->
+    <string name="create_alert_title">Marker not select</string>
+    <string name="create_alert_massage">First you need to select a location</string>
+
     <!--Shop edit-->
     <string name="shop_edit_name_hint">Shop name</string>
     <string name="shop_edit_new_shop_default">Nameless shop</string>

@@ -26,10 +26,41 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <fragment
-        android:id="@+id/map"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.SupportMapFragment" />
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_above="@+id/toolbar_bottom"/>
+
+        <RelativeLayout
+            android:id="@id/toolbar_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_toolbar_height"
+            android:background="?attr/colorPrimary"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" >
+
+            <Button
+                android:id="@+id/done_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:text="Done"
+                android:singleLine="true"
+                android:background="@drawable/background_normal"
+                android:visibility="visible"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>
