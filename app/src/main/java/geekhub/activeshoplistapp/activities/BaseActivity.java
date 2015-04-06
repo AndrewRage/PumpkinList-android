@@ -29,7 +29,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     private DrawerLayout drawerLayout;
     private ListView drawerListView;
     private View drawerHeader;
-    private boolean drawerHamburgerScreen = false;
+    //private boolean drawerHamburgerScreen = false;
     public ActivityHelper activityHelper;
 
     @Override
@@ -94,19 +94,19 @@ public abstract class BaseActivity extends ActionBarActivity {
         });
     }
 
-    public void setHamburgerScreen(boolean hamburger) {
+    /*public void setHamburgerScreen(boolean hamburger) {
         drawerHamburgerScreen = hamburger;
-    }
+    }*/
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (activityHelper.getPurchaseMenuId() == AppConstants.MENU_SHOW_PURCHASE_LIST) {
+        /*if (activityHelper.getPurchaseMenuId() == AppConstants.MENU_SHOW_PURCHASE_LIST) {
             setHamburgerScreen(true);
         } else {
             setHamburgerScreen(false);
-        }
+        }*/
 
         SharedPrefHelper sharedPrefHelper = SharedPrefHelper.getInstance();
         if (!sharedPrefHelper.isLogin()) {
@@ -125,7 +125,9 @@ public abstract class BaseActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-                if(drawerHamburgerScreen && drawerLayout != null && backStackEntryCount <= 0){
+                if(activityHelper.getGlobalId() == AppConstants.MENU_SHOW_PURCHASE_LIST
+                        && backStackEntryCount <= 0
+                        && drawerLayout != null ){
                     if (drawerLayout.isDrawerOpen(drawerListView)) {
                         drawerLayout.closeDrawer(drawerListView);
                     } else {
