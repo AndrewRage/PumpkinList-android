@@ -858,7 +858,6 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
                 int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
                 if (heightDiff > 100) { // 99% of the time the height diff will be due to a keyboard.
-                    showToolbarBottomPanel(false);
                     toolbarBottom.setVisibility(View.GONE);
                     /*if (!isOpened) {
                         //Do two things, make the view top visible and the editText smaller
@@ -867,6 +866,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 } else if (isOpened) {
                     isOpened = false; //Show keyboard
                     toolbarBottom.setVisibility(View.VISIBLE);
+                    showToolbarBottomPanel(false);
                 }
             }
         });
