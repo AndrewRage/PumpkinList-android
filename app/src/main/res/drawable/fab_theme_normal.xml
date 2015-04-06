@@ -10,6 +10,6 @@
         android:right="2dp"
         android:top="1dp"
         android:bottom="3dp"
-        android:drawable="@drawable/fab_background"/>
+        android:drawable="@drawable/fab_theme_background"/>
 
 </layer-list>
