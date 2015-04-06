@@ -70,6 +70,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private static final String STATE_ID = "ListIdState";
     private static final String STATE_GOODS = "GoodsState";
     private static final String STATE_TITLE = "TitleState";
+    private static final String STATE_NEW_LIST = "newListState";
     private static final int REQUEST_SHOP = 10101;
     private static final int REQUEST_PLACES = 10102;
     private static final int LOADER_ITEM_ID = 0;
@@ -78,7 +79,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private static final int LOADER_LIST = 3;
     private PurchaseItemAdapter adapter;
     private ListView purchaseListView;
-    private View header, progressBar, addItemButton, toolbarBottom, createButton, clearTimeButton, moreButton;
+    private View header, progressBar, addItemButton, toolbarBottom, createButton, clearTimeButton, moreButton, createView;
     private Button doneButton;
     private EditText listNameEdit;
     private EditText goodsLabelEdit;
@@ -88,7 +89,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private List<PlacesModel> shopsList, placesList;
     private PurchaseListModel purchaseList;
     private Parcelable purchaseListViewState;
-    private boolean isShowMore = false, isDateSelect = false, isTimeSelect = false;
+    private boolean isShowMore = false, isDateSelect = false, isTimeSelect = false, isNewList = false;
     private int mYear, mMonth, mDay, mHour, mMinute;
     private String titleState;
 
@@ -141,6 +142,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         toolbarBottom = view.findViewById(R.id.toolbar_bottom);
         moreButton = view.findViewById(R.id.more_button);
         doneButton = (Button) view.findViewById(R.id.done_button);
+        createView = view.findViewById(R.id.create_panel);
         createButton = view.findViewById(R.id.create_list_button);
         clearTimeButton = view.findViewById(R.id.clear_time_button);
         shopsSpinner = (Spinner) view.findViewById(R.id.shops_spinner);
@@ -164,11 +166,14 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
         long id = -1;
         String goodsState = null;
+        boolean isRestoreSaved = false;
 
         if (savedInstanceState != null) {
             id = savedInstanceState.getLong(STATE_ID);
             goodsState = savedInstanceState.getString(STATE_GOODS);
-            titleState = savedInstanceState.getString(STATE_GOODS);
+            titleState = savedInstanceState.getString(STATE_TITLE);
+            isNewList = savedInstanceState.getBoolean(STATE_NEW_LIST);
+            isRestoreSaved = true;
         }
         if (id < 0 && getArguments() != null) {
             id = getArguments().getLong(ARG_LIST_ID);
@@ -179,6 +184,9 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             args.putLong(ARG_LIST_ID, id);
             getLoaderManager().initLoader(LOADER_LIST, args, this);
         } else {
+            if (!isRestoreSaved) {
+                isNewList = true;
+            }
             purchaseList = new PurchaseListModel();
             purchaseList.setTimeCreate(System.currentTimeMillis());
             List<PurchaseItemModel> purchaseItems = new ArrayList<>();
@@ -259,24 +267,80 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         if (purchaseList.getDbId() != 0) {
             getLoaderManager().initLoader(LOADER_ITEM_ID, null, this);
             progressBar.setVisibility(View.VISIBLE);
-        }/*if else {
-            //TODO create new list button
-            //Not ready yet
-            createButton.setVisibility(View.VISIBLE);
-        }*/
+        }
+        if (isNewList) {
+            createView.setVisibility(View.VISIBLE);
+            moreButton.setVisibility(View.GONE);
+            doneButton.setVisibility(View.GONE);
+        }
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (purchaseList.getDbId() == 0
                         && TextUtils.isEmpty(listNameEdit.getText().toString())) {
-                    Toast.makeText(
+
+                    /*Toast.makeText(
                             getActivity(),
                             R.string.purchase_edit_create_empty_toast,
                             Toast.LENGTH_LONG
-                    ).show();
+                    ).show();*/
+
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle(getString(R.string.purchase_edit_create_empty_title))
+                            .setMessage(getString(R.string.purchase_edit_create_empty_message))
+                            .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //nothing
+                                }
+                            })
+                            .show();
                 } else {
-                    onBackPressed();
+                    if (TextUtils.isEmpty(listNameEdit.getText())) {
+                        listNameEdit.setText(R.string.purchase_edit_new_list_default);
+                    }
+                    purchaseList.setListName(listNameEdit.getText().toString());
+                    final String name = goodsLabelEdit.getText().toString();
+                    final Handler handler = new Handler();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (purchaseList.getDbId() == 0) {
+                                Uri uri = ContentHelper.insertPurchaseList(getActivity(), purchaseList);
+                                purchaseList.setDbId(Long.parseLong(uri.getLastPathSegment()));
+                            }
+                            if (!TextUtils.isEmpty(name)) {
+                                PurchaseItemModel item = new PurchaseItemModel(
+                                        0,
+                                        0,
+                                        0,
+                                        false,
+                                        false,
+                                        0,
+                                        name,
+                                        0,
+                                        "",
+                                        0
+                                );
+                                ContentHelper.insertPurchaseItem(getActivity(), item, purchaseList.getDbId());
+
+                                if (adapter.getCursor() == null) {
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            getLoaderManager().initLoader(LOADER_ITEM_ID, null, PurchaseEditFragment.this);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }).start();
+
+                    createView.setVisibility(View.GONE);
+                    moreButton.setVisibility(View.VISIBLE);
+                    doneButton.setVisibility(View.VISIBLE);
+
+                    isNewList = false;
                 }
             }
         });
@@ -816,6 +880,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         outState.putLong(STATE_ID, purchaseList.getDbId());
         outState.putString(STATE_GOODS, goodsLabelEdit.getText().toString());
         outState.putString(STATE_TITLE, listNameEdit.getText().toString());
+        outState.putBoolean(STATE_NEW_LIST, isNewList);
     }
 
     @Override
@@ -1047,7 +1112,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
     private void refreshPurchaseList(Cursor cursor) {
         purchaseList = ContentHelper.getPurchaseList(cursor);
-        if (titleState != null) {
+        if (!TextUtils.isEmpty(titleState)) {
             listNameEdit.setText(titleState);
             titleState = null;
         } else {

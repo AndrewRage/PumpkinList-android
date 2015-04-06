@@ -35,15 +35,26 @@
             android:singleLine="true"
             android:background="@drawable/background_normal"/>
 
-        <Button
-            android:id="@+id/create_list_button"
-            android:layout_width="0dp"
+        <RelativeLayout
+            android:id="@+id/create_panel"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Create list"
-            android:singleLine="true"
-            android:background="@drawable/background_normal"
-            android:visibility="gone"/>
+            android:visibility="gone" >
+
+            <Button
+                android:id="@+id/create_list_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:text="@string/purchase_edit_bottom_create_list"
+                android:singleLine="true"
+                android:background="@drawable/background_normal"
+                android:visibility="visible"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 

@@ -36,7 +36,7 @@
             android:background="@drawable/background_normal" />
 
         <RelativeLayout
-            android:id="@+id/done_panel"
+            android:id="@+id/create_panel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone" >
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:text="Create list"
+                android:text="@string/purchase_edit_bottom_create_list"
                 android:singleLine="true"
                 android:background="@drawable/background_normal"
                 android:visibility="visible"

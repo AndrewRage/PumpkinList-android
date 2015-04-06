@@ -60,13 +60,15 @@
     <string name="purchase_edit_button_appointment">Reminder</string>
     <string name="purchase_edit_button_done">Shopping done</string>
     <string name="purchase_edit_button_continue">Continue shopping</string>
-    <string name="purchase_edit_create_empty_toast">Can\'t create empty shopping list!</string>
+    <string name="purchase_edit_create_empty_title">Shopping list is empty!</string>
+    <string name="purchase_edit_create_empty_message">Can\'t create empty shopping list!</string>
     <string name="purchase_edit_bottom_set_date">Set date</string>
     <string name="purchase_edit_bottom_set_time">Set time</string>
     <string name="purchase_edit_bottom_fail_time_toast">Please, select a future time for notification</string>
     <string name="purchase_edit_bottom_time_label">Remind at the time:</string>
     <string name="purchase_edit_bottom_shop_label">Remind near the:</string>
     <string name="purchase_edit_bottom_place_label">Remind on the way to:</string>
+    <string name="purchase_edit_bottom_create_list">Create list</string>
 
     <!--Map Activity-->
     <string name="create_alert_title">Marker not select</string>
