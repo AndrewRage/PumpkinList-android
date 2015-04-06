@@ -86,7 +86,7 @@ public class PlacesManageFragment extends BaseFragment implements LoaderManager.
         }
         getLoaderManager().initLoader(menuItemId, null, this);
 
-        adapter = new PlaceAdapter(getActivity(), R.layout.item_shop, placesList);
+        adapter = new PlaceAdapter(getActivity(), R.layout.item_place, placesList);
         placeListView.setAdapter(adapter);
         placeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
