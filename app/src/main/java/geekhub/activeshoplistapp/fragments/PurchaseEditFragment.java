@@ -68,6 +68,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private static final String ARG_LIST_ID = "PurchaseList_param";
     private static final String STATE_LIST = "PurchaseListState";
     private static final String STATE_ID = "ListIdState";
+    private static final String STATE_GOODS = "GoodsState";
+    private static final String STATE_TITLE = "TitleState";
     private static final int REQUEST_SHOP = 10101;
     private static final int REQUEST_PLACES = 10102;
     private static final int LOADER_ITEM_ID = 0;
@@ -88,6 +90,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private Parcelable purchaseListViewState;
     private boolean isShowMore = false, isDateSelect = false, isTimeSelect = false;
     private int mYear, mMonth, mDay, mHour, mMinute;
+    private String titleState;
 
     public static PurchaseEditFragment newInstance(long purchaseListId) {
         PurchaseEditFragment fragment = new PurchaseEditFragment();
@@ -160,9 +163,12 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         super.onViewCreated(view, savedInstanceState);
 
         long id = -1;
+        String goodsState = null;
 
         if (savedInstanceState != null) {
             id = savedInstanceState.getLong(STATE_ID);
+            goodsState = savedInstanceState.getString(STATE_GOODS);
+            titleState = savedInstanceState.getString(STATE_GOODS);
         }
         if (id < 0 && getArguments() != null) {
             id = getArguments().getLong(ARG_LIST_ID);
@@ -179,6 +185,10 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             purchaseList.setPurchasesItems(purchaseItems);
 
             initScreen();
+        }
+
+        if (goodsState != null) {
+            goodsLabelEdit.setText(goodsState);
         }
 
         moreButton.setOnClickListener(new View.OnClickListener() {
@@ -804,6 +814,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         purchaseListViewState = purchaseListView.onSaveInstanceState();
         outState.putParcelable(STATE_LIST, purchaseListViewState);
         outState.putLong(STATE_ID, purchaseList.getDbId());
+        outState.putString(STATE_GOODS, goodsLabelEdit.getText().toString());
+        outState.putString(STATE_TITLE, listNameEdit.getText().toString());
     }
 
     @Override
@@ -1035,7 +1047,12 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
     private void refreshPurchaseList(Cursor cursor) {
         purchaseList = ContentHelper.getPurchaseList(cursor);
-        listNameEdit.setText(purchaseList.getListName());
+        if (titleState != null) {
+            listNameEdit.setText(titleState);
+            titleState = null;
+        } else {
+            listNameEdit.setText(purchaseList.getListName());
+        }
         initScreen();
     }
 
