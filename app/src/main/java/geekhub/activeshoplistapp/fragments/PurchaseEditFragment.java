@@ -123,7 +123,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_purchase_edit, container, false);
 
-        setListenerToRootView();
+        //setListenerToRootView();
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ActionBarActivity activity = (ActionBarActivity) getActivity();

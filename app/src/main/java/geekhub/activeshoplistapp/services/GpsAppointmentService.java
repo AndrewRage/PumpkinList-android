@@ -65,23 +65,14 @@ public class GpsAppointmentService extends Service {
                 true,
                 contentObserver
         );
-        readPurchaseList();
+        //readPurchaseList();
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand");
-        if (locationManager == null) {
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(
-                    LocationManager.PASSIVE_PROVIDER, UPDATE_TIME_NETWORK, UPDATE_PLACE_NETWORK, passiveListener);
-            locationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER, UPDATE_TIME_NETWORK, UPDATE_PLACE_NETWORK, networkListener);
-            locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, UPDATE_TIME_NETWORK, UPDATE_PLACE_NETWORK, gpsListener);
-            //startGps();
-        }
+        readPurchaseList();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -183,7 +174,7 @@ public class GpsAppointmentService extends Service {
             cursor.close();
         }
 
-        Log.d(TAG, "purchaseList.size = " + purchaseLists.size());
+        //Log.d(TAG, "purchaseList.size = " + purchaseLists.size());
 
         for (int i = 0; i < purchaseLists.size(); i++) {
             Location point = null;
@@ -273,15 +264,28 @@ public class GpsAppointmentService extends Service {
             }
         }
 
-        if (purchaseLists.size() == 0) {
-            locationManager.removeUpdates(gpsListener);
-            locationManager.removeUpdates(networkListener);
-            locationManager.removeUpdates(passiveListener);
-            locationManager = null;
-            handler = null;
-            purchaseLists = null;
-            stopSelf();
+        if (purchaseLists.size() != 0) {
+            if (locationManager == null) {
+                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                locationManager.requestLocationUpdates(
+                        LocationManager.PASSIVE_PROVIDER, UPDATE_TIME_NETWORK, UPDATE_PLACE_NETWORK, passiveListener);
+                locationManager.requestLocationUpdates(
+                        LocationManager.NETWORK_PROVIDER, UPDATE_TIME_NETWORK, UPDATE_PLACE_NETWORK, networkListener);
+                locationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER, UPDATE_TIME_NETWORK, UPDATE_PLACE_NETWORK, gpsListener);
+                //startGps();
+            }
+        } else {
+            if (locationManager != null) {
+                locationManager.removeUpdates(gpsListener);
+                locationManager.removeUpdates(networkListener);
+                locationManager.removeUpdates(passiveListener);
+                locationManager = null;
+            }
+            //handler = null;
+            //purchaseLists = null;
             Log.d(TAG, "serviceStop");
+            this.stopSelf();
         }
     }
 
