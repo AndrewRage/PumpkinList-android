@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -125,28 +127,21 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
 
             int time = getResources().getInteger(R.integer.fab_button_hide_time);
             int distance = getResources().getDimensionPixelSize(R.dimen.fab_button_hide_distance);
-            int padding = getResources().getDimensionPixelSize(R.dimen.fab_button_right_margin);
 
             if (!show) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                    RelativeLayout.LayoutParams params =
-                            (RelativeLayout.LayoutParams) floatPlus.getLayoutParams();
-                    params.bottomMargin = (-distance);
-                    floatPlus.setLayoutParams(params);
+                    floatPlus.setVisibility(View.GONE);
                 } else {
                     ObjectAnimator
-                            .ofFloat(floatPlus, "translationX", 0, distance)
+                            .ofFloat(floatPlus, "translationY", 0, distance)
                             .setDuration(time).start();
                 }
             } else {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                    RelativeLayout.LayoutParams params =
-                            (RelativeLayout.LayoutParams) floatPlus.getLayoutParams();
-                    params.bottomMargin = padding;
-                    floatPlus.setLayoutParams(params);
+                    floatPlus.setVisibility(View.VISIBLE);
                 } else {
                     ObjectAnimator
-                            .ofFloat(floatPlus, "translationX", distance, 0)
+                            .ofFloat(floatPlus, "translationY", distance, 0)
                             .setDuration(time).start();
                 }
             }
