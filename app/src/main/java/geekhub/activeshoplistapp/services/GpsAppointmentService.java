@@ -19,6 +19,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -176,13 +177,16 @@ public class GpsAppointmentService extends Service {
 
         //Log.d(TAG, "purchaseList.size = " + purchaseLists.size());
 
-        for (int i = 0; i < purchaseLists.size(); i++) {
+        Iterator<PurchaseListModel> iterator = purchaseLists.iterator();
+        while (iterator.hasNext()) {
+            PurchaseListModel purchaseList = iterator.next();
+
             Location point = null;
             Location shop = null;
             Location place = null;
             float pointRadius = 0;
 
-            if (purchaseLists.get(i).getShopId() != 0) {
+            if (purchaseList.getShopId() != 0) {
                 String[] projection = {
                         SqlDbHelper.COLUMN_ID,
                         SqlDbHelper.PLACES_COLUMN_PLACES_ID,
@@ -190,14 +194,14 @@ public class GpsAppointmentService extends Service {
                         SqlDbHelper.PLACES_COLUMN_LONGITUDE,
                 };
                 StringBuilder selectionBuilder = new StringBuilder();
-                if (purchaseLists.get(i).isUserShop()) {
+                if (purchaseList.isUserShop()) {
                     selectionBuilder.append(SqlDbHelper.COLUMN_ID);
                 } else {
                     selectionBuilder.append(SqlDbHelper.PLACES_COLUMN_PLACES_ID);
                 }
                 selectionBuilder.append("=?");
                 String selection = selectionBuilder.toString();
-                String[] args = new String[]{Long.toString(purchaseLists.get(i).getShopId())};
+                String[] args = new String[]{Long.toString(purchaseList.getShopId())};
                 Cursor cursor = getContentResolver().query(
                         ShoppingContentProvider.PLACE_CONTENT_URI,
                         projection,
@@ -205,16 +209,18 @@ public class GpsAppointmentService extends Service {
                         args,
                         null
                 );
-                cursor.moveToFirst();
-                int indexLatitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LATITUDE);
-                int indexLongitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LONGITUDE);
-                shop = new Location(AppConstants.LOCATION);
-                shop.setLatitude(cursor.getDouble(indexLatitude));
-                shop.setLongitude(cursor.getDouble(indexLongitude));
+                if (cursor.getCount() > 0) {
+                    cursor.moveToFirst();
+                    int indexLatitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LATITUDE);
+                    int indexLongitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LONGITUDE);
+                    shop = new Location(AppConstants.LOCATION);
+                    shop.setLatitude(cursor.getDouble(indexLatitude));
+                    shop.setLongitude(cursor.getDouble(indexLongitude));
+                }
                 cursor.close();
             }
 
-            if (purchaseLists.get(i).getPlaceId() != 0) {
+            if (purchaseList.getPlaceId() != 0) {
                 String[] projection = {
                         SqlDbHelper.COLUMN_ID,
                         SqlDbHelper.PLACES_COLUMN_PLACES_ID,
@@ -222,14 +228,14 @@ public class GpsAppointmentService extends Service {
                         SqlDbHelper.PLACES_COLUMN_LONGITUDE,
                 };
                 StringBuilder selectionBuilder = new StringBuilder();
-                if (purchaseLists.get(i).isUserPlace()) {
+                if (purchaseList.isUserPlace()) {
                     selectionBuilder.append(SqlDbHelper.COLUMN_ID);
                 } else {
                     selectionBuilder.append(SqlDbHelper.PLACES_COLUMN_PLACES_ID);
                 }
                 selectionBuilder.append("=?");
                 String selection = selectionBuilder.toString();
-                String[] args = new String[]{Long.toString(purchaseLists.get(i).getPlaceId())};
+                String[] args = new String[]{Long.toString(purchaseList.getPlaceId())};
                 Cursor cursor = getContentResolver().query(
                         ShoppingContentProvider.PLACE_CONTENT_URI,
                         projection,
@@ -237,12 +243,14 @@ public class GpsAppointmentService extends Service {
                         args,
                         null
                 );
-                cursor.moveToFirst();
-                int indexLatitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LATITUDE);
-                int indexLongitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LONGITUDE);
-                place = new Location(AppConstants.LOCATION);
-                place.setLatitude(cursor.getDouble(indexLatitude));
-                place.setLongitude(cursor.getDouble(indexLongitude));
+                if (cursor.getCount() > 0) {
+                    cursor.moveToFirst();
+                    int indexLatitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LATITUDE);
+                    int indexLongitude = cursor.getColumnIndex(SqlDbHelper.PLACES_COLUMN_LONGITUDE);
+                    place = new Location(AppConstants.LOCATION);
+                    place.setLatitude(cursor.getDouble(indexLatitude));
+                    place.setLongitude(cursor.getDouble(indexLongitude));
+                }
                 cursor.close();
             }
 
@@ -250,17 +258,22 @@ public class GpsAppointmentService extends Service {
                 point = Coordinate.middlePoint(shop, place);
                 pointRadius = Coordinate.distance(point, place);
                 if (pointRadius < 1500) {
-                    purchaseLists.get(i).setPointRadius(pointRadius);
-                    purchaseLists.get(i).setPointLocation(point);
+                    purchaseList.setPointRadius(pointRadius);
+                    purchaseList.setPointLocation(point);
                 }
             }
             if (pointRadius == 0 || pointRadius > MIN_RADIUS * 2) {
                 if (shop != null) {
-                    purchaseLists.get(i).setShopLocation(shop);
+                    purchaseList.setShopLocation(shop);
                 }
                 if (place != null) {
-                    purchaseLists.get(i).setPlaceLocation(place);
+                    purchaseList.setPlaceLocation(place);
                 }
+            }
+            if (purchaseList.getPointLocation() == null
+                    && purchaseList.getShopLocation() == null
+                    && purchaseList.getPlaceLocation() == null) {
+                purchaseLists.remove(purchaseList);
             }
         }
 
