@@ -849,7 +849,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     /*
     * Keyboard show/hide listener
     * */
-    boolean isOpened = false;
+    /*boolean isOpened = false;
     public void setListenerToRootView(){
         final View activityRootView = getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
         activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -859,9 +859,9 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
                 if (heightDiff > 100) { // 99% of the time the height diff will be due to a keyboard.
                     toolbarBottom.setVisibility(View.GONE);
-                    /*if (!isOpened) {
+                    *//*if (!isOpened) {
                         //Do two things, make the view top visible and the editText smaller
-                    }*/
+                    }*//*
                     isOpened = true;
                 } else if (isOpened) {
                     isOpened = false; //Show keyboard
@@ -870,7 +870,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 }
             }
         });
-    }
+    }*/
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
