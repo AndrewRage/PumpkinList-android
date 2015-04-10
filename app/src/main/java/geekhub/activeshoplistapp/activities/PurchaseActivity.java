@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.fragments.PurchaseEditFragment;
 import geekhub.activeshoplistapp.fragments.PurchaseManageFragment;
+import geekhub.activeshoplistapp.helpers.ActivityHelper;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 
@@ -20,6 +21,7 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityHelper.getInstance().setIsMainActivity(true);
         initDrawer();
         if (savedInstanceState == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -43,6 +45,7 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
 
     @Override
     protected void onResume() {
+        ActivityHelper.getInstance().setIsMainActivity(true);
         superOnResume();
         SharedPrefHelper sharedPrefHelper = SharedPrefHelper.getInstance();
         if (!sharedPrefHelper.isLogin()) {

@@ -71,7 +71,9 @@ public abstract class BaseFragment extends Fragment implements BaseActivity.Inte
     public void changeHomeUpToHamburger() {
         ActionBarActivity activity = (ActionBarActivity) getActivity();
         ActivityHelper helper = ActivityHelper.getInstance();
-        if (helper.getGlobalId() == AppConstants.MENU_SHOW_PURCHASE_LIST) {
+        if (helper.isMainActivity()
+                && helper.getGlobalId() == AppConstants.MENU_SHOW_PURCHASE_LIST
+                && getActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
             activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         }
     }

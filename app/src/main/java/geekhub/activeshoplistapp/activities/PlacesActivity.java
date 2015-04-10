@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.fragments.PlacesManageFragment;
+import geekhub.activeshoplistapp.helpers.ActivityHelper;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 
 /**
@@ -17,6 +18,7 @@ public class PlacesActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityHelper.getInstance().setIsMainActivity(false);
         Intent args = getIntent();
         if (args != null) {
             menuItemId = args.getExtras().getInt(AppConstants.EXTRA_MENU_ITEM);

@@ -125,7 +125,8 @@ public abstract class BaseActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-                if(activityHelper.getGlobalId() == AppConstants.MENU_SHOW_PURCHASE_LIST
+                if(activityHelper.isMainActivity()
+                        && activityHelper.getGlobalId() == AppConstants.MENU_SHOW_PURCHASE_LIST
                         && backStackEntryCount <= 0
                         && drawerLayout != null ){
                     if (drawerLayout.isDrawerOpen(drawerListView)) {
