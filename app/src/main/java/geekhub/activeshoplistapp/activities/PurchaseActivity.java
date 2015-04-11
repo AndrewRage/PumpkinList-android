@@ -54,7 +54,12 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
             startActivity(intent);
         }
         if (activityHelper.getGlobalId() != activityHelper.getPurchaseMenuId()) {
-            menuShowPurchaseLists(AppConstants.MENU_SHOW_PURCHASE_LIST);
+            if (activityHelper.getGlobalId() == AppConstants.MENU_SHOW_PURCHASE_LIST
+                    || activityHelper.getGlobalId() == AppConstants.MENU_SHOW_PURCHASE_ARCHIVE) {
+                menuShowPurchaseLists(activityHelper.getGlobalId());
+            } else {
+                activityHelper.setGlobalId(activityHelper.getPurchaseMenuId());
+            }
         }
     }
 

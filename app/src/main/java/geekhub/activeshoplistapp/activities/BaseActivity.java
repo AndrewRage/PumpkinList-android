@@ -127,7 +127,7 @@ public abstract class BaseActivity extends ActionBarActivity {
                 int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
                 if(activityHelper.isMainActivity()
                         && activityHelper.getGlobalId() == AppConstants.MENU_SHOW_PURCHASE_LIST
-                        && backStackEntryCount <= 0
+                        && backStackEntryCount == 0
                         && drawerLayout != null ){
                     if (drawerLayout.isDrawerOpen(drawerListView)) {
                         drawerLayout.closeDrawer(drawerListView);
@@ -196,8 +196,14 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     public void menuShowPurchaseLists(int menuId) {
-        activityHelper.setPurchaseMenuId(menuId);
+        //activityHelper.setPurchaseMenuId(menuId);
         finish();
+        //overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
         overridePendingTransition(0, 0);
     }
 }
