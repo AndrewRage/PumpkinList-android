@@ -66,6 +66,11 @@ public class GpsAppointmentService extends Service {
                 true,
                 contentObserver
         );
+        getContentResolver().registerContentObserver(
+                ShoppingContentProvider.PLACE_CONTENT_URI,
+                true,
+                contentObserver
+        );
         //readPurchaseList();
         super.onCreate();
     }
