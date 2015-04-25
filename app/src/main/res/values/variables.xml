@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="fabric_crashlytics">0a363350d0632ff943098c0326304g9ca6b734e2</string>
+    <string name="fabric_crashlytics">8320f4f5acb21ff81d1b7b411decc230244e2fae</string>
     <string name="google_api_key">AIzaSyBq1lyEGw0J6eOL6qW1Sh7kldhlPlNZxoM</string>
     <string name="facebook_app_id">1571987843087597</string>
     <string name="vkontakte_app_id">4793881</string>
-    <string name="twitter_consumer_key"> jbyX6BViPz9Sst0NzX0vJ5CJy</string>
-    <string name="twitter_consumer_secret"> FKROVMQcYg0mD7zJ2sM05GYg9xqozEMDE97envfBx9tW2XsIrz</string>
+    <string name="twitter_consumer_key">FxCVjf2muxEyVKUfKF4cHkDTS</string>
     <string name="server_url">active-shop-list.herokuapp.com/</string>
 
 </resources>
