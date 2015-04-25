@@ -76,9 +76,11 @@
             android:enabled="true"
             android:exported="false" >
         </provider>
+
         <meta-data
             android:name="com.crashlytics.ApiKey"
-            android:value="@string/fabric_crashlytics" />
+            android:value="8320f4f5acb21ff81d1b7b411decc230244e2fae" />
+
     </application>
 
 </manifest>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="fabric_crashlytics">8320f4f5acb21ff81d1b7b411decc230244e2fae</string>
     <string name="google_api_key">AIzaSyBq1lyEGw0J6eOL6qW1Sh7kldhlPlNZxoM</string>
     <string name="facebook_app_id">1571987843087597</string>
     <string name="vkontakte_app_id">4793881</string>
