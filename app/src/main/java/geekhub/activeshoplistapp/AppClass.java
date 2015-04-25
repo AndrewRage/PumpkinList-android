@@ -8,10 +8,12 @@ import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 import geekhub.activeshoplistapp.services.GpsAppointmentService;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by rage on 06.02.15.
@@ -27,6 +29,7 @@ public class AppClass extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         SharedPrefHelper.getInstance(getApplicationContext());
         SqlDbHelper.getInstance(getApplicationContext());
 

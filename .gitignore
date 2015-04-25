@@ -45,3 +45,4 @@ build/
 # IML files
 *.iml
 **/app.iml
+app/crashlytics.properties
