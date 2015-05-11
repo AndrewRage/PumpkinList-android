@@ -51,6 +51,7 @@ import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.activities.PlacesActivity;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
 import geekhub.activeshoplistapp.adapters.SettingsSpinnerAdapter;
+import geekhub.activeshoplistapp.asyncs.AddNewListTask;
 import geekhub.activeshoplistapp.helpers.ActivityHelper;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ContentHelper;
@@ -1043,7 +1044,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         }
     }
 
-    private Uri addNewList() {
+    private void addNewList() {
         if (TextUtils.isEmpty(listNameEdit.getText())) {
             listNameEdit.setText(R.string.purchase_edit_new_list_default);
         }
@@ -1054,15 +1055,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             purchaseList.setTimeAlarm(c.getTimeInMillis());
         }
 
-        Uri uri = ContentHelper.insertPurchaseList(getActivity(), purchaseList);
-        purchaseList.setDbId(Long.parseLong(uri.getLastPathSegment()));
-
-        if (purchaseList.getTimeAlarm() > System.currentTimeMillis()
-                && purchaseList.getDbId() > 0) {
-            AlarmUtils alarmUtils = new AlarmUtils(getActivity());
-            alarmUtils.setListAlarm(purchaseList);
-        }
-        return uri;
+        new AddNewListTask(getActivity(), purchaseList).execute();
     }
 
     private void changeBought(final long dbId, final boolean checked) {
