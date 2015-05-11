@@ -10,10 +10,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
+import geekhub.activeshoplistapp.BuildConfig;
+
 public class ShoppingContentProvider extends ContentProvider {
     private static final String TAG = ShoppingContentProvider.class.getSimpleName();
 
-    public static final String CONTENT_AUTHORITY = "geekhub.activeshoplistapp.provider";
+    public static final String CONTENT_AUTHORITY = BuildConfig.APPLICATION_ID + ".provider";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     public static final String PATH_GOODS = "goods";

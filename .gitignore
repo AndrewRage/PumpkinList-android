@@ -1,4 +1,6 @@
 manifest-merger-release-report.txt
+manifest-merger-coming-release-report.txt
+manifest-merger-flowing-release-report.txt
 
 #built application files
 *.apk

@@ -71,7 +71,7 @@
 
         <provider
             android:name=".helpers.ShoppingContentProvider"
-            android:authorities="geekhub.activeshoplistapp.provider"
+            android:authorities="${applicationId}.provider"
             android:process=":content"
             android:enabled="true"
             android:exported="false" >
