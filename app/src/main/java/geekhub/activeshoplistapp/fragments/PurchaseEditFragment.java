@@ -52,6 +52,7 @@ import geekhub.activeshoplistapp.activities.PlacesActivity;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
 import geekhub.activeshoplistapp.adapters.SettingsSpinnerAdapter;
 import geekhub.activeshoplistapp.asyncs.AddNewListTask;
+import geekhub.activeshoplistapp.asyncs.UpdateListTask;
 import geekhub.activeshoplistapp.helpers.ActivityHelper;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ContentHelper;
@@ -984,12 +985,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             listNameEdit.setText(R.string.purchase_edit_new_list_default);
         }
         purchaseList.setListName(listNameEdit.getText().toString());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ContentHelper.updatePurchaseList(getActivity(), purchaseList);
-            }
-        }).start();
+        new UpdateListTask(purchaseList, getActivity()).execute();
     }
 
     private void deleteList() {
