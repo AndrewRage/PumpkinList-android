@@ -1,20 +1,25 @@
 package geekhub.activeshoplistapp.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
 import geekhub.activeshoplistapp.R;
+import geekhub.activeshoplistapp.asyncs.AddNewListTask;
+import geekhub.activeshoplistapp.asyncs.UpdateListTask;
 import geekhub.activeshoplistapp.fragments.PurchaseEditFragment;
 import geekhub.activeshoplistapp.fragments.PurchaseManageFragment;
 import geekhub.activeshoplistapp.helpers.ActivityHelper;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
+import geekhub.activeshoplistapp.model.PurchaseListModel;
 
 /**
  * Created by rage on 08.02.15.
  */
-public class PurchaseActivity extends BaseActivity implements PurchaseManageFragment.OnPurchaseListMainFragmentListener, FragmentManager.OnBackStackChangedListener {
+public class PurchaseActivity extends BaseActivity implements PurchaseManageFragment.OnPurchaseListMainFragmentListener, PurchaseEditFragment.OnPurchaseEditFragmentListener, FragmentManager.OnBackStackChangedListener {
     private static final String TAG = PurchaseActivity.class.getSimpleName();
     private PurchaseEditFragment purchaseListEditFragment;
 
@@ -125,5 +130,23 @@ public class PurchaseActivity extends BaseActivity implements PurchaseManageFrag
         super.menuLogout();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void addNewList(PurchaseListModel purchaseList) {
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB) {
+            new AddNewListTask(this, purchaseList).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            new AddNewListTask(this, purchaseList).execute();
+        }
+    }
+
+    @Override
+    public void updateList(PurchaseListModel purchaseList) {
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB) {
+            new UpdateListTask(purchaseList, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            new UpdateListTask(purchaseList, this).execute();
+        }
     }
 }

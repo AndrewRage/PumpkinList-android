@@ -1,6 +1,7 @@
 package geekhub.activeshoplistapp.fragments;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -80,6 +81,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private static final int LOADER_PLACE_ID = 1;
     private static final int LOADER_SHOP_ID = 2;
     private static final int LOADER_LIST = 3;
+    private OnPurchaseEditFragmentListener onPurchaseEditFragmentListener;
     private PurchaseItemAdapter adapter;
     private ListView purchaseListView;
     private View header, progressBar, addItemButton, toolbarBottom, createButton, clearTimeButton, moreButton, createView;
@@ -985,7 +987,9 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             listNameEdit.setText(R.string.purchase_edit_new_list_default);
         }
         purchaseList.setListName(listNameEdit.getText().toString());
-        new UpdateListTask(purchaseList, getActivity()).execute();
+        if (onPurchaseEditFragmentListener != null) {
+            onPurchaseEditFragmentListener.updateList(purchaseList);
+        }
     }
 
     private void deleteList() {
@@ -1051,7 +1055,9 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             purchaseList.setTimeAlarm(c.getTimeInMillis());
         }
 
-        new AddNewListTask(getActivity(), purchaseList).execute();
+        if (onPurchaseEditFragmentListener != null) {
+            onPurchaseEditFragmentListener.addNewList(purchaseList);
+        }
     }
 
     private void changeBought(final long dbId, final boolean checked) {
@@ -1109,6 +1115,18 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             listNameEdit.setText(purchaseList.getListName());
         }
         initScreen();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            onPurchaseEditFragmentListener = (OnPurchaseEditFragmentListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnLoginFragmentListener");
+        }
     }
 
     @Override
@@ -1254,5 +1272,10 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         //adapter.swapCursor(null);
         adapter.changeCursor(null);
         progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public interface OnPurchaseEditFragmentListener {
+        void addNewList(PurchaseListModel purchaseList);
+        void updateList(PurchaseListModel purchaseList);
     }
 }
