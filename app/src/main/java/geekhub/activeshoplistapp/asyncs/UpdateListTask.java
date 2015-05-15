@@ -9,6 +9,7 @@ import geekhub.activeshoplistapp.model.PurchaseListModel;
 /**
  * Created by rage on 5/13/15.
  */
+@Deprecated
 public class UpdateListTask extends AsyncTask<Void, Void, Void> {
     private PurchaseListModel purchaseList;
     private Context context;

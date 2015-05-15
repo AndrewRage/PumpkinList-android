@@ -59,6 +59,9 @@
             android:name=".services.GpsAppointmentService"
             android:process=":gps_appointment_service" />
 
+        <service android:name=".services.WritePurchaseListService"
+            android:exported="false"/>
+
         <receiver android:name=".broadcasts.AutoStartBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

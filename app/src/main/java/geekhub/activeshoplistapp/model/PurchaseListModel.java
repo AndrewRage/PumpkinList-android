@@ -2,13 +2,14 @@ package geekhub.activeshoplistapp.model;
 
 import android.location.Location;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 
 /**
  * Created by rage on 08.02.15. Create by task: 003
  */
-public class PurchaseListModel {
+public class PurchaseListModel implements Serializable {
 
     public static final int PLACE_SHOP = 1;
     public static final int PLACE_PLACE = 2;

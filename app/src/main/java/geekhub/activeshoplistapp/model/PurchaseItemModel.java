@@ -1,9 +1,11 @@
 package geekhub.activeshoplistapp.model;
 
+import java.io.Serializable;
+
 /**
  * Created by rage on 08.02.15. Create by task: 003
  */
-public class PurchaseItemModel {
+public class PurchaseItemModel implements Serializable {
     private long dbId;
     private long serverId;
     private long listDbId;

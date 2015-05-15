@@ -61,6 +61,7 @@ import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
 import geekhub.activeshoplistapp.model.PlacesModel;
 import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
+import geekhub.activeshoplistapp.services.WritePurchaseListService;
 import geekhub.activeshoplistapp.utils.AlarmUtils;
 
 /**
@@ -985,7 +986,10 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             listNameEdit.setText(R.string.purchase_edit_new_list_default);
         }
         purchaseList.setListName(listNameEdit.getText().toString());
-        new UpdateListTask(purchaseList, getActivity()).execute();
+        //new UpdateListTask(purchaseList, getActivity()).execute();
+        getActivity().startService(new Intent(getActivity(), WritePurchaseListService.class)
+                .putExtra(WritePurchaseListService.LIST_EXTRA, purchaseList)
+        );
     }
 
     private void deleteList() {
@@ -1050,8 +1054,10 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             c.set(mYear, mMonth, mDay, mHour, mMinute, 0);
             purchaseList.setTimeAlarm(c.getTimeInMillis());
         }
-
-        new AddNewListTask(getActivity(), purchaseList).execute();
+        //new AddNewListTask(getActivity(), purchaseList).execute();
+        getActivity().startService(new Intent(getActivity(), WritePurchaseListService.class)
+                        .putExtra(WritePurchaseListService.LIST_EXTRA, purchaseList)
+        );
     }
 
     private void changeBought(final long dbId, final boolean checked) {

@@ -11,6 +11,7 @@ import geekhub.activeshoplistapp.utils.AlarmUtils;
 /**
  * Created by rage on 5/11/15.
  */
+@Deprecated
 public class AddNewListTask extends AsyncTask<Void, Void, Void> {
     private PurchaseListModel purchaseList;
     private Context context;
