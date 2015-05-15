@@ -62,6 +62,7 @@
     <string name="purchase_edit_button_continue">Continue shopping</string>
     <string name="purchase_edit_create_empty_title">Shopping list is empty!</string>
     <string name="purchase_edit_create_empty_message">Can\'t create empty shopping list!</string>
+    <string name="purchase_edit_save_empty_message">Can\'t save empty shopping list!</string>
     <string name="purchase_edit_bottom_set_date">Set date</string>
     <string name="purchase_edit_bottom_set_time">Set time</string>
     <string name="purchase_edit_bottom_fail_time_toast">Please, select a future time for notification</string>

@@ -29,7 +29,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -51,9 +50,6 @@ import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.activities.PlacesActivity;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
 import geekhub.activeshoplistapp.adapters.SettingsSpinnerAdapter;
-import geekhub.activeshoplistapp.asyncs.AddNewListTask;
-import geekhub.activeshoplistapp.asyncs.UpdateListTask;
-import geekhub.activeshoplistapp.helpers.ActivityHelper;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ContentHelper;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
@@ -476,6 +472,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         placeSpinner.setEnabled(enable);
         if (enable) {
             doneButton.setText(R.string.purchase_edit_button_done);
+            setDoneIcon();
         } else {
             doneButton.setText(R.string.purchase_edit_button_continue);
         }
@@ -927,6 +924,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         } else {
             if (!TextUtils.isEmpty(listNameEdit.getText().toString())) {
                 addNewList();
+            } else {
+                Toast.makeText(getActivity(), R.string.purchase_edit_save_empty_message, Toast.LENGTH_SHORT).show();
             }
         }
         hideSoftKeyboard();
@@ -986,9 +985,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             listNameEdit.setText(R.string.purchase_edit_new_list_default);
         }
         purchaseList.setListName(listNameEdit.getText().toString());
-        //new UpdateListTask(purchaseList, getActivity()).execute();
         getActivity().startService(new Intent(getActivity(), WritePurchaseListService.class)
-                .putExtra(WritePurchaseListService.LIST_EXTRA, purchaseList)
+                        .putExtra(WritePurchaseListService.LIST_EXTRA, purchaseList)
         );
     }
 
@@ -1054,7 +1052,6 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             c.set(mYear, mMonth, mDay, mHour, mMinute, 0);
             purchaseList.setTimeAlarm(c.getTimeInMillis());
         }
-        //new AddNewListTask(getActivity(), purchaseList).execute();
         getActivity().startService(new Intent(getActivity(), WritePurchaseListService.class)
                         .putExtra(WritePurchaseListService.LIST_EXTRA, purchaseList)
         );
@@ -1260,5 +1257,12 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         //adapter.swapCursor(null);
         adapter.changeCursor(null);
         progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void setDoneIcon() {
+        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        if (activity != null) {
+            activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_check_white_24dp);
+        }
     }
 }
