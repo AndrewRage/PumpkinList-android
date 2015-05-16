@@ -308,6 +308,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                             if (purchaseList.getDbId() == 0) {
                                 Uri uri = ContentHelper.insertPurchaseList(getActivity(), purchaseList);
                                 purchaseList.setDbId(Long.parseLong(uri.getLastPathSegment()));
+                            } else {
+                                ContentHelper.updatePurchaseList(getActivity(), purchaseList);
                             }
                             if (!TextUtils.isEmpty(name)) {
                                 PurchaseItemModel item = new PurchaseItemModel(
@@ -335,6 +337,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                             }
                         }
                     }).start();
+
+                    goodsLabelEdit.setText(null);
 
                     createView.setVisibility(View.GONE);
                     moreButton.setVisibility(View.VISIBLE);
@@ -878,7 +882,9 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         super.onSaveInstanceState(outState);
         purchaseListViewState = purchaseListView.onSaveInstanceState();
         outState.putParcelable(STATE_LIST, purchaseListViewState);
-        outState.putLong(STATE_ID, purchaseList.getDbId());
+        if (purchaseList != null) {
+            outState.putLong(STATE_ID, purchaseList.getDbId());
+        }
         outState.putString(STATE_GOODS, goodsLabelEdit.getText().toString());
         outState.putString(STATE_TITLE, listNameEdit.getText().toString());
         outState.putBoolean(STATE_NEW_LIST, isNewList);
@@ -917,6 +923,10 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
     @Override
     public boolean onBackPressed() {
+        getLoaderManager().destroyLoader(LOADER_LIST);
+        getLoaderManager().destroyLoader(LOADER_PLACE_ID);
+        getLoaderManager().destroyLoader(LOADER_SHOP_ID);
+        getLoaderManager().destroyLoader(LOADER_ITEM_ID);
         if (purchaseList.getDbId() != 0) {
             if (!TextUtils.equals(listNameEdit.getText().toString(), purchaseList.getListName())) {
                 updateList();
@@ -985,9 +995,11 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             listNameEdit.setText(R.string.purchase_edit_new_list_default);
         }
         purchaseList.setListName(listNameEdit.getText().toString());
-        getActivity().startService(new Intent(getActivity(), WritePurchaseListService.class)
-                        .putExtra(WritePurchaseListService.LIST_EXTRA, purchaseList)
-        );
+        if (getActivity() != null) {
+            getActivity().startService(new Intent(getActivity(), WritePurchaseListService.class)
+                            .putExtra(WritePurchaseListService.LIST_EXTRA, purchaseList)
+            );
+        }
     }
 
     private void deleteList() {
@@ -1052,9 +1064,11 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             c.set(mYear, mMonth, mDay, mHour, mMinute, 0);
             purchaseList.setTimeAlarm(c.getTimeInMillis());
         }
-        getActivity().startService(new Intent(getActivity(), WritePurchaseListService.class)
-                        .putExtra(WritePurchaseListService.LIST_EXTRA, purchaseList)
-        );
+        if (getActivity() != null) {
+            getActivity().startService(new Intent(getActivity(), WritePurchaseListService.class)
+                            .putExtra(WritePurchaseListService.LIST_EXTRA, purchaseList)
+            );
+        }
     }
 
     private void changeBought(final long dbId, final boolean checked) {
@@ -1080,7 +1094,9 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         if (shopsList.size() > 0) {
             shopsList.clear();
         }
-        shopsList.addAll(ContentHelper.getPlaceList(cursor));
+        if (!cursor.isClosed()) {
+            shopsList.addAll(ContentHelper.getPlaceList(cursor));
+        }
         if (shopSpinnerAdapter == null) {
             initShopSpinner();
         } else {
@@ -1095,7 +1111,9 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         if (placesList.size() > 0) {
             placesList.clear();
         }
-        placesList.addAll(ContentHelper.getPlaceList(cursor));
+        if (!cursor.isClosed()) {
+            placesList.addAll(ContentHelper.getPlaceList(cursor));
+        }
         if (placeSpinnerAdapter == null) {
             initPlaceSpinner();
         } else {
@@ -1104,14 +1122,18 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     }
 
     private void refreshPurchaseList(Cursor cursor) {
-        purchaseList = ContentHelper.getPurchaseList(cursor);
-        if (!TextUtils.isEmpty(titleState)) {
-            listNameEdit.setText(titleState);
-            titleState = null;
+        if (!cursor.isClosed()) {
+            purchaseList = ContentHelper.getPurchaseList(cursor);
+            if (!TextUtils.isEmpty(titleState)) {
+                listNameEdit.setText(titleState);
+                titleState = null;
+            } else {
+                listNameEdit.setText(purchaseList.getListName());
+            }
+            initScreen();
         } else {
-            listNameEdit.setText(purchaseList.getListName());
+            onBackPressed();
         }
-        initScreen();
     }
 
     @Override
