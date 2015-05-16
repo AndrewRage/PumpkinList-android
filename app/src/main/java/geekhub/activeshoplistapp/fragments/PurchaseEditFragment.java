@@ -893,10 +893,12 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getLoaderManager().destroyLoader(LOADER_LIST);
-        getLoaderManager().destroyLoader(LOADER_PLACE_ID);
-        getLoaderManager().destroyLoader(LOADER_SHOP_ID);
-        getLoaderManager().destroyLoader(LOADER_ITEM_ID);
+        if (getActivity() != null && isAdded()) {
+            getLoaderManager().destroyLoader(LOADER_LIST);
+            getLoaderManager().destroyLoader(LOADER_PLACE_ID);
+            getLoaderManager().destroyLoader(LOADER_SHOP_ID);
+            getLoaderManager().destroyLoader(LOADER_ITEM_ID);
+        }
     }
 
     @Override
@@ -923,23 +925,26 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
     @Override
     public boolean onBackPressed() {
-        getLoaderManager().destroyLoader(LOADER_LIST);
-        getLoaderManager().destroyLoader(LOADER_PLACE_ID);
-        getLoaderManager().destroyLoader(LOADER_SHOP_ID);
-        getLoaderManager().destroyLoader(LOADER_ITEM_ID);
-        if (purchaseList.getDbId() != 0) {
-            if (!TextUtils.equals(listNameEdit.getText().toString(), purchaseList.getListName())) {
-                updateList();
-            }
-        } else {
-            if (!TextUtils.isEmpty(listNameEdit.getText().toString())) {
-                addNewList();
-            } else {
-                Toast.makeText(getActivity(), R.string.purchase_edit_save_empty_message, Toast.LENGTH_SHORT).show();
-            }
+        if (getActivity() != null && isAdded()) {
+            getLoaderManager().hasRunningLoaders();
+            getLoaderManager().destroyLoader(LOADER_LIST);
+            getLoaderManager().destroyLoader(LOADER_PLACE_ID);
+            getLoaderManager().destroyLoader(LOADER_SHOP_ID);
+            getLoaderManager().destroyLoader(LOADER_ITEM_ID);
         }
-        hideSoftKeyboard();
         if (getActivity() != null) {
+            if (purchaseList.getDbId() != 0) {
+                if (!TextUtils.equals(listNameEdit.getText().toString(), purchaseList.getListName())) {
+                    updateList();
+                }
+            } else {
+                if (!TextUtils.isEmpty(listNameEdit.getText().toString())) {
+                    addNewList();
+                } else {
+                    Toast.makeText(getActivity(), R.string.purchase_edit_save_empty_message, Toast.LENGTH_SHORT).show();
+                }
+            }
+            hideSoftKeyboard();
             getActivity().getSupportFragmentManager().popBackStack();
         }
         return false;

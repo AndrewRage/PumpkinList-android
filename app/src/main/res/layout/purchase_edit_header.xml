@@ -6,10 +6,9 @@
     android:layout_height="wrap_content"
     android:background="@color/gray_overlay">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
@@ -21,16 +20,22 @@
             android:hint="@string/purchase_edit_new_goods_hint"
             android:id="@+id/edit_goods_label"
             android:singleLine="true"
-            android:layout_weight="6"
-            android:imeOptions="actionDone" />
+            android:imeOptions="actionDone"
+            android:layout_toLeftOf="@+id/button_goods_add"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/purchase_edit_add_button"
+            android:singleLine="true"
             android:id="@+id/button_goods_add"
-            android:layout_weight="1" />
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
 </LinearLayout>
