@@ -369,8 +369,9 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
     private void savePosition() {
         if (isEdit) {
-            if (placesModel.getGpsLatitude() != marker.getPosition().latitude
-                    || placesModel.getGpsLongitude() != marker.getPosition().longitude) {
+            if (marker != null
+                    && (placesModel.getGpsLatitude() != marker.getPosition().latitude
+                    || placesModel.getGpsLongitude() != marker.getPosition().longitude)) {
                 needSave = true;
                 placesModel.setGpsLatitude(marker.getPosition().latitude);
                 placesModel.setGpsLongitude(marker.getPosition().longitude);

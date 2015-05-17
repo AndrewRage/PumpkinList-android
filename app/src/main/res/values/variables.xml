@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="google_api_key">AIzaSyBq1lyEGw0J6eOL6qW1Sh7kldhlPlNZxoM</string>
+    <string name="google_api_key">AIzaSyBq1lyEGw0J6eOL6qW1Sh7kldhlPlNZxoM(this)</string>
     <string name="facebook_app_id">1571987843087597</string>
     <string name="vkontakte_app_id">4793881</string>
     <string name="twitter_consumer_key">FxCVjf2muxEyVKUfKF4cHkDTS</string>
