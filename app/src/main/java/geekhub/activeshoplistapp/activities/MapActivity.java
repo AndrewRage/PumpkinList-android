@@ -1,25 +1,31 @@
 package geekhub.activeshoplistapp.activities;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.ContentObserver;
+import android.content.IntentFilter;
 import android.database.Cursor;
+import android.location.Address;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.PersistableBundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,6 +41,7 @@ import geekhub.activeshoplistapp.helpers.ContentHelper;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 import geekhub.activeshoplistapp.model.PlacesModel;
 import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
+import geekhub.activeshoplistapp.services.GeoLocationService;
 
 /**
  * Created by rage on 3/3/15.
@@ -56,37 +63,47 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private Marker marker;
     private GoogleMap.OnMarkerDragListener markerDragListener;
     private boolean needSave = false;
-    private View doneButton;
+    private EditText editSearch;
+    private View progressBar;
+    private GeoBroadcast geoBroadcast;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        geoBroadcast = new GeoBroadcast();
+        IntentFilter intentFilter = new IntentFilter(GeoLocationService.GEO_LOCATION_BROADCAST);
+        registerReceiver(geoBroadcast, intentFilter);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_check_white_24dp);
+
         placeNameEdit = (EditText) findViewById(R.id.title);
         placeNameEdit.clearFocus();
 
-        doneButton = findViewById(R.id.done_button);
-        doneButton.setOnClickListener(new View.OnClickListener() {
+        progressBar = findViewById(R.id.progress_bar);
+
+        findViewById(R.id.button_search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (marker == null) {
-                    new AlertDialog.Builder(MapActivity.this)
-                            .setTitle(getString(R.string.create_alert_title))
-                            .setMessage(getString(R.string.create_alert_massage))
-                            .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //nothing
-                                }
-                            })
-                            .show();
-                } else {
-                    onBackPressed();
+                searchLocationAction(editSearch.getText().toString());
+            }
+        });
+
+        editSearch = (EditText) findViewById(R.id.edit_search);
+        editSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    searchLocationAction(editSearch.getText().toString());
+                    handled = true;
                 }
+                return handled;
             }
         });
 
@@ -199,7 +216,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-
+        progressBar.setVisibility(View.GONE);
         //fix map crash - need test!
         map = googleMap;
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -207,14 +224,15 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         map.setOnMarkerDragListener(markerDragListener);
 
         if (placesModel.getGpsLatitude() > 0 && placesModel.getGpsLongitude() > 0) {
-            marker = map.addMarker(new MarkerOptions()
+            /*marker = map.addMarker(new MarkerOptions()
                     .position(new LatLng(
                             placesModel.getGpsLatitude(),
                             placesModel.getGpsLongitude()
                     ))
-                    .draggable(false)); //TODO draggable
+                    .draggable(false));*/
 
             LatLng latLng = new LatLng(placesModel.getGpsLatitude(), placesModel.getGpsLongitude());
+            addMarker(latLng);
             showMyLocation(latLng);
             isOnceShowMyLocation = true;
         }
@@ -231,15 +249,22 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                if (marker == null) {
-                    marker = googleMap.addMarker(new MarkerOptions()
-                            .position(latLng)
-                            .draggable(false)); //TODO draggable
-                } else {
-                    marker.setPosition(latLng);
-                }
+                addMarker(latLng);
+                searchAddressAction(latLng);
             }
         });
+    }
+
+    private void addMarker(LatLng latLng) {
+        if (map != null) {
+            if (marker == null) {
+                marker = map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .draggable(false)); //TODO draggable
+            } else {
+                marker.setPosition(latLng);
+            }
+        }
     }
 
     private void showMyLocation(Location location) {
@@ -418,6 +443,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     protected void onDestroy() {
         super.onDestroy();
         getSupportLoaderManager().destroyLoader(0);
+        unregisterReceiver(geoBroadcast);
     }
 
     private LoaderManager.LoaderCallbacks<Cursor> loaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
@@ -457,5 +483,70 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
         }
     };
+
+    private void searchLocationAction(String searchString) {
+        if (!TextUtils.isEmpty(searchString)) {
+            hideSoftKeyboard();
+            progressBar.setVisibility(View.VISIBLE);
+            Intent intent = new Intent(this, GeoLocationService.class);
+            intent.putExtra(GeoLocationService.SEARCH_STRING, searchString);
+            startService(intent);
+        }
+    }
+
+    private void searchAddressAction(LatLng latLng) {
+        if (latLng != null) {
+            hideSoftKeyboard();
+            Intent intent = new Intent(this, GeoLocationService.class);
+            intent.putExtra(GeoLocationService.LAT_LONG, latLng);
+            startService(intent);
+        }
+    }
+
+    class GeoBroadcast extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            progressBar.setVisibility(View.GONE);
+            int taskId = intent.getExtras().getInt(GeoLocationService.TASK_ID, 0);
+            Address address = intent.getExtras().getParcelable(GeoLocationService.ADDRESS_RESULT);
+            if (taskId == GeoLocationService.GET_LOCATION) {
+                if (address != null) {
+                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                    addMarker(latLng);
+                    showMyLocation(latLng);
+                } else {
+                    Toast.makeText(MapActivity.this, R.string.map_search_fail, Toast.LENGTH_SHORT).show();
+                }
+            }
+            if (placesModel != null && TextUtils.isEmpty(placesModel.getShopName()) && address != null) {
+                StringBuilder stringBuilder = new StringBuilder();
+                boolean addCity = true;
+                int count = address.getMaxAddressLineIndex();
+                if (count > 2) {
+                    count = 2;
+                }
+                for (int i = 0; i < count; i++) {
+                    if (!TextUtils.equals(address.getAddressLine(i), address.getLocality())) {
+                        addCity = false;
+                    }
+                }
+                if (addCity) {
+                    stringBuilder.append(address.getLocality());
+                    if (address.getMaxAddressLineIndex() > 0) {
+                        stringBuilder.append(", ");
+                    }
+                }
+                if (address.getMaxAddressLineIndex() > 0) {
+                    if (address.getMaxAddressLineIndex() > 1) {
+                        stringBuilder.append(address.getAddressLine(1));
+                        stringBuilder.append(", ");
+                    }
+                    stringBuilder.append(address.getAddressLine(0));
+                }
+                placeNameEdit.setText(stringBuilder.toString());
+            }
+        }
+    }
 
 }

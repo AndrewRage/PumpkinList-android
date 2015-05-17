@@ -62,6 +62,9 @@
         <service android:name=".services.WritePurchaseListService"
             android:exported="false"/>
 
+        <service android:name=".services.GeoLocationService"
+            android:exported="false"/>
+
         <receiver android:name=".broadcasts.AutoStartBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

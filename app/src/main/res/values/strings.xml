@@ -74,6 +74,8 @@
     <!--Map Activity-->
     <string name="create_alert_title">Marker not select</string>
     <string name="create_alert_massage">First you need to select a location</string>
+    <string name="map_search_button">Search</string>
+    <string name="map_search_fail">Place not found</string>
 
     <!--Shop edit-->
     <string name="shop_edit_name_hint">Shop name</string>

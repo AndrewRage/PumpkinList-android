@@ -46,12 +46,23 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" >
 
+            <EditText
+                android:id="@+id/edit_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:imeOptions="actionDone"
+                android:layout_toLeftOf="@+id/button_search"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"  />
+
             <Button
-                android:id="@+id/done_button"
+                android:id="@+id/button_search"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:text="Done"
+                android:text="@string/map_search_button"
                 android:singleLine="true"
                 android:background="@drawable/background_normal"
                 android:visibility="visible"
@@ -60,6 +71,14 @@
                 android:layout_alignParentEnd="true" />
 
         </RelativeLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="visible" />
 
     </RelativeLayout>
 
