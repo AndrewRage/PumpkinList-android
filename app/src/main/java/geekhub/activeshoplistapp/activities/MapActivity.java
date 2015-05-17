@@ -385,6 +385,8 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                     ContentHelper.insertPlace(MapActivity.this, placesModel);
                 }
             }).start();
+        } else {
+            Toast.makeText(this, R.string.map_save_empty_location, Toast.LENGTH_SHORT).show();
         }
         if (isEdit) {
             savePosition();

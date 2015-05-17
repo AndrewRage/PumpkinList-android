@@ -76,6 +76,7 @@
     <string name="create_alert_massage">First you need to select a location</string>
     <string name="map_search_button">Search</string>
     <string name="map_search_fail">Place not found</string>
+    <string name="map_save_empty_location">Can\'t save empty location!</string>
 
     <!--Shop edit-->
     <string name="shop_edit_name_hint">Shop name</string>
