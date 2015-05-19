@@ -79,7 +79,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     private static final int LOADER_LIST = 3;
     private PurchaseItemAdapter adapter;
     private ListView purchaseListView;
-    private View header, progressBar, addItemButton, toolbarBottom, createButton, clearTimeButton, moreButton, createView;
+    private View header, progressBar, addItemButton, toolbarBottom, createButton, clearTimeButton, moreButton, createView, hidePanel;
     private Button doneButton;
     private EditText listNameEdit;
     private EditText goodsLabelEdit;
@@ -144,6 +144,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         doneButton = (Button) view.findViewById(R.id.done_button);
         createView = view.findViewById(R.id.create_panel);
         createButton = view.findViewById(R.id.create_list_button);
+        hidePanel = view.findViewById(R.id.hide_panel);
         clearTimeButton = view.findViewById(R.id.clear_time_button);
         shopsSpinner = (Spinner) view.findViewById(R.id.shops_spinner);
         placeSpinner = (Spinner) view.findViewById(R.id.place_spinner);
@@ -272,6 +273,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             createView.setVisibility(View.VISIBLE);
             moreButton.setVisibility(View.GONE);
             doneButton.setVisibility(View.GONE);
+        } else {
+            hidePanel.setVisibility(View.VISIBLE);
         }
 
         createButton.setOnClickListener(new View.OnClickListener() {
@@ -343,6 +346,8 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                     createView.setVisibility(View.GONE);
                     moreButton.setVisibility(View.VISIBLE);
                     doneButton.setVisibility(View.VISIBLE);
+
+                    hidePanel.setVisibility(View.VISIBLE);
 
                     isNewList = false;
                 }

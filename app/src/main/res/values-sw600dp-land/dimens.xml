@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="purchase_list_item_columns">4</integer>
+
+    <dimen name="right_toolbar_width">170dp</dimen>
 </resources>

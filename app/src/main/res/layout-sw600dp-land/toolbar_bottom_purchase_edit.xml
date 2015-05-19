@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/toolbar_bottom"
+    android:layout_height="match_parent"
+    android:layout_width="@dimen/right_toolbar_width"
+    android:background="?attr/colorPrimary"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:layout_below="@+id/toolbar"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/visible_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/more_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/purchase_edit_button_appointment"
+            android:singleLine="true"
+            android:background="@drawable/background_normal" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/create_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="30dp">
+
+        <Button
+            android:id="@+id/create_list_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/purchase_edit_bottom_create_list"
+            android:singleLine="true"
+            android:background="@drawable/background_normal"
+            android:layout_centerHorizontal="true"
+            android:visibility="visible"/>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/done_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/purchase_edit_button_done"
+        android:singleLine="true"
+        android:background="@drawable/background_normal"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"/>
+
+    <RelativeLayout
+        android:id="@+id/hide_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/bottom_toolbar_padding"
+        android:layout_centerVertical="true"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/time_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/purchase_edit_bottom_time_label"
+                android:id="@+id/time_text"
+                android:gravity="center_vertical" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="@dimen/bottom_toolbar_spinner_width"
+            android:layout_height="@dimen/bottom_toolbar_time_layout_size"
+            android:text="@string/purchase_edit_bottom_set_date"
+            android:background="@drawable/background_normal"
+            android:padding="10dp"
+            android:id="@+id/time_date"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/time_layout"/>
+
+        <TextView
+            android:layout_width="@dimen/bottom_toolbar_spinner_width"
+            android:layout_height="@dimen/bottom_toolbar_time_layout_size"
+            android:text="@string/purchase_edit_bottom_set_time"
+            android:background="@drawable/background_normal"
+            android:padding="10dp"
+            android:id="@+id/time_time"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/time_date"/>
+
+        <RelativeLayout
+            android:id="@+id/time_clear"
+            android:layout_width="@dimen/bottom_toolbar_spinner_width"
+            android:layout_height="@dimen/bottom_toolbar_time_layout_size"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/time_time">
+
+            <ImageView
+                android:layout_width="@dimen/bottom_toolbar_time_layout_size"
+                android:layout_height="@dimen/bottom_toolbar_time_layout_size"
+                android:background="@drawable/background_normal"
+                android:padding="8dp"
+                android:src="@drawable/ic_reload"
+                android:scaleType="fitCenter"
+                android:id="@+id/clear_time_button"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:visibility="visible"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/purchase_edit_bottom_shop_label"
+            android:id="@+id/shop_text"
+            android:gravity="bottom"
+            android:layout_below="@+id/time_clear"/>
+
+        <Spinner
+            android:id="@+id/shops_spinner"
+            android:layout_width="@dimen/bottom_toolbar_spinner_width"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_normal"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/shop_text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/bottom_toolbar_time_layout_size"
+            android:text="@string/purchase_edit_bottom_place_label"
+            android:id="@+id/place_text"
+            android:gravity="bottom"
+            android:layout_below="@id/shops_spinner"/>
+
+        <Spinner
+            android:id="@+id/place_spinner"
+            android:layout_width="@dimen/bottom_toolbar_spinner_width"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_normal"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/place_text"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
