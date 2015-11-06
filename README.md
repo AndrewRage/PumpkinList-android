@@ -1,6 +1,7 @@
 # PumpkinList-android
 Pumpkin List is an open source shopping list with GPS alarm. In the application can create a shopping list and add a notification condition: the time (as a alarm clock), or locations (eg returning home or/and when you're near the shop). At the appointed time or/and location triggered notification, clicking on which it show list of goods. This list is editable if needed make changes. For convenience, the purchased goods can are marked in checkbox. Complete lists are saved in the archive.
 
+### Download
 [![Google Play](https://www.gstatic.com/android/market_images/web/play_one_bar_logo.png)](https://play.google.com/store/apps/details?id=ua.org.horishniy.pumpkinlist)
 
 ### The MIT License (MIT)
