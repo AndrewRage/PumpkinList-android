@@ -1,9 +1,7 @@
 package geekhub.activeshoplistapp.fragments;
 
 import android.animation.ObjectAnimator;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -20,6 +18,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -52,11 +51,11 @@ import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
 import geekhub.activeshoplistapp.adapters.SettingsSpinnerAdapter;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ContentHelper;
+import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
+import geekhub.activeshoplistapp.model.PlacesModel;
 import geekhub.activeshoplistapp.model.PurchaseItemModel;
 import geekhub.activeshoplistapp.model.PurchaseListModel;
-import geekhub.activeshoplistapp.model.PlacesModel;
-import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
 import geekhub.activeshoplistapp.services.WritePurchaseListService;
 import geekhub.activeshoplistapp.utils.AlarmUtils;
 
@@ -568,7 +567,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 }
             }
         });
-        Dialog dialog = builder.create();
+        AlertDialog dialog = builder.create();
 
         name.setText(item.getGoodsLabel());
         name.setEnabled(!item.isCancel());
