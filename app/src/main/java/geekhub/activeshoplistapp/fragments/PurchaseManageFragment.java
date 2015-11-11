@@ -1,35 +1,29 @@
 package geekhub.activeshoplistapp.fragments;
 
 import android.animation.ObjectAnimator;
-import android.app.Activity;
-import android.database.ContentObserver;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.RelativeLayout;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.adapters.PurchaseListAdapter;
 import geekhub.activeshoplistapp.helpers.ActivityHelper;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ContentHelper;
-import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
+import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 
 /**
  * Created by rage on 08.02.15. Create by task: 004
@@ -79,9 +73,9 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
         progressBar.setVisibility(View.VISIBLE);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            adapter = new PurchaseListAdapter(getActivity(), null, R.layout.item_purchase_view);
+            adapter = new PurchaseListAdapter(getContext(), null, R.layout.item_purchase_view);
         } else {
-            adapter = new PurchaseListAdapter(getActivity(), null, 0, R.layout.item_purchase_view);
+            adapter = new PurchaseListAdapter(getContext(), null, 0, R.layout.item_purchase_view);
         }
         purchaseView.setAdapter(adapter);
         purchaseView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -148,15 +142,12 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
         }
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
+    @Override public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            purchaseListMainFragmentListener = (OnPurchaseListMainFragmentListener) activity;
+            purchaseListMainFragmentListener = (OnPurchaseListMainFragmentListener) getActivity();
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnLoginFragmentListener");
+            throw new ClassCastException("Parent Activity must implement OnLoginFragmentListener");
         }
     }
 
@@ -193,7 +184,7 @@ public class PurchaseManageFragment extends BaseFragment implements LoaderManage
         }
         String selection = SqlDbHelper.PURCHASE_LIST_COLUMN_DONE + "=?";
         return new CursorLoader(
-                getActivity(),
+                getContext(),
                 ShoppingContentProvider.PURCHASE_LIST_CONTENT_URI,
                 projection,
                 selection,

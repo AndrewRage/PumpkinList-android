@@ -7,6 +7,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
@@ -61,9 +63,11 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void showNotification(Context context, PurchaseListModel list) {
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_notification_icon)
+                        .setLargeIcon(bitmap)
                         .setContentTitle(list.getListName())
                         .setContentText(context.getString(R.string.notification_alarm_description))
                         //.setContentInfo("info")

@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +25,9 @@ import geekhub.activeshoplistapp.activities.MapActivity;
 import geekhub.activeshoplistapp.adapters.PlaceAdapter;
 import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ContentHelper;
+import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
 import geekhub.activeshoplistapp.model.PlacesModel;
-import geekhub.activeshoplistapp.helpers.ShoppingContentProvider;
 
 /**
  * Created by rage on 08.02.15. Create by task: 004
@@ -86,12 +85,12 @@ public class PlacesManageFragment extends BaseFragment implements LoaderManager.
         }
         getLoaderManager().initLoader(menuItemId, null, this);
 
-        adapter = new PlaceAdapter(getActivity(), R.layout.item_place, placesList);
+        adapter = new PlaceAdapter(getContext(), R.layout.item_place, placesList);
         placeListView.setAdapter(adapter);
         placeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), MapActivity.class)
+                Intent intent = new Intent(getContext(), MapActivity.class)
                         .putExtra(AppConstants.EXTRA_MENU_ITEM, menuItemId)
                         .putExtra(
                                 AppConstants.EXTRA_PLACE_ID,
@@ -104,7 +103,7 @@ public class PlacesManageFragment extends BaseFragment implements LoaderManager.
         floatPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MapActivity.class)
+                Intent intent = new Intent(getContext(), MapActivity.class)
                         .putExtra(AppConstants.EXTRA_MENU_ITEM, menuItemId);
                 startActivityForResult(intent, AppConstants.SHOP_RESULT_CODE);
             }
@@ -208,7 +207,7 @@ public class PlacesManageFragment extends BaseFragment implements LoaderManager.
                 };
                 String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
                 return new CursorLoader(
-                        getActivity(),
+                        getContext(),
                         ShoppingContentProvider.PLACE_CONTENT_URI,
                         projection,
                         SqlDbHelper.PLACES_COLUMN_CATEGORY + "=?",
@@ -230,7 +229,7 @@ public class PlacesManageFragment extends BaseFragment implements LoaderManager.
                 };
                 String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
                 return new CursorLoader(
-                        getActivity(),
+                        getContext(),
                         ShoppingContentProvider.PLACE_CONTENT_URI,
                         projection,
                         SqlDbHelper.PLACES_COLUMN_CATEGORY + "=?",
