@@ -1,10 +1,9 @@
 package geekhub.activeshoplistapp.fragments;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,15 +68,12 @@ public class LoginFragment extends BaseFragment{
         });
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
+    @Override public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            onLoginFragmentListener = (OnLoginFragmentListener) activity;
+            onLoginFragmentListener = (OnLoginFragmentListener) getActivity();
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnLoginFragmentListener");
+            throw new ClassCastException("Parent activity must implement OnLoginFragmentListener");
         }
     }
 

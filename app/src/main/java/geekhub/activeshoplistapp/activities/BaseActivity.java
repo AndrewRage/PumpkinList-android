@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,8 +17,8 @@ import java.util.List;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.adapters.DrawerMenuAdapter;
-import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ActivityHelper;
+import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
 
 /**
@@ -26,7 +26,7 @@ import geekhub.activeshoplistapp.helpers.SharedPrefHelper;
  * 
  * Base activity
  */
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = BaseActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
     private ListView drawerListView;

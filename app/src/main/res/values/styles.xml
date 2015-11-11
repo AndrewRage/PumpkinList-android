@@ -3,7 +3,7 @@
     <style name="ASlistTheme" parent="ASlistBase">
 
         <item name="windowActionBar">false</item>
-        <!--<item name="windowNoTitle">true</item>-->
+        <item name="windowNoTitle">true</item>
 
         <item name="android:textColorPrimary">@color/theme_primary_text</item>
         <item name="android:textColorSecondary">@color/theme_secondary_text</item>
@@ -17,7 +17,7 @@
     </style>
 
     <!-- Base application theme. -->
-    <style name="ASlistBase" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+    <style name="ASlistBase" parent="Theme.AppCompat.Light.DarkActionBar">
 
         <item name="colorPrimary">@color/theme_primary</item>
         <item name="colorPrimaryDark">@color/theme_primary_dark</item>
