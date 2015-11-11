@@ -17,7 +17,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -46,6 +45,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import geekhub.activeshoplistapp.R;
+import geekhub.activeshoplistapp.activities.BaseActivity;
 import geekhub.activeshoplistapp.activities.PlacesActivity;
 import geekhub.activeshoplistapp.adapters.PurchaseItemAdapter;
 import geekhub.activeshoplistapp.adapters.SettingsSpinnerAdapter;
@@ -125,7 +125,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         //setListenerToRootView();
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        BaseActivity activity = (BaseActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -243,9 +243,9 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
     private void initScreen() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            adapter = new PurchaseItemAdapter(getActivity(), null, R.layout.item_purchase_edit);
+            adapter = new PurchaseItemAdapter(getContext(), null, R.layout.item_purchase_edit);
         } else {
-            adapter = new PurchaseItemAdapter(getActivity(), null, 0, R.layout.item_purchase_edit);
+            adapter = new PurchaseItemAdapter(getContext(), null, 0, R.layout.item_purchase_edit);
         }
         adapter.setOnItemInteractionListener(new PurchaseItemAdapter.OnItemInteractionListener() {
             @Override
@@ -288,7 +288,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                             Toast.LENGTH_LONG
                     ).show();*/
 
-                    new AlertDialog.Builder(getActivity())
+                    new AlertDialog.Builder(getContext())
                             .setTitle(getString(R.string.purchase_edit_create_empty_title))
                             .setMessage(getString(R.string.purchase_edit_create_empty_message))
                             .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
@@ -417,7 +417,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                     isTimeSelect = false;
 
                     purchaseList.setTimeAlarm(0);
-                    AlarmUtils alarmUtils = new AlarmUtils(getActivity());
+                    AlarmUtils alarmUtils = new AlarmUtils(getContext());
                     alarmUtils.cancelListAlarm(purchaseList);
 
                     dateText.setText(R.string.purchase_edit_bottom_set_date);
@@ -443,7 +443,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                     titleBuilder.append(getString(R.string.purchase_edit_alert_done_title));
                     massageBuilder.append(getString(R.string.purchase_edit_alert_done_message));
                 }
-                new AlertDialog.Builder(getActivity())
+                new AlertDialog.Builder(getContext())
                         .setTitle(titleBuilder.toString())
                         .setMessage(massageBuilder.toString())
                         .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
@@ -509,7 +509,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 cursor.getLong(indexTimestamp)
         );
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         builder.setTitle(R.string.purchase_edit_item_title);
         View view = inflater.inflate(R.layout.dialog_purchase_item, null);
@@ -528,7 +528,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            ContentHelper.updatePurchaseItem(getActivity(), item);
+                            ContentHelper.updatePurchaseItem(getContext(), item);
                         }
                     }).start();
                 }
@@ -548,7 +548,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            ContentHelper.deletePurchaseItem(getActivity(), item.getDbId());
+                            ContentHelper.deletePurchaseItem(getContext(), item.getDbId());
                         }
                     }).start();
                 } else {
@@ -561,7 +561,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            ContentHelper.updatePurchaseItem(getActivity(), item);
+                            ContentHelper.updatePurchaseItem(getContext(), item);
                         }
                     }).start();
                 }
@@ -579,7 +579,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
     private void initShopSpinner() {
         shopSpinnerAdapter = new SettingsSpinnerAdapter(
-                getActivity(),
+                getContext(),
                 R.layout.item_settings_spinner,
                 shopsList,
                 R.string.shop_edit_spinner_default_entry
@@ -588,7 +588,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             @Override
             public void onClick(View v) {
                 shopsSpinner.setEnabled(false);
-                Intent intent = new Intent(getActivity(), PlacesActivity.class);
+                Intent intent = new Intent(getContext(), PlacesActivity.class);
                 intent.putExtra(AppConstants.EXTRA_MENU_ITEM, AppConstants.MENU_SHOW_SHOPS);
                 startActivityForResult(intent, REQUEST_SHOP);
             }
@@ -652,7 +652,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
     private void initPlaceSpinner() {
         placeSpinnerAdapter = new SettingsSpinnerAdapter(
-                getActivity(),
+                getContext(),
                 R.layout.item_settings_spinner,
                 placesList,
                 R.string.place_edit_spinner_default_entry
@@ -661,7 +661,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             @Override
             public void onClick(View v) {
                 placeSpinner.setEnabled(false);
-                Intent intent = new Intent(getActivity(), PlacesActivity.class);
+                Intent intent = new Intent(getContext(), PlacesActivity.class);
                 intent.putExtra(AppConstants.EXTRA_MENU_ITEM, AppConstants.MENU_SHOW_PLACES);
                 startActivityForResult(intent, REQUEST_PLACES);
             }
@@ -737,7 +737,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         }
 
         new TimePickerDialog(
-                getActivity(),
+                getContext(),
                 new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -770,7 +770,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         }
 
         new DatePickerDialog(
-                getActivity(),
+                getContext(),
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -796,13 +796,13 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
 
             if (purchaseList.getDbId() > 0) {
                 updateList();
-                AlarmUtils alarmUtils = new AlarmUtils(getActivity());
+                AlarmUtils alarmUtils = new AlarmUtils(getContext());
                 if (purchaseList.getTimeAlarm() > System.currentTimeMillis()) {
                     alarmUtils.setListAlarm(purchaseList);
                 } else {
                     alarmUtils.cancelListAlarm(purchaseList);
                     Toast.makeText(
-                            getActivity(),
+                            getContext(),
                             R.string.purchase_edit_bottom_fail_time_toast,
                             Toast.LENGTH_SHORT
                     ).show();
@@ -945,7 +945,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 if (!TextUtils.isEmpty(listNameEdit.getText().toString())) {
                     addNewList();
                 } else {
-                    Toast.makeText(getActivity(), R.string.purchase_edit_save_empty_message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.purchase_edit_save_empty_message, Toast.LENGTH_SHORT).show();
                 }
             }
             hideSoftKeyboard();
@@ -966,7 +966,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 @Override
                 public void run() {
                     if (purchaseList.getDbId() == 0) {
-                        Uri uri = ContentHelper.insertPurchaseList(getActivity(), purchaseList);
+                        Uri uri = ContentHelper.insertPurchaseList(getContext(), purchaseList);
                         purchaseList.setDbId(Long.parseLong(uri.getLastPathSegment()));
                     }
                     PurchaseItemModel item = new PurchaseItemModel(
@@ -981,7 +981,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                             "",
                             0
                     );
-                    ContentHelper.insertPurchaseItem(getActivity(), item, purchaseList.getDbId());
+                    ContentHelper.insertPurchaseItem(getContext(), item, purchaseList.getDbId());
 
                     if (adapter.getCursor() == null) {
                         handler.post(new Runnable() {
@@ -1005,7 +1005,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
         }
         purchaseList.setListName(listNameEdit.getText().toString());
         if (getActivity() != null) {
-            getActivity().startService(new Intent(getActivity(), WritePurchaseListService.class)
+            getActivity().startService(new Intent(getContext(), WritePurchaseListService.class)
                             .putExtra(WritePurchaseListService.LIST_EXTRA, purchaseList)
             );
         }
@@ -1035,7 +1035,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                         listName
                 );
             }
-            new AlertDialog.Builder(getActivity())
+            new AlertDialog.Builder(getContext())
                     .setTitle(R.string.purchase_edit_alert_delete_title)
                     .setMessage(message)
                     .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
@@ -1074,7 +1074,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
             purchaseList.setTimeAlarm(c.getTimeInMillis());
         }
         if (getActivity() != null) {
-            getActivity().startService(new Intent(getActivity(), WritePurchaseListService.class)
+            getActivity().startService(new Intent(getContext(), WritePurchaseListService.class)
                             .putExtra(WritePurchaseListService.LIST_EXTRA, purchaseList)
             );
         }
@@ -1175,7 +1175,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 String orderBy = SqlDbHelper.PURCHASE_ITEM_COLUMN_IS_CANCEL + " ASC, "
                         + SqlDbHelper.COLUMN_ID + " DESC";
                 return new CursorLoader(
-                        getActivity(),
+                        getContext(),
                         ShoppingContentProvider.PURCHASE_ITEM_CONTENT_URI,
                         projection,
                         SqlDbHelper.PURCHASE_ITEM_COLUMN_LIST_ID + "=?",
@@ -1197,7 +1197,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 };
                 String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
                 return new CursorLoader(
-                        getActivity(),
+                        getContext(),
                         ShoppingContentProvider.PLACE_CONTENT_URI,
                         projection,
                         SqlDbHelper.PLACES_COLUMN_CATEGORY + "=?",
@@ -1219,7 +1219,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                 };
                 String orderBy = SqlDbHelper.COLUMN_ID + " DESC";
                 return new CursorLoader(
-                        getActivity(),
+                        getContext(),
                         ShoppingContentProvider.PLACE_CONTENT_URI,
                         projection,
                         SqlDbHelper.PLACES_COLUMN_CATEGORY + "=?",
@@ -1246,7 +1246,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
                         SqlDbHelper.PURCHASE_LIST_COLUMN_TIMESTAMP,
                 };
                 return new CursorLoader(
-                        getActivity(),
+                        getContext(),
                         uri,
                         projection,
                         null,
@@ -1291,7 +1291,7 @@ public class PurchaseEditFragment extends BaseFragment implements LoaderManager.
     }
 
     private void setDoneIcon() {
-        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        BaseActivity activity = (BaseActivity) getActivity();
         if (activity != null) {
             activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_check_white_24dp);
         }

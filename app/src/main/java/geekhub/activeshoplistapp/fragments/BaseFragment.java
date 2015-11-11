@@ -2,15 +2,14 @@ package geekhub.activeshoplistapp.fragments;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.activities.BaseActivity;
-import geekhub.activeshoplistapp.helpers.AppConstants;
 import geekhub.activeshoplistapp.helpers.ActivityHelper;
+import geekhub.activeshoplistapp.helpers.AppConstants;
 
 /**
  * Created by rage on 06.02.15.
@@ -26,7 +25,7 @@ public abstract class BaseFragment extends Fragment implements BaseActivity.Inte
 
     public void addToolbar(View view, boolean displayHome) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        BaseActivity activity = (BaseActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(displayHome);
         activity.getSupportActionBar().setHomeButtonEnabled(displayHome);
@@ -35,12 +34,12 @@ public abstract class BaseFragment extends Fragment implements BaseActivity.Inte
     }
 
     public void setActionBarTitle(int resId) {
-        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        BaseActivity activity = (BaseActivity) getActivity();
         activity.getSupportActionBar().setTitle(resId);
     }
 
     public void setActionBarTitle(String string) {
-        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        BaseActivity activity = (BaseActivity) getActivity();
         activity.getSupportActionBar().setTitle(string);
     }
 
@@ -69,7 +68,7 @@ public abstract class BaseFragment extends Fragment implements BaseActivity.Inte
     }
 
     public void changeHomeUpToHamburger() {
-        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        BaseActivity activity = (BaseActivity) getActivity();
         ActivityHelper helper = ActivityHelper.getInstance();
         if (helper.isMainActivity()
                 && helper.getGlobalId() == AppConstants.MENU_SHOW_PURCHASE_LIST

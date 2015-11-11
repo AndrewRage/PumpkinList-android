@@ -1,5 +1,6 @@
 package geekhub.activeshoplistapp.adapters;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -12,7 +13,6 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import geekhub.activeshoplistapp.R;
 import geekhub.activeshoplistapp.helpers.SqlDbHelper;
@@ -24,12 +24,14 @@ public class PurchaseListAdapter extends CursorAdapter {
     private int resource;
     private LayoutInflater inflater;
 
+    @TargetApi(8)
     public PurchaseListAdapter(Context context, Cursor c, int resource) {
         super(context, c);
         this.resource = resource;
         inflater = LayoutInflater.from(context);
     }
 
+    @TargetApi(11)
     public PurchaseListAdapter(Context context, Cursor c, int flags, int resource) {
         super(context, c, flags);
         this.resource = resource;

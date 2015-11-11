@@ -22,8 +22,8 @@ android {
         applicationId "geekhub.activeshoplistapp"
         minSdkVersion 10
         targetSdkVersion 22
-        versionCode 8
-        versionName "0.8"
+        versionCode 9
+        versionName "0.9"
     }
     buildTypes {
         release {

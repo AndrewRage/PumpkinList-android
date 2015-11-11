@@ -8,6 +8,8 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -531,9 +533,11 @@ public class GpsAppointmentService extends Service {
     }
 
     private void showNotification(PurchaseListModel list) {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(GpsAppointmentService.this)
                         .setSmallIcon(R.drawable.ic_notification_icon)
+                        .setLargeIcon(bitmap)
                         .setContentTitle(list.getListName())
                         .setContentText(getApplicationContext().getString(R.string.notification_gps_description))
                         //.setContentInfo("info")
